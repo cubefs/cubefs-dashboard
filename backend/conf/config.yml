@@ -18,7 +18,7 @@ server:
   static_resource:
     enable: true
     relative_path: /portal
-    root_path: ../frontend/dist
+    root_path: ./dist
 prefix:
   api: /api/cubefs
 mysql:
