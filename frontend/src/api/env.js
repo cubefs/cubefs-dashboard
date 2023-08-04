@@ -1,0 +1,44 @@
+/**
+ * Copyright 2023 The CubeFS Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+function env(mode = '', opts = { isOnly: false }) {
+  const yamls = {}
+  const list = []
+
+  if (mode === '*') {
+    return yamls
+  }
+
+  if (opts.isOnly) {
+    return Object.assign({}, yamls[`${mode}.yaml`])
+  } else {
+    list.push(...['.env.yaml', '.env.local.yaml'])
+    if (mode) {
+      list.push(
+        ...[
+          `.env.${mode}.yaml`,
+          `.env.${mode}.local.yaml`,
+          `${mode}.yaml`,
+          `${mode}.local.yaml`,
+        ]
+      )
+    }
+
+    return Object.assign({}, ...list.map((key) => yamls[key] || {}))
+  }
+}
+
+export default env
