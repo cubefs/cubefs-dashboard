@@ -96,6 +96,9 @@ func Create(c *gin.Context) {
 		in.FollowerRead = true
 		in.ReplicaNumber = 1
 	}
+	if input.ReplicaNumber == 1 || input.ReplicaNumber == 2 {
+		in.FollowerRead = true
+	}
 	data, err := vol.Create(c, addr, in)
 	if err != nil {
 		log.Errorf("vol.Create failed.args:%+v,addr:%s,err:%+v", input, addr, err)
