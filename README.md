@@ -5,19 +5,19 @@ cubefs Console (cfs-gui) is a graphical management tool for cubeFS system, which
 
 # Architecture
 The cfs-gui backend interacts directly with the CubeFS cluster, manages multiple clusters simultaneously, and stores its own data in the database. The permission module can assign accounts to different application scenarios. cfs-gui has four main functional modules, as follows:<br>
-Virtual resource management: volume, data partition, metadata partition, erasure code strip<br>
-Physical resource management: nodes, disks, etc<br>
-Rights management: users and roles<br>
-File management: list, upload, download<br>
+- Logical resource management: volume, data-partition, meta-partition, erasure-coding stripe, etc
+- Physical resource management: nodes, disks, etc
+- Authorization management: users and roles
+- File management: file upload, download, list, delete and other operations
 
 <img src="https://github.com/cubefs/cubefs-dashboard/blob/main/pictures/architecture.png" align=center/>
 
 # Features
-Managing multiple clusters: The Management Console is deployed independently of a cluster and can manage multiple clusters simultaneously<br>
-Flexible rights management: Console users can associate multiple roles, each role corresponds to a group of rights, each rights refers to an important button on the page
-Volume creation and authorization: It allows you to create volumes and grant read and write permissions to tenants<br>
-Resource migration: The Console supports partition, disk, and machine dimension offline (automatic migration)/migration<br>
-File management: List, upload, download<br>
+- Multi-cluster management: the dashboard can be deployed independently from the storage cluster and can manage multiple storage clusters<br>
+- Flexible authorization management: Each user can be associated with multiple roles, and each role has access permissions to a set of resources
+- Volume creation and authorization: it supports authorizing other tenants to read and write the volumes created by oneself
+- Resource migration: it supports resource decommissioning or migration at the granularity of partition, disk, or machine
+- File management: List, upload, download<br>
 
 # Compilation
 ## Requirements:
