@@ -8,7 +8,7 @@ The cfs-gui backend interacts directly with the CubeFS cluster, manages multiple
 - Logical resource management: volume, data-partition, meta-partition, erasure-coding stripe, etc
 - Physical resource management: nodes, disks, etc
 - Authorization management: users and roles
-- File management: file upload, download, list, delete and other operations
+- File management: file upload, download, list
 
 <img src="https://github.com/cubefs/cubefs-dashboard/blob/main/pictures/architecture.png" align=center/>
 
