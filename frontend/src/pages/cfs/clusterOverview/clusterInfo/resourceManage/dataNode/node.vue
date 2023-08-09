@@ -111,6 +111,9 @@
       </el-table-column>
       <el-table-column label="节点状态" prop="status" :width="90"></el-table-column>
       <el-table-column label="读写状态" prop="writable_str" :width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.status === 'Active' ? scope.row.writable_str : '------' }}</span>
+        </template>
       </el-table-column>
       <el-table-column label="更新时间" prop="report_time" sortable width="100">
         <template slot-scope="scope">
