@@ -231,7 +231,7 @@ export default {
           return [boo.signed_url]
         } else {
           return boo.map((i) => {
-            return i.signed_url
+            return i.url
           })
         }
       }

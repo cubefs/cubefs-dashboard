@@ -134,7 +134,7 @@ export function request(url, options, fileName, partIndex, max, chunkSize) {
         options.onProgress({ loaded: evt.loaded, chunkSize, fileName, partIndex, max })
       }
     })
-
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
     xhr.onreadystatechange = () => {
       const responseText = xhr.responseText
       if (xhr.readyState !== 4) {
