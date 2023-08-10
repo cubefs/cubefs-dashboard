@@ -189,7 +189,7 @@ export default {
     handleCommand(command) {
       switch (command) {
         case 'docs':
-          window.open('https://cubefs.io/zh/docs/master/maintenance/gui.html')
+          window.open('https://cubefs.io/zh/docs/master/tools/gui.html')
           break
         case 'logout':
           userLogout().then(() => {
