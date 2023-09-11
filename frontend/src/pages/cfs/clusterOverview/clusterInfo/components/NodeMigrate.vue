@@ -25,20 +25,20 @@
 <template>
   <el-dialog
     :append-to-body="true"
-    :title="`${nodeType === 1 ? '' : '元'}数据节点迁移`"
+    :title="`${nodeType === 1 ? $t('common.data') : $t('common.meta')}` + $t('resource.nodemigrate')"
     :visible.sync="dialogFormVisible"
     width="600px"
     :destroy-on-close="true"
     @closed="onClose"
   >
     <el-form ref="form" :model="formData" label-width="100px">
-      <el-form-item label="集群名称" prop="cluster_name">
+      <el-form-item :label="$t('common.cluster') + $t('common.name')" prop="cluster_name">
         <el-input v-model="formData.cluster_name" :disabled="true"></el-input>
       </el-form-item>
-      <el-form-item label="源地址" prop="src_addr">
+      <el-form-item :label="$t('resource.srcaddr')" prop="src_addr">
         <el-input v-model="formData.src_addr" :disabled="true"></el-input>
       </el-form-item>
-      <el-form-item label="目标地址" prop="target_addr" :rules="[{ required: true, message: '请选择目标地址', trigger: 'change' }]">
+      <el-form-item :label="$t('resource.dstaddr')" prop="target_addr" :rules="[{ required: true, message: this.$t('resource.selectdst'), trigger: 'change' }]">
         <el-select v-model="formData.target_addr">
           <el-option
             v-for="item in addressList"
@@ -50,8 +50,8 @@
       </el-form-item>
     </el-form>
     <template slot="footer">
-      <el-button @click="onClose">取消</el-button>
-      <el-button type="primary" @click="doMigrate">确定</el-button>
+      <el-button @click="onClose">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="doMigrate">{{ $t('common.submit') }}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -103,7 +103,7 @@ export default {
         if (valid) {
           const migrateFunc = this.nodeType === 1 ? migrateDataNode : migrateMetaNode
           await migrateFunc(this.formData)
-          this.$message.success('迁移成功')
+          this.$message.success(this.$t('resource.migratesuc'))
           this.$emit('refresh')
           this.onClose()
         }

@@ -22,22 +22,22 @@
       ><span>vid:</span><span class="mg-lf-m">{{ curVol.vid }}</span></span>
       <span
         class="mg-lf-m"
-      ><span>条带组状态:</span><span class="mg-lf-m">{{ statusMap[curVol.status] }}</span></span>
+      ><span>{{ $t('common.stripe') }}{{ $t('common.status') }}:</span><span class="mg-lf-m">{{ statusMap[curVol.status] }}</span></span>
       <span
         class="mg-lf-m"
-      ><span>健康度:</span><span class="mg-lf-m">{{ curVol.health_score === 0 ? '没有不可写的磁盘' : `有${Math.abs(curVol.health_score)}个磁盘不可写` }}</span></span>
+      ><span>{{ $t('resource.healthlevel') }}:</span><span class="mg-lf-m">{{ curVol.health_score === 0 ? $t('resource.alldiskhealth') : `${Math.abs(curVol.health_score)}` + $t('resource.diskunhealth') }}</span></span>
       <span
         class="mg-lf-m"
       ><span>code_mode:</span><span class="mg-lf-m">{{ codeMap[curVol.code_mode] }}</span></span>
       <span
         class="mg-lf-m"
-      ><span>总空间:</span><span class="mg-lf-m">{{ curVol.total | readablizeBytes }}</span></span>
+      ><span>{{ $t('common.total') }}{{ $t('common.size') }}:</span><span class="mg-lf-m">{{ curVol.total | readablizeBytes }}</span></span>
       <span
         class="mg-lf-m"
-      ><span>已使用:</span><span class="mg-lf-m">{{ curVol.used| readablizeBytes }}</span></span>
+      ><span>{{ $t('common.used') }}:</span><span class="mg-lf-m">{{ curVol.used| readablizeBytes }}</span></span>
       <span
         class="mg-lf-m"
-      ><span>空闲:</span><span class="mg-lf-m">{{ curVol.free | readablizeBytes }}</span></span>
+      ><span>{{ $t('common.free') }}:</span><span class="mg-lf-m">{{ curVol.free | readablizeBytes }}</span></span>
     </div>
     <el-tabs v-model="activeName" class="inside" @tab-click="handleClick">
       <el-tab-pane
@@ -88,12 +88,12 @@ export default {
     tabs() {
       return [
         {
-          label: '数据块',
+          label: this.$t('common.datablock'),
           name: 'dataBlock',
           component: 'DataBlock',
         },
         {
-          label: '磁盘列表',
+          label: this.$t('common.disk') + this.$t('common.list'),
           name: 'diskList',
           component: 'DiskList',
         },

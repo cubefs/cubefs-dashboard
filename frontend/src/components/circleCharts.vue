@@ -16,12 +16,12 @@
 
 <template>
   <div class="chart_warp">
-    <div class="text_title">{{ title }}</div>
+    <div class="text_title">{{ $t(title)}}</div>
     <div
       ref="echartsView"
       :class="[noData ? 'hiddCenter' : '', 'width_height100']"
     >
-      <div v-if="noData">{{ data.panel }}暂无数据</div>
+      <div v-if="noData">{{ data.panel }} {{ $t('component.nodata') }}</div>
     </div>
   </div>
 </template>
@@ -69,6 +69,9 @@ export default {
       },
       deep: true,
     },
+    '$i18n.locale'(newValue) {
+      this.init()
+    }
   },
   async mounted() {
     this.getTotal()
@@ -86,10 +89,10 @@ export default {
         tooltip: {
           trigger: 'item',
           formatter: (params) => {
-            let str = params.seriesName + '<br />'
+            let str = this.$t(params.seriesName) + '<br />'
             str +=
               params.marker +
-              params.name +
+              this.$t(params.name) +
               ': ' +
               this.valueFormat(params.value) +
               '(' +
@@ -107,10 +110,12 @@ export default {
           formatter: (name) => {
             const itemValue = this.eData.filter((el) => el.name === name)
             if (this.total === 0) {
-              return `${name}：(${this.valueFormat(itemValue[0].value)}/0%)`
+              // return i18nname + `：(${this.valueFormat(itemValue[0].value)}/0%)`
+              return `${this.$t(name)}：(${this.valueFormat(itemValue[0].value)}/0%)`
             }
             const percent = (itemValue[0].value / this.total * 100).toFixed(2)
-            return `${name}：(${this.valueFormat(itemValue[0].value)}/${percent}%)`
+            // return i18nname + `：(${this.valueFormat(itemValue[0].value)}/${percent}%)`
+              return `${this.$t(name)}：(${this.valueFormat(itemValue[0].value)}/${percent}%)`
           },
         },
         color: this.color,
@@ -126,7 +131,7 @@ export default {
         //   },
         // },
         title: {
-          text: '总量',
+          text: this.$t('common.totalnum'),
           subtext: this.valueFormat(this.total),
           left: 'center', // 对齐方式居中
           top: '40%', // 距离顶部
@@ -180,7 +185,7 @@ export default {
       echart.setOption(option, true)
       const that = this
       echart.on('click', function (params) {
-        that.$emit('showDialog', params.seriesName)
+        that.$emit('showDialog', that.$t(params.seriesName))
       })
     },
   },

@@ -17,7 +17,7 @@
 <template>
   <el-card class="">
     <el-row v-if="showWhich==='normal'" style="text-align:right;margin-bottom: 10px">
-      <a @click="changeShow('writing')">正在写入的条带组</a>
+      <a @click="changeShow('writing')">{{ $t('resource.inwritingstrip') }}</a>
       <SearchCom ref="searchCom" @set-forms="getForms" />
       <UTablePage
         ref="table"
@@ -36,29 +36,29 @@
       >
         <el-table-column
           type="index"
-          label="序号"
+          :label="$t('common.id')"
           class-name="link"
           fixed="left"
           width="80"
         >
         </el-table-column>
         <el-table-column prop="vid" label="vid" sortable="custom"></el-table-column>
-        <el-table-column prop="used" label="已使用" sortable="custom">
+        <el-table-column prop="used" :label="$t('common.used')" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.used | readablizeBytes }}
           </template>
         </el-table-column>
-        <el-table-column prop="free" label="空闲" sortable="custom">
+        <el-table-column prop="free" :label="$t('common.free')" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.free | readablizeBytes }}
           </template>
         </el-table-column>
-        <el-table-column prop="total" label="总空间" sortable="custom">
+        <el-table-column prop="total" :label="$t('common.total') + $t('common.size')" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.total | readablizeBytes }}
           </template>
         </el-table-column>
-        <el-table-column label="使用率" width="120" prop="usedRadio" sortable="custom">
+        <el-table-column :label="$t('common.usage')" width="120" prop="usedRadio" sortable="custom">
           <template slot-scope="scope">
             <!-- scope.row.size / scope.row.used -->
             <!-- <span>{{ scope.row.used | readablizeBytes }}{{ '/'+scope.row.usedRadio+'%' }}</span> -->
@@ -73,12 +73,12 @@
               ]"
             >
             </el-progress> </template></el-table-column>
-        <el-table-column prop="health_score" label="健康度" sortable="custom">
+        <el-table-column prop="health_score" :label="$t('resource.healthlevel')" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.code_mode }}
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" sortable="custom">
+        <el-table-column prop="status" :label="$t('common.status')" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.status | filterStatus }}
           </template>
@@ -90,7 +90,7 @@
         </el-table-column>
         <el-table-column
           prop="cluster"
-          label="操作"
+          :label="$t('common.action')"
           :width="150"
           align="center"
         >
@@ -102,7 +102,7 @@
                   vid: scope.row.vid,
                 },
               }"
-            >详情</router-link>
+            >{{ $t('common.detail') }}</router-link>
           </template>
         </el-table-column>
       </UTablePage>
@@ -110,12 +110,12 @@
     <el-row v-if="showWhich==='writing'">
       <WritingVol @changeShow="changeShow" :clusterId="clusterId"/>
     </el-row>
-    <el-drawer :destroy-on-close="true" :visible.sync="drawer" size="80%" :before-close="handleClose" title="条带组详情">
+    <el-drawer :destroy-on-close="true" :visible.sync="drawer" size="80%" :before-close="handleClose" :title="$t('resource.stripedetail')">
       <div v-if="$route.query.vid ||$route.query.disk_id" slot="title" class="TitleFontType">
-        条带组详情
+        {{ $t('resource.stripedetail') }}
       </div>
       <div v-if="$route.query.host" slot="title" class="TitleFontType">
-          节点详情
+        {{ $t('common.node') }}{{ $t('common.detail') }}
       </div>
       <volumnDetail v-if="$route.query.vid ||$route.query.disk_id" />
       <nodeDetail v-if="$route.query.host" />

@@ -22,7 +22,7 @@
         size="mini"
         class="back"
         @click="goBack"
-      >返 回
+      >{{ $t('button.goback') }}
       </el-button>
     </el-row>
     <el-row>

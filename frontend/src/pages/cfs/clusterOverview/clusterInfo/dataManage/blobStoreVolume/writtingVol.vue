@@ -19,7 +19,7 @@
     <div
       class="mb10 back"
       @click="change"
-    ><a>返回</a> </div>
+    ><a>{{ $t('button.goback') }}</a> </div>
     <!-- <SearchCom ref="searchCom" @set-forms="getForms" @finish="finish" /> -->
     <el-row>
       <UTablePage
@@ -36,24 +36,24 @@
         <el-table-column prop="vid" label="vid" sortable="custom"></el-table-column>
         <!-- <el-table-column prop="host_name" label="主机名" sortable="custom"></el-table-column>
         <el-table-column prop="host" label="主机" sortable="custom"> </el-table-column> -->
-        <el-table-column prop="used" label="已使用" sortable="custom">
+        <el-table-column prop="used" :label="$t('common.used')" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.used | readablizeBytes }}
           </template>
         </el-table-column>
-        <el-table-column prop="free" label="空闲" sortable="custom">
+        <el-table-column prop="free" :label="$t('common.free')" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.free | readablizeBytes }}
           </template>
         </el-table-column>
-        <el-table-column prop="total" label="总空间" sortable="custom">
+        <el-table-column prop="total" :label="$t('common.total') + $t('common.size')" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.total | readablizeBytes }}
           </template>
         </el-table-column>
-        <el-table-column prop="health_score" label="健康度" sortable="custom" width="100">
+        <el-table-column prop="health_score" :label="$t('resource.healthlevel')" sortable="custom" width="100">
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="120" sortable="custom">
+        <el-table-column prop="status" :label="$t('common.status')" width="120" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.status | filterStatus }}
           </template>
@@ -63,14 +63,14 @@
             {{ scope.row.code_mode }}
           </template>
         </el-table-column>
-        <el-table-column prop="过期时间" label="expire_time" sortable="custom">
+        <el-table-column :prop="$t('common.timeout')" label="expire_time" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.expire_time | fTime }}
           </template>
         </el-table-column>
         <el-table-column
           prop="cluster"
-          label="操作"
+          :label="$t('common.action')"
           :width="120"
           align="center"
         >
@@ -82,7 +82,7 @@
                   vid: scope.row.vid,
                 },
               }"
-            >详情</router-link>
+            >{{ $t('common.detail') }}</router-link>
           </template>
         </el-table-column>
       </UTablePage>
@@ -133,12 +133,12 @@ export default {
       activeName: 'dataBlock',
       tabs: [
         {
-          label: '数据块',
+          label: this.$t('common.datablock'),
           name: 'dataBlock',
           component: 'DataBlock',
         },
         {
-          label: '磁盘列表',
+          label: this.$t('common.disk') + this.$t('common.list'),
           name: 'diskList',
           component: 'DiskList',
         },

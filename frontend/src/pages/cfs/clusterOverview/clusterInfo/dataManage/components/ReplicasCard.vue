@@ -16,7 +16,7 @@
 
 <template>
   <div class="card">
-    <div class="card_title m-b-5">副本{{ indexMap[index] }} <span v-if="replica.IsLeader">(主)</span></div>
+    <div class="card_title m-b-5">{{ $t('common.copy') }}  {{ indexMap[index] }} <span v-if="replica.IsLeader">({{ $t('common.leader') }})</span></div>
     <el-row
       style="padding: 5px 0px"
     >
@@ -110,7 +110,7 @@ export default {
   },
   data() {
     return {
-      indexMap: ['一', '二', '三'],
+      indexMap: ['1', '2', '3'],
     }
   },
   methods: {

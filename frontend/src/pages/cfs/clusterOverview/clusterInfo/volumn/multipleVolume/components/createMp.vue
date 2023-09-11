@@ -16,7 +16,7 @@
 
 <template>
   <el-dialog
-    title="创建Mp"
+    :title="$t('common.create')+ 'Mp'"
     :visible.sync="dialogFormVisible"
     width="700px"
     @closed="clearData"
@@ -28,20 +28,20 @@
       label-width="25%"
       class="mid-block"
     >
-      <el-form-item label="卷名:" prop="volName">
+      <el-form-item :label="$t('common.volumename') + ':'" prop="volName">
         <el-input v-model="forms.name" disabled class="input"></el-input>
       </el-form-item>
-      <el-form-item label="元数据分片值:" prop="start">
+      <el-form-item :label="$t('volume.metaparsize') + ':'" prop="start">
         <el-input
           v-model.number="forms.start"
           class="input"
-          placeholder="请输入分片值"
+          :placeholder="$t('volume.inputmetaparsize')"
         ></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="doCheck">确 定</el-button>
-      <el-button type="primary" @click="close">取 消</el-button>
+      <el-button type="primary" @click="doCheck">{{ $t('button.submit') }}</el-button>
+      <el-button type="primary" @click="close">{{ $t('button.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -66,14 +66,14 @@ export default {
         start: [
           {
             required: true,
-            message: '请输入分片值',
+            message: this.$t('volume.inputmetaparsize'),
             trigger: 'blur',
           },
         ],
         name: [
           {
             required: true,
-            message: '请输入卷名称',
+            message: this.$t('volume.inputvolume'),
             trigger: 'blur',
           },
         ],
@@ -102,7 +102,7 @@ export default {
         start: +start,
         cluster_name: this.clusterName,
       })
-      this.$message.success('创建mp成功')
+      this.$message.success( this.$t('volume.mpsuc'))
       this.$emit('refresh')
       this.close()
     },

@@ -18,22 +18,22 @@
   <section class="bucket_detail">
     <el-card>
       <ModuleBucketTitle :go-back="goBack" :bucket="volName">
-        <span>所在集群：<span class="value-c">{{ clusterName }}</span></span>
+        <span>{{ $t('filemanage.whichcluster') }} ：<span class="value-c">{{ clusterName }}</span></span>
       </ModuleBucketTitle>
       <el-alert
-        title="提示"
+        :title="$t('common.tips')"
         type="info"
         show-icon>
         <div>
-          <p>文件管理操作需要先配置跨域才能放开，且跨域来源需包含访问域名，例如</p>
-          <p>来源: {{ protocol }}//{{ host }}</p>
-          <p>允许Methods: PUT,GET,POST,DELETE</p>
-          <p>允许Headers: *</p>
+          <p>{{ $t('filemanage.tips1') }}</p>
+          <p>{{ $t('filemanage.source') }}: {{ protocol }}//{{ host }}</p>
+          <p>{{ $t('filemanage.allowmethods') }}: PUT,GET,POST,DELETE</p>
+          <p>{{ $t('filemanage.allowheaders') }}: *</p>
         </div>
       </el-alert>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="跨域设置" name="cors"></el-tab-pane>
-        <el-tab-pane label="文件管理" name="file" :disabled="disabledFile"></el-tab-pane>
+        <el-tab-pane :label="$t('filemanage.corscfg')" name="cors"></el-tab-pane>
+        <el-tab-pane :label="$t('filemanage.filemg')" name="file" :disabled="disabledFile"></el-tab-pane>
       </el-tabs>
       <file v-if="activeName === 'file'"></file>
       <Cors v-if="activeName === 'cors'" @get-cors="getCors"></Cors>

@@ -30,17 +30,17 @@
       >
         <el-table-column
           type="index"
-          label="序号"
+          :label="$t('common.id')"
           class-name="link"
           fixed="left"
           width="60"
         >
         </el-table-column>
-        <el-table-column prop="host" label="主机" :width="200" sortable="custom">
+        <el-table-column prop="host" :label="$t('common.host')" :width="200" sortable="custom">
         </el-table-column>
-        <el-table-column prop="idc" label="机房" :width="100" sortable="custom"></el-table-column>
-        <el-table-column prop="rack" label="机柜" sortable="custom"></el-table-column>
-        <el-table-column prop="readonly" label="读写信息" :width="120">
+        <el-table-column prop="idc" :label="$t('common.idc')" :width="100" sortable="custom"></el-table-column>
+        <el-table-column prop="rack" :label="$t('common.rack')" sortable="custom"></el-table-column>
+        <el-table-column prop="readonly" :label="$t('common.writable')" :width="120">
           <template slot-scope="scope">
             <div class="rw h-58">
               <el-button-group size="mini">
@@ -58,20 +58,20 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="size" label="总空间" :width="90" sortable="custom">
+        <el-table-column prop="size" :label="$t('common.total') + $t('common.size')" :width="90" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.size | readablizeBytes }}
           </template></el-table-column>
-        <el-table-column prop="used" label="已使用" :width="90" sortable="custom">
+        <el-table-column prop="used" :label="$t('common.used')" :width="90" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.used | readablizeBytes }}
           </template></el-table-column>
-        <el-table-column prop="free" label="剩余" sortable="custom">
+        <el-table-column prop="free" :label="$t('common.free')" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.free | readablizeBytes }}
           </template>
         </el-table-column>
-        <el-table-column label="使用率" width="120" prop="usedRadio" sortable="custom">
+        <el-table-column :label="$t('common.usage')" width="120" prop="usedRadio" sortable="custom">
           <template slot-scope="scope">
             <!-- scope.row.size / scope.row.used -->
             <el-progress
@@ -86,25 +86,25 @@
             >
             </el-progress> </template>
         </el-table-column>
-        <el-table-column prop="badDiskCt" label="坏盘/总(数)">
+        <el-table-column prop="badDiskCt" :label="$t('resource.baddiskct')">
           <template slot-scope="scope">
             {{ `${(scope.row.badDiskIds || []).length} / ${scope.row.allNodeCt}` }}
           </template>
         </el-table-column>
-        <el-table-column label="下线中" prop="offLineNum" width="100" sortable="custom">
+        <el-table-column :label="$t('common.offline')" prop="offLineNum" width="100" sortable="custom">
           <template slot-scope="scope">
             {{ `${scope.row.offLineNum}` }}
           </template>
         </el-table-column>
         <el-table-column
           prop="cluster"
-          label="操作"
+          :label="$t('common.action')"
           :width="230"
           align="center"
           fixed="right"
         >
           <template slot-scope="scope">
-            <MoreOperate :count="2">
+            <MoreOperate :count="2" :i18n="i18n">
               <el-button
                 type="text"
                 size="mini"
@@ -115,7 +115,7 @@
                     host: scope.row.host,
                   },
                 }"
-              >详情</router-link></el-button>
+              >{{ $t('common.detail') }}</router-link></el-button>
               <el-button
                 v-auth="'BLOBSTORE_NODES_ACCESS'"
                 class="w100"
@@ -124,7 +124,7 @@
                 :disabled="computeRW(scope.row, false) === 0"
                 @click="changeRW(scope.row, false)"
               >
-                切读写</el-button>
+                {{ $t('common.rw') }}</el-button>
               <el-button
                 v-auth="'BLOBSTORE_NODES_ACCESS'"
                 class="w100"
@@ -133,7 +133,7 @@
                 :disabled="computeRW(scope.row, true) === 0"
                 @click="changeRW(scope.row, true)"
               >
-                切只读</el-button>
+                {{ $t('common.ro') }}</el-button>
               <!-- <div>
                 <el-popover
                   v-if="haveOrder(scope.row, 'NODE_DROP')"
@@ -198,12 +198,12 @@
           </template>
         </el-table-column>
       </UTablePage>
-      <el-drawer :destroy-on-close="true" :visible.sync="drawer" size="80%" :before-close="handleClose" title="条带组详情">
+      <el-drawer :destroy-on-close="true" :visible.sync="drawer" size="80%" :before-close="handleClose" :title="$t('resource.stripedetail')">
         <div v-if="$route.query.vid ||$route.query.disk_id" slot="title" class="TitleFontType">
-          条带组详情
+          {{ $t('resource.stripedetail') }}
         </div>
         <div v-if="$route.query.host" slot="title" class="TitleFontType">
-          节点详情
+          {{ $t('common.node') }}{{ $t('common.detail') }}
         </div>
         <volumnDetail v-if="$route.query.vid ||$route.query.disk_id" />
         <nodeDetail v-if="$route.query.host" />
@@ -227,6 +227,7 @@ import { readablizeBytes } from '@/utils'
 import { nodeStatusMap } from '@/pages/cfs/status.conf'
 import UTablePage from '@/components/uPageTable.vue'
 import mixin from '@/pages/cfs/clusterOverview/mixin'
+import i18n from '@/i18n'
 export default {
   components: {
     SearchCom,
@@ -266,6 +267,7 @@ export default {
       activeName: 'diskList',
       curHost: {},
       forms: {},
+      i18n,
     }
   },
   computed: {
@@ -309,11 +311,11 @@ export default {
     async offLineService(row) {
       try {
         const remark = await this.$prompt(
-          '审批成功后,会自动触发服务下线',
-          '提示',
+          this.$t('resource.autooffline'),
+          this.$t('common.notice'),
           {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+            confirmButtonText: this.$t('common.yes'),
+            cancelButtonText: this.$t('common.no'),
             inputValue: '',
             dangerouslyUseHTMLString: true,
           },
@@ -323,8 +325,8 @@ export default {
         const res = await offlineService({ host: row.host, cluster, user_id: userId, user_name: userName, host_name: row.host_name, remark: `${remark?.value}`, docking_remark: '审批通过,将下线' })
         if (res.data?.orderDetailUrl) {
           try {
-            await this.$confirm('服务下线操作申请成功, 请前往云工单查看审批详情', '提示', {
-              confirmButtonText: '查看',
+            await this.$confirm(this.$t('resource.cloudjobs'), this.$t('common.notice'), {
+              confirmButtonText: this.$t('common.view'),
               type: 'success',
             })
             window.open(res.data?.orderDetailUrl)
@@ -451,13 +453,13 @@ export default {
     async offLine(row) {
       try {
         const remark = await this.$prompt(
-          `<span>请确认是否将该节点下<span style="color: #f5222d">${
+          this.$t('resource.diskofflinetips1')+ `${
           row.disabledCt ? (row.allNodeCt - row.disabledCt) : row.allNodeCt
-          }块磁盘</span>下线? 共${row.allNodeCt}块</span>。<br>审批成功后,会自动触发磁盘下线`,
-          '提示',
+          }` + this.$t('resource.diskofflinetips2') + `${row.allNodeCt} </span>。<br/>` + this.$t('resource.autooffline'),
+          this.$t('common.notice'),
           {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+            confirmButtonText: this.$t('common.yes'),
+            cancelButtonText: this.$t('common.no'),
             inputValue: '',
             dangerouslyUseHTMLString: true,
           },
@@ -467,8 +469,8 @@ export default {
         const res = await offLineNodeList({ host: row.host, cluster, user_id: userId, user_name: userName, host_name: row.host_name, remark: `${remark?.value}`, docking_remark: '审批通过,将下线' })
         if (res.data?.orderDetailUrl) {
           try {
-            await this.$confirm('磁盘下线操作申请成功, 请前往云工单查看审批详情', '提示', {
-              confirmButtonText: '查看',
+            await this.$confirm(this.$t('resource.cloudjobs'), this.$t('common.notice'), {
+              confirmButtonText: this.$t('common.view'),
               type: 'success',
             })
             window.open(res.data?.orderDetailUrl)
@@ -476,23 +478,23 @@ export default {
             this.getData()
           }
         } else {
-          this.$message.success('下线成功')
+          this.$message.success(this.$t('common.offline') + this.$t('common.xxsuc'))
         }
         this.getData()
       } catch (e) {}
     },
     async changeRW(row, readonly) {
+      console.log(this)
       try {
         await this.$confirm(
-          `<span>请确认是否将该节点下<span style="color: #f5222d">${
-          this.computeRW(row, readonly)
-          }块磁盘</span>切换为<span style="color: #f5222d">${
-            !readonly ? ' 读写 ' : ' 只读 '
-          }</span>状态? 共${row.allNodeCt}块</span>`,
-          '提示',
+          `${this.$t('resource.rwrochgtips1')} ${this.computeRW(row, readonly)}
+          ${this.$t('resource.rwrochgtips2')}${
+            !readonly ? this.$t('common.rw') : this.$t('common.ro')
+          }${this.$t('resource.rwrochgtips3')}${row.allNodeCt}</span>`,
+          this.$t('common.notice'),
           {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+            confirmButtonText: this.$t('common.yes'),
+            cancelButtonText: this.$t('common.no'),
             type: 'warning',
             dangerouslyUseHTMLString: true,
           },
@@ -503,7 +505,7 @@ export default {
           readonly: readonly,
           cluster,
         })
-        this.$message.success('切换成功')
+        this.$message.success(this.$t('common.xxsuc'))
         this.getData()
       } catch (e) {}
     },

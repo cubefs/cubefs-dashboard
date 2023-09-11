@@ -18,17 +18,17 @@
   <el-dialog
     top="3vh"
     :append-to-body="true"
-    title="dp详情"
+    :title="'dp' + $t('common.detail')"
     :visible.sync="dialogFormVisible"
     width="1000px"
     @closed="onClose"
   >
     <el-row class="m-b">
       <el-col :span="6">ID: {{ data.PartitionID }}</el-col>
-      <el-col :span="6">副本数: {{ data.ReplicaNum }}</el-col>
+      <el-col :span="6">{{ $t('common.copies') }}: {{ data.ReplicaNum }}</el-col>
       <el-col :span="6">
         <el-row>
-          <el-col :span="4"> 卷名: </el-col>
+          <el-col :span="4"> {{ $t('common.volumename') }}: </el-col>
           <el-col :span="20" class="m-r">
             {{ data.VolName }}
           </el-col>

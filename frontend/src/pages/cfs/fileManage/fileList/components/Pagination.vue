@@ -27,7 +27,7 @@
           v-for="page in pageSizes"
           :key="page"
           :value="page"
-          :label="`${page}条/页`"
+          :label="`${page}` + $t('common.itermperpages')"
         >
         </el-option>
       </el-select>
@@ -35,13 +35,13 @@
         type="button"
         class="el-icon-d-arrow-left w20"
         :disabled="currentPage === 1"
-        title="首页"
+        :title="$t('common.homepage')"
         @click="onClick(1)"
       ></button>
       <button
         type="button"
         class="el-icon-arrow-left w20"
-        title="上一页"
+        :title="$t('common.previous')"
         :disabled="currentPage === 1"
         @click="onClick(2)"
       ></button>
@@ -50,7 +50,7 @@
       </div>
       <button
         class="el-icon-arrow-right w20"
-        title="下一页"
+        :title="$t('common.next')"
         @click="onClick(3)"
       ></button>
       <slot name="help"></slot>
@@ -113,7 +113,7 @@ export default {
         } else return
       } else if (type === 3) {
         if (!this.marker) {
-          this.$message.warning('没有更多数据了')
+          this.$message.warning(this.$t('common.nomoredata'))
           return
         }
         this.currentPage++

@@ -16,6 +16,7 @@
 
 import { Message } from 'element-ui'
 
+
 function checkValue(arr, key, value) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i][key] === value) {
@@ -55,43 +56,45 @@ export function authMixin (Vue, { router, store }) {
   })
 }
 
-export const codeList = [
-  {
-    title: '集群管理',
-    children: ['CLUSTER_CREATE', 'CLUSTER_UPDATE', 'CFS_USERS_LIST', 'CFS_USERS_CREATE'],
-  },
-  {
-    title: '卷管理',
-    children: ['CFS_VOLS_CREATE', 'CFS_VOLS_UPDATE', 'CFS_VOLS_EXPAND', 'CFS_VOLS_SHRINK', 'CFS_USERS_POLICIES'],
-  },
-  {
-    title: '多副本节点',
-    children: ['CFS_DATANODE_DECOMMISSION', 'CFS_DATANODE_MIGRATE', 'CFS_DISKS_DECOMMISSION', 'CFS_DATAPARTITION_DECOMMISSION'],
-  },
-  {
-    title: '纠删码节点',
-    children: ['BLOBSTORE_NODES_ACCESS', 'BLOBSTORE_DISKS_ACCESS', 'BLOBSTORE_DISKS_SET', 'BLOBSTORE_DISKS_PROBE'],
-  },
-  {
-    title: '元数据节点',
-    children: ['CFS_METANODE_DECOMMISSION', 'CFS_METANODE_MIGRATE', 'CFS_METAPARTITION_DECOMMISSION'],
-  },
-  {
-    title: '文件管理',
-    children: ['CFS_S3_DIRS_CREATE', 'CFS_S3_FILES_DOWNLOAD_SIGNEDURL', 'CFS_S3_FILES_UPLOAD_SIGNEDURL'],
-  },
-  {
-    title: '集群事件',
-    children: ['BLOBSTORE_CONFIG_SET'],
-  },
-  {
-    title: '用户管理',
-    children: ['AUTH_USER_UPDATE', 'AUTH_USER_DELETE', 'AUTH_USER_PASSWORD_UPDATE'],
-  },
-  {
-    title: '角色管理',
-    children: ['AUTH_ROLE_CREATE', 'AUTH_ROLE_UPDATE', 'AUTH_ROLE_DELETE'],
-  },
-]
+export function getCodeList(that) {
+  return [
+    {
+      title: that.$t('auth.cluster'),
+      children: ['CLUSTER_CREATE', 'CLUSTER_UPDATE', 'CFS_USERS_LIST', 'CFS_USERS_CREATE'],
+    },
+    {
+      title: that.$t('auth.volume'),
+      children: ['CFS_VOLS_CREATE', 'CFS_VOLS_UPDATE', 'CFS_VOLS_EXPAND', 'CFS_VOLS_SHRINK', 'CFS_USERS_POLICIES'],
+    },
+    {
+      title: that.$t('auth.multi_replicas'),
+      children: ['CFS_DATANODE_DECOMMISSION', 'CFS_DATANODE_MIGRATE', 'CFS_DISKS_DECOMMISSION', 'CFS_DATAPARTITION_DECOMMISSION'],
+    },
+    {
+      title: that.$t('auth.ec'),
+      children: ['BLOBSTORE_NODES_ACCESS', 'BLOBSTORE_DISKS_ACCESS', 'BLOBSTORE_DISKS_SET', 'BLOBSTORE_DISKS_PROBE'],
+    },
+    {
+      title: that.$t('auth.meta'),
+      children: ['CFS_METANODE_DECOMMISSION', 'CFS_METANODE_MIGRATE', 'CFS_METAPARTITION_DECOMMISSION'],
+    },
+    {
+      title: that.$t('auth.file'),
+      children: ['CFS_S3_DIRS_CREATE', 'CFS_S3_FILES_DOWNLOAD_SIGNEDURL', 'CFS_S3_FILES_UPLOAD_SIGNEDURL'],
+    },
+    {
+      title: that.$t('auth.clusterevents'),
+      children: ['BLOBSTORE_CONFIG_SET'],
+    },
+    {
+      title: that.$t('auth.user'),
+      children: ['AUTH_USER_UPDATE', 'AUTH_USER_DELETE', 'AUTH_USER_PASSWORD_UPDATE'],
+    },
+    {
+      title: that.$t('auth.role'),
+      children: ['AUTH_ROLE_CREATE', 'AUTH_ROLE_UPDATE', 'AUTH_ROLE_DELETE'],
+    },
+  ]
+}
 
 export const backendAuthids = [3, 4, 7, 11, 13, 14, 15, 16, 17, 18, 19, 24, 25, 26, 31, 32, 36, 41, 42, 43, 44, 48, 49, 53, 54, 58, 59, 63, 64, 66, 67, 70, 71]

@@ -22,26 +22,26 @@
         class="fl-rt"
         type="primary"
         @click.stop="userDialogVisible = true"
-      >租户管理</el-button>
+      >{{ $t('common.tenant') }}{{ $t('common.management') }}</el-button>
       <div class="detail_title label">
         <div>
-          <span><span>集群名称:</span> <span class="mg-lf-m fontType">{{ clusterInfo.name }}</span></span>
+          <span><span>{{ $t('common.cluster') }}{{ $t('common.name') }}:</span> <span class="mg-lf-m fontType">{{ clusterInfo.name }}</span></span>
           <span
             class="mg-lf-m"
-          ><span>总容量:</span><span class="mg-lf-m fontType">{{ clusterInfo.data_total }}</span></span>
+          ><span>{{ $t('common.total') }}{{ $t('common.size') }}:</span><span class="mg-lf-m fontType">{{ clusterInfo.data_total }}</span></span>
           <span
             class="mg-lf-m"
-          ><span>总文件数:</span><span class="mg-lf-m fontType">{{ dentry_count }}</span></span>
+          ><span>{{ $t('common.total') }}{{ $t('common.file') }}:</span><span class="mg-lf-m fontType">{{ dentry_count }}</span></span>
           <span
             class="mg-lf-m"
-          ><span>总卷数:</span><span class="mg-lf-m fontType">{{ volTotal }}</span></span>
+          ><span>{{ $t('common.total') }}{{ $t('common.volume') }}:</span><span class="mg-lf-m fontType">{{ volTotal }}</span></span>
           <span
             class="mg-lf-m"
           ><span>cli:</span> <span class="mg-lf-m fontType">{{ clusterInfo.cli }}</span></span>
         </div>
         <div class="m-t-5">
           <span>
-            <span>管理服务地址:</span>
+            <span>{{ $t('clusterinfo.masteraddr') }}:</span>
             <span
               v-for="item in clusterInfo.master_addr"
               :key="item"
@@ -49,12 +49,12 @@
               :class="{
                 leader_address: item === clusterInfo.leader_addr
               }"
-            >{{ item }}{{ item === clusterInfo.leader_addr ? '(主)' : '(从)' }}</span>
+            >{{ item }}{{ item === clusterInfo.leader_addr ? '(' + $t('common.leader')+ ')' : '(' + $t('common.follower') + ')' }}</span>
           </span>
         </div>
         <el-dialog
           top="10vh"
-          title="租户列表"
+          :title="$t('common.tenant') + $t('common.list')"
           :visible.sync="userDialogVisible"
         >
           <UserManage />
@@ -62,7 +62,7 @@
       </div>
       <el-collapse v-model="collapseName">
         <el-collapse-item name="1">
-          <span slot="title" class="collapse-title">图形看板</span>
+          <span slot="title" class="collapse-title">{{ $t('common.dashboard') }}</span>
           <GraphicsBoard
             :cluster-info="clusterInfo"
           />
@@ -89,17 +89,17 @@ export default {
       userDialogVisible: false,
       tabs: [
         {
-          label: '卷管理',
+          label: this.$t('common.volume'),
           name: 'volumn',
           component: 'Volumn',
         },
         {
-          label: '数据管理',
+          label: this.$t('common.data'),
           name: 'dataManage',
           component: 'DataManage',
         },
         {
-          label: '元数据管理',
+          label: this.$t('common.meta'),
           name: 'metaDataManage',
           component: 'MetaDataManage',
         },

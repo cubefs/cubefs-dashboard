@@ -26,25 +26,25 @@
             size="medium"
             plain
             @click="handleAdd"
-          >上传文件</el-button>
+          >{{ $t('common.upload') }}</el-button>
           <el-button
             icon="el-icon-refresh"
             size="medium"
             plain
             @click="handleUpdate"
-          >刷新</el-button>
+          >{{ $t('button.refresh') }}</el-button>
           <el-button
             v-auth="'CFS_S3_DIRS_CREATE'"
             type="warning"
             size="medium"
             @click="handleAddFolder"
-          >新建文件夹</el-button>
+          >{{ $t('filemanage.createfolder') }}</el-button>
         </div>
         <div class="flex">
           <div @keyup="searchFile">
             <el-input
               v-model="params.prefix"
-              placeholder="请输入搜索前缀，只能搜索当前路径下的文件"
+              :placeholder="$t('filemanage.searchtips')"
               prefix-icon="el-icon-search"
               size="medium"
               clearable
@@ -55,7 +55,7 @@
       </div>
       <div class="marginB8 flex justify-content-between font14 color3">
         <div>
-          <span>当前路径：</span>
+          <span>{{ $t('common.curpath') }} ： </span>
           <span class="margin_r4">{{ folderName ? folderName : '' }}</span>
           <el-button
             icon="el-icon-back"
@@ -63,12 +63,12 @@
             round
             plain
             @click="handleBack"
-          >返回上一级</el-button>
+          > {{ $t('common.goback') }}</el-button>
         </div>
       </div>
 
       <el-table ref="fileTable" :data="tableData" size="medium">
-        <el-table-column prop="key" label="文件名" width="200">
+        <el-table-column prop="key" :label="$t('common.filename')" width="200">
           <template slot-scope="scope">
             <div>
               <span
@@ -88,17 +88,17 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="mime_type" label="文件类型">
+        <el-table-column prop="mime_type" :label="$t('common.filetype')">
           <template slot-scope="scope">
             <div>
               <span
                 v-if="scope.row.key.charAt(scope.row.key.length - 1) === '/'"
-              >文件夹</span>
+              >{{ $t('common.folder') }}</span>
               <span v-else>{{ scope.row.mime_type }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="file_size" label="文件大小">
+        <el-table-column prop="file_size" :label="$t('common.filesize')">
           <template slot-scope="scope">
             <div>
               <span
@@ -108,12 +108,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="put_time" label="文件上传时间">
+        <el-table-column prop="put_time" :label="$t('filemanage.puttime')">
           <template slot-scope="scope">{{
             renderTime(scope.row.put_time)
           }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="260">
+        <el-table-column :label="$t('common.action')" width="260">
           <template slot-scope="scope">
             <div v-if="scope.row.key.charAt(scope.row.key.length - 1) === '/'">
             </div>
@@ -123,7 +123,7 @@
                 size="medium"
                 type="text"
                 @click="handleDownload(scope.row)"
-              >下载</el-button>
+              >{{ $t('common.download') }}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -272,7 +272,7 @@ export default {
       folders.forEach((i) => {
         fileList.push({
           key: i,
-          mime_type: '文件夹',
+          mime_type: this.$t('common.folder'),
           isDir: true,
           type: 0,
         })
@@ -360,9 +360,9 @@ export default {
       this.$refs.pagination.onClick(3)
     },
     loadTitleFun() {
-      if (this.iconType === 'el-icon-sort-down') return '点击加载'
-      if (this.iconType === 'el-icon-loading') return '加载中'
-      if (this.iconType === 'el-icon-sort-up') return '没有更多数据了'
+      if (this.iconType === 'el-icon-sort-down') return this.$t('common.c2load')
+      if (this.iconType === 'el-icon-loading') return this.$t('common.loading')
+      if (this.iconType === 'el-icon-sort-up') return this.$t('common.nomoredata')
     },
     readablizeUnit(value) {
       return readablizeUnit(value)
@@ -391,7 +391,7 @@ export default {
         key: key,
         mimeType,
         putTime: this.renderTime(putTime),
-        type: type === 0 ? '标准存储' : '显示低频存储',
+        type: type === 0 ? this.$t('filemanage.standard') : this.$t('filemanage.infrqac'),
         download_url: row.download_url,
         hash,
       }

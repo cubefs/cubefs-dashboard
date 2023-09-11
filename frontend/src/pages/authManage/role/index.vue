@@ -17,10 +17,10 @@
 <template>
   <el-card>
     <div class="bar">
-      <el-input v-model="role_name" prefix-icon="el-icon-search" placeholder="请输入角色名" style="width: 240px" clearable />
+      <el-input v-model="role_name" prefix-icon="el-icon-search" :placeholder="$t('rolemgt.inputname')" style="width: 240px" clearable />
       <div>
-        <el-button v-auth="'AUTH_ROLE_DELETE'" type="text" icon="el-icon-delete" style="color: #ed4014">删除</el-button>
-        <el-button v-auth="'AUTH_ROLE_CREATE'" type="primary" icon="el-icon-plus" @click="addRole">添加角色</el-button>
+        <el-button v-auth="'AUTH_ROLE_DELETE'" type="text" icon="el-icon-delete" style="color: #ed4014">{{ $t('common.delete') }}</el-button>
+        <el-button v-auth="'AUTH_ROLE_CREATE'" type="primary" icon="el-icon-plus" @click="addRole">{{ $t('common.add') + " " + $t('common.role') }}</el-button>
       </div>
     </div>
     <o-page-table
@@ -43,7 +43,6 @@
 
 <script>
 import RoleDialog from './roleDialog.vue'
-import lang from '@/i18n/lang/zh'
 export default {
   components: {
     RoleDialog,
@@ -69,32 +68,32 @@ export default {
           width: 120,
         },
         {
-          title: '角色名称',
+          title: this.$t('common.role') + " " + this.$t('common.name'),
           key: 'role_name',
           width: 200,
         },
         {
-          title: '权限',
+          title: this.$t('common.privilege'),
           key: 'permissions',
           render: (h, { row }) => {
             return <div>
               {
                 row.permissions.map((item, index) => {
-                  return <span>{ this.$t(item.auth_code) }{ index < row.permissions.length - 1 ? '、' : '' }</span>
+                  return <span>{ this.$t('privileges.' + item.auth_code) }{ index < row.permissions.length - 1 ? '、' : '' }</span>
                 })
               }
             </div>
           },
         },
         {
-          title: '操作',
+          title: this.$t('common.action'),
           key: '',
           align: 'center',
           width: 200,
           render: (h, { row }) => {
             return <div>
-              <el-button v-auth="AUTH_ROLE_UPDATE" type='text' onClick={() => this.editRole(row)}>编辑</el-button>
-              <el-button v-auth="AUTH_ROLE_DELETE" type='text' style={ [1, 2, 3].includes(row.id) ? {} : { color: '#ed4014' } } disabled={[1, 2, 3].includes(row.id)} onClick={() => this.deleteRole(row)}>删除</el-button>
+              <el-button v-auth="AUTH_ROLE_UPDATE" type='text' onClick={() => this.editRole(row)}>{ this.$t('common.edit') }</el-button>
+              <el-button v-auth="AUTH_ROLE_DELETE" type='text' style={ [1, 2, 3].includes(row.id) ? {} : { color: '#ed4014' } } disabled={[1, 2, 3].includes(row.id)} onClick={() => this.deleteRole(row)}>{ this.$t('common.delete') }</el-button>
             </div>
           },
         },
@@ -103,7 +102,7 @@ export default {
   },
   methods: {
     afterSendHook(data) {
-      const codeList = Object.keys(lang)
+      const codeList = Object.keys(this.$i18n.messages[this.$i18n.locale].privileges)
       data.forEach(item => {
         item.origin_permissions = item.permissions
         item.permissions = item.permissions.filter(_item => _item.is_check).filter(_item => codeList.includes(_item.auth_code))

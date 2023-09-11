@@ -24,19 +24,19 @@
     @closed="onClose"
   >
     <div slot="title" style="display: flex;">
-      <div class="dialog-title">dp详情</div>
-      <el-tooltip effect="dark" content="导出Excel" placement="right">
+      <div class="dialog-title">dp{{ $t('common.detail') }}</div>
+      <el-tooltip effect="dark" :content="$t('button.export') + 'Excel'" placement="right">
         <i class="el-icon-download icon" @click="onExportClick"></i>
       </el-tooltip>
     </div>
     <el-row class="m-b info-text">
       <el-col :span="2">ID: {{ data.PartitionID }}</el-col>
-      <el-col :span="2">副本数: {{ data.ReplicaNum }}</el-col>
-      <el-col :span="4">卷名: {{ data.VolName }}</el-col>
-      <el-col :span="4">状态: {{ data.Status }}</el-col>
-      <el-col :span="4">Peers是否匹配:
+      <el-col :span="2">{{ $t('common.copies') }}: {{ data.ReplicaNum }}</el-col>
+      <el-col :span="4"> {{ $t('common.volumename') }}: {{ data.VolName }}</el-col>
+      <el-col :span="4">{{ $t('common.status') }}: {{ data.Status }}</el-col>
+      <el-col :span="4">  Peers{{ $t('common.matched') }}:
         <el-tooltip :disabled="comparePeers()" effect="light" content="" placement="bottom">
-          <span>{{ comparePeers() ? '是' : '否' }}</span>
+          <span>{{ comparePeers() ? $t('common.yes') : $t('common.no') }}</span>
           <div slot="content">
             <el-table
               :data="data.Peers"

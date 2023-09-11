@@ -32,7 +32,7 @@
         multiple
         list-type="picture"
       >
-        <el-button size="small" type="primary">点击上传</el-button>
+        <el-button size="small" type="primary">{{ $t('button.upload') }}</el-button>
       </el-upload>
       <ul class="file_list_wrap">
         <li v-for="(i, index) in fileList" :key="index" class="file_list">
@@ -113,7 +113,7 @@ export default {
       this.$emit('reload')
     },
     openUploadView(id, prefix) {
-      this.reloadTitle = '上传文件至 ' + id
+      this.reloadTitle = this.$t('filemanage.upaddr') + id
       this.prefix = prefix
       this.dialogVisible = true
       that = this
@@ -180,7 +180,7 @@ export default {
           size: param.file.size,
         })
       } else {
-        that.$message.warning('不能重复上传')
+        that.$message.warning(this.$t('filemanage.norepeatedlyup'))
         return
       }
       putFile(newParam, options)
@@ -254,7 +254,7 @@ export default {
       if (this.abortFun.length) {
         this.abortFun.forEach(({ xhr, reject }) => {
           if (xhr) {
-            reject && reject('手动取消')
+            reject && reject(this.$t('filemanage.cancelmanually'))
             xhr.abort()
           }
         })

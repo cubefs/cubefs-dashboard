@@ -30,29 +30,29 @@
         style="width: 240px; margin-top: 45px;"
       >
         <div class="label">
-          账号
-          <el-tooltip class="item" effect="dark" content="只能包含数字、大写字母、小写字母、下划线" placement="right">
+          {{ $t('common.account') }}
+          <el-tooltip class="item" effect="dark" :content="$t('usermgt.accountrule')" placement="right">
             <i class="el-icon-question"></i>
           </el-tooltip>
         </div>
         <el-form-item prop="user_name">
-          <el-input v-model="loginForm.user_name" placeholder="请输入账号" />
+          <el-input v-model="loginForm.user_name" :placeholder="$t('usermgt.inputaccount')" />
         </el-form-item>
         <div class="label">
-          密码
+          {{ $t('common.passwd') }}
           <el-tooltip class="item" effect="dark" placement="right">
-            <div slot="content">密码长度大于等于8小于等于16<br />密码只能包含数字、大写字母、小写字母、特殊字符（~!@#$%^&*_.?），且至少两种类型以上</div>
+            <div slot="content">{{ $t('usermgt.passwdlen') }}<br />{{ $t('usermgt.passwdrule') }}</div>
             <i class="el-icon-question"></i>
           </el-tooltip>
         </div>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" />
+          <el-input v-model="loginForm.password" type="password" :placeholder="$t('usermgt.inputpasswd')" />
         </el-form-item>
       </el-form>
       <div class="btn-group">
-        <div class="signup-btn" @click="goToSignup">注册</div>
-        <div class="signup-btn password-btn" @click="goToPassword">修改密码</div>
-        <el-button v-loading="loading" class="login-btn" :class="{ active: canLogin }" @click="login">登录</el-button>
+        <div class="signup-btn" @click="goToSignup">{{ $t('common.signup') }}</div>
+        <div class="signup-btn password-btn" @click="goToPassword">{{ $t('common.changepasswd') }}</div>
+        <el-button v-loading="loading" class="login-btn" :class="{ active: canLogin }" @click="login">{{ $t('button.signin') }}</el-button>
       </div>
     </div>
     <div v-if="isSignup" class="signup">
@@ -66,58 +66,58 @@
         style="width: 240px; margin-top: 45px;"
       >
         <div class="label">
-          账号
-          <el-tooltip class="item" effect="dark" content="只能包含数字、大写字母、小写字母、下划线" placement="right">
+          {{ $t('common.account') }}
+          <el-tooltip class="item" effect="dark" :content="$t('usermgt.accountrule')" placement="right">
             <i class="el-icon-question"></i>
           </el-tooltip>
         </div>
         <el-form-item prop="user_name">
-          <el-input v-model="signupForm.user_name" autocomplete="off" placeholder="请输入账号" />
+          <el-input v-model="signupForm.user_name" autocomplete="off" placeholder="$t('usermgt.inputaccount')" />
         </el-form-item>
         <div v-if="!isPassword">
           <div class="label">
-            密码
+            {{ $t('common.passwd') }}
             <el-tooltip class="item" effect="dark" placement="right">
-              <div slot="content">密码长度大于等于8小于等于16<br />密码只能包含数字、大写字母、小写字母、特殊字符（~!@#$%^&*_.?），且至少两种类型以上</div>
+              <div slot="content">{{ $t('usermgt.passwdlen') }}<br />{{ $t('usermgt.passwdrule') }}</div>
               <i class="el-icon-question"></i>
             </el-tooltip>
           </div>
           <el-form-item prop="password">
-            <el-input v-model="signupForm.password" autocomplete="new-password" type="password" placeholder="请输入密码" />
+            <el-input v-model="signupForm.password" autocomplete="new-password" type="password" :placeholder="$t('usermgt.inputpasswd')" />
           </el-form-item>
-          <div class="label">手机</div>
+          <div class="label">{{ $t('common.phone') }}</div>
           <el-form-item prop="phone">
-            <el-input v-model="signupForm.phone" placeholder="请输入手机" />
+            <el-input v-model="signupForm.phone" :placeholder="$t('usermgt.inputphone')" />
           </el-form-item>
-          <div class="label">邮箱</div>
+          <div class="label">{{ $t('common.email') }}</div>
           <el-form-item prop="email">
-            <el-input v-model="signupForm.email" placeholder="请输入邮箱" />
+            <el-input v-model="signupForm.email" :placeholder="$t('usermgt.inputemail')" />
           </el-form-item>
         </div>
         <div v-else>
           <div class="label">
-            旧密码
+            {{ $t('common.old') }}{{ $('common.passwd') }}
             <el-tooltip class="item" effect="dark" placement="right">
-              <div slot="content">密码长度大于等于8小于等于16<br />密码只能包含数字、大写字母、小写字母、特殊字符（~!@#$%^&*_.?），且至少两种类型以上</div>
+              <div slot="content">{{ $t('usermgt.passwdlen') }}<br />{{ $t('usermgt.passwdrule') }}</div>
               <i class="el-icon-question"></i>
             </el-tooltip>
           </div>
           <el-form-item prop="old_password">
-            <el-input v-model="signupForm.old_password" type="password" placeholder="请输入旧密码" />
+            <el-input v-model="signupForm.old_password" type="password" :placeholder="$t('usermgt.inputoldpasswd')" />
           </el-form-item>
           <div class="label">
-            新密码
+            {{ $t('common.new') }}{{ $('common.passwd') }}
             <el-tooltip class="item" effect="dark" placement="right">
-              <div slot="content">密码长度大于等于8小于等于16<br />密码只能包含数字、大写字母、小写字母、特殊字符（~!@#$%^&*_.?），且至少两种类型以上</div>
+              <div slot="content">{{ $t('usermgt.passwdlen') }}<br />{{ $t('usermgt.passwdrule') }}</div>
               <i class="el-icon-question"></i>
             </el-tooltip>
           </div>
           <el-form-item prop="new_password">
-            <el-input v-model="signupForm.new_password" autocomplete="new-password" type="password" placeholder="请输入新密码" />
+            <el-input v-model="signupForm.new_password" autocomplete="new-password" type="password" :placeholder="$t('usermgt.inputnewpasswd')" />
           </el-form-item>
         </div>
       </el-form>
-      <el-button v-loading="signupLoading" class="signup-btn-big" :class="{ active: canSignup }" @click="signup">{{ isPassword ? '修改密码' : '注册' }}</el-button>
+      <el-button v-loading="signupLoading" class="signup-btn-big" :class="{ active: canSignup }" @click="signup">{{ isPassword ? $t('common.changepasswd') : $t('common.signup') }}</el-button>
     </div>
     <div class="copyright">© 2023 The CubeFS Authors</div>
   </div>
@@ -139,14 +139,14 @@ export default {
       if (this.checkUser(value)) {
         cb()
       } else {
-        cb(new Error('账号格式错误！请重新输入'))
+        cb(new Error(this.$t('usermgt.illegalaccount')))
       }
     }
     const validatePassword = (rule, value, cb) => {
       if (this.checkPassword(value)) {
         cb()
       } else {
-        cb(new Error('密码格式错误！请重新输入'))
+        cb(new Error(this.$t('usermgt.illegalpasswd')))
       }
     }
     return {
@@ -171,8 +171,8 @@ export default {
       signupRules: {
         user_name: [{ validator: validateUser, trigger: 'blur' }],
         password: [{ validator: validatePassword, trigger: 'blur' }],
-        phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+        phone: [{ required: true, message: this.$t('usermgt.inputphone'), trigger: 'blur' }],
+        email: [{ required: true, message: this.$t('usermgt.inputemail'), trigger: 'blur' }],
         old_password: [{ validator: validatePassword, trigger: 'blur' }],
         new_password: [
           { validator: validatePassword, trigger: 'blur' },
@@ -231,7 +231,7 @@ export default {
       }
       this.loading = true
       userLogin(this.loginForm).then(async() => {
-        this.$message.success('登录成功')
+        this.$message.success(this.$t('common.login') + this.$t('common.xxsuc'))
         localStorage.setItem('userInfo', JSON.stringify({ user_name: this.loginForm.user_name }))
         await this.$store.dispatch('moduleUser/setAuth')
         this.$router.push('/')
@@ -249,7 +249,7 @@ export default {
         // eslint-disable-next-line camelcase
         const { old_password, new_password, ...params } = this.signupForm
         userCreate(params).then(() => {
-          this.$message.success('注册成功')
+          this.$message.success(this.$t('common.signup') + this.$t('common.xxsuc'))
           this.isSignup = false
         }).finally(() => {
           this.signupLoading = false
@@ -258,7 +258,7 @@ export default {
         // eslint-disable-next-line camelcase
         const { old_password, new_password, user_name } = this.signupForm
         selfPasswordUpdate({ old_password, new_password, user_name }).then(() => {
-          this.$message.success('修改密码成功')
+          this.$message.success(this.$t('common.change') + this.$t('common.passwd') + this.$t('common.xxsuc'))
           this.isSignup = false
         }).finally(() => {
           this.signupLoading = false
@@ -338,7 +338,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 240px;
+  width: 300px;
 }
 .signup-btn {
   margin-top: 10px;

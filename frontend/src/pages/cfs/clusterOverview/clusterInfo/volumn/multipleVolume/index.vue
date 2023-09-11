@@ -27,7 +27,7 @@
       <div class="search">
         <el-input
           v-model.trim="inputParams"
-          placeholder="请输入卷名"
+          :placeholder="$t('volume.inputvolume')"
           clearable
           class="input"
         ></el-input>
@@ -36,41 +36,41 @@
           class=""
           style="margin-left: 10px;"
           @click="onSearchClick"
-        >搜 索</el-button>
+        >{{ $t('button.search') }}</el-button>
         <el-button
           icon="el-icon-circle-plus"
           type="primary"
           @click.stop="download"
-        >导出列表</el-button>
+        >{{ $t('button.export') }}</el-button>
         <el-button
           v-auth="'CFS_VOLS_CREATE'"
           icon="el-icon-circle-plus"
           type="primary"
           @click.stop="createVol"
-        >创建卷</el-button>
+        >{{ $t('common.create') }}{{ $t('common.volume') }}</el-button>
       </div>
     </el-row>
     <u-page-table :data="dataList" :page-size="page.per_page">
-      <el-table-column label="序号" type="index" :width="80"></el-table-column>
-      <el-table-column label="卷名" prop="name" sortable>
+      <el-table-column :label="$t('common.id')" type="index" :width="80"></el-table-column>
+      <el-table-column :label="$t('common.volume')" prop="name" sortable>
         <template slot-scope="scope">
           <a @click="showDrawer(scope.row)">{{ scope.row.name }}</a>
         </template>
       </el-table-column>
-      <el-table-column label="卷类型" prop="vol_type">
+      <el-table-column :label="$t('common.voltype')" prop="vol_type">
         <template slot-scope="scope">
-          {{ scope.row.vol_type | formatVolType }}
+          {{ scope.row.vol_type | formatVolType(that) }}
         </template>
       </el-table-column>
       <el-table-column
-        label="数据副本数"
+        :label="$t('common.copies')"
         prop="dp_replica_num"
         :width="100"
       ></el-table-column>
-      <el-table-column label="owner租户" prop="owner" :width="120"></el-table-column>
-      <el-table-column label="状态" prop="status" :width="80"></el-table-column>
+      <el-table-column :label="$t('filemanage.tenant')" prop="owner" :width="120"></el-table-column>
+      <el-table-column :label="$t('common.status')" prop="status" :width="80"></el-table-column>
       <el-table-column
-        label="总容量"
+        :label="$t('common.total') + $t('common.size')"
         prop="total_size"
         sortable
         :width="90"
@@ -81,14 +81,14 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="已使用"
+        :label="$t('common.used')"
         prop="used_size"
         sortable
         :width="90"
         :sort-method="sortMethodUsed"
       ></el-table-column>
       <el-table-column
-        label="使用率"
+        :label="$t('common.usage')"
         prop="usage_ratio"
         sortable
         :sort-method="sortMethodUsedRatio"
@@ -110,41 +110,42 @@
           >
           </el-progress> </template>
       </el-table-column>
-      <el-table-column label="MP数" prop="mp_cnt" sortable :width="80">
+      <el-table-column label="MP" prop="mp_cnt" sortable :width="80">
         <template slot-scope="scope">
           <a @click="showDrawer(scope.row, 'metaPartition')">{{ scope.row.mp_cnt }}</a>
 
         </template>
       </el-table-column>
-      <el-table-column label="DP数" prop="dp_cnt" sortable :width="80">
+      <el-table-column label="DP" prop="dp_cnt" sortable :width="80">
         <template slot-scope="scope">
           <a @click="showDrawer(scope.row, 'partition')">{{ scope.row.dp_cnt }}</a>
         </template>
       </el-table-column>
       <el-table-column
-        label="inode数"
+        label="inode"
         prop="inode_count"
         sortable
         width="100"
       ></el-table-column>
       <el-table-column
-        label="dentry数"
+        label="dentry"
         prop="dentry_count"
         sortable
         width="110"
       ></el-table-column>
       <el-table-column
-        label="创建时间"
+        :label="$t('common.createtime')"
         prop="create_time"
         sortable
         width="100"
       ></el-table-column>
-      <el-table-column label="业务" prop="business"></el-table-column>
-      <el-table-column label="操作" :width="80">
+      <el-table-column :label="$t('common.business')" prop="business"></el-table-column>
+      <el-table-column :label="$t('common.action')" :width="80">
         <template slot-scope="scope">
           <MoreOPerate
             :count="1"
-            title="操作"
+            title="common.action"
+            :i18n="i18n"
           >
             <el-button
               v-auth="'CFS_VOLS_EXPAND'"
@@ -152,21 +153,21 @@
               size="medium"
               type="text"
               @click="handleExpansion(scope.row, 'expansion')"
-            >扩容</el-button>
+            >{{ $t('common.scaleup') }}</el-button>
             <el-button
               v-auth="'CFS_VOLS_SHRINK'"
               class="btn"
               size="medium"
               type="text"
               @click="handleExpansion(scope.row, 'shrink')"
-            >缩容</el-button>
+            >{{ $t('common.scaledown') }}</el-button>
             <el-button
               v-auth="'CFS_USERS_POLICIES'"
               class="btn"
               size="medium"
               type="text"
               @click="handleAuth(scope.row)"
-            >授权</el-button>
+            >{{ $t('common.permissions') }}</el-button>
           </MoreOPerate>
         </template>
       </el-table-column>
@@ -179,40 +180,40 @@
     <update-vol ref="updateVol" @refresh="refresh"></update-vol>
     <el-drawer :destroy-on-close="true" :visible.sync="drawer" size="1000px">
       <div slot="title" class="fontType">
-        卷详情
+        {{ $t('common.volume') }}{{ $t('common.detail') }}
       </div>
       <div class="fontTypeSpan">
         <span class="mg-lf-m">
-          <span>卷名:</span>
+          <span>{{ $t('common.volumename') }}:</span>
           <span class="mg-lf-m">{{ curVol.name }}</span>
         </span>
         <span class="mg-lf-m">
-          <span>卷状态:</span>
+          <span>{{ $t('common.volume') }}{{ $t('common.status') }}:</span>
           <span class="mg-lf-m">{{ curVol.status }}</span>
         </span>
         <span
           class="mg-lf-m"
-        ><span>业务:</span><span class="mg-lf-m">{{ curVol.business }}</span></span>
+        ><span>{{ $t('common.business') }}:</span><span class="mg-lf-m">{{ curVol.business }}</span></span>
         <span
           class="mg-lf-m"
-        ><span>总空间:</span><span class="mg-lf-m">{{ curVol.total_size | renderSize }}</span></span>
+        ><span>{{ $t('common.total') }}{{ $t('common.size') }}:</span><span class="mg-lf-m">{{ curVol.total_size | renderSize }}</span></span>
         <span
           class="mg-lf-m"
-        ><span>已使用:</span><span class="mg-lf-m">{{ curVol.used_size }}</span></span>
+        ><span>{{ $t('common.used') }}:</span><span class="mg-lf-m">{{ curVol.used_size }}</span></span>
         <span
           class="mg-lf-m"
-        ><span>使用率:</span><span class="mg-lf-m">{{ curVol.usage_ratio }}</span></span>
+        ><span>{{ $t('common.usage') }}:</span><span class="mg-lf-m">{{ curVol.usage_ratio }}</span></span>
         <el-row v-if="curVol.vol_type === 1">
           <span class="mg-lf-m">
-            <span>低频卷cache容量大小:</span>
+            <span>{{ $t('volume.infreqcachesize') }}:</span>
             <span class="mg-lf-m">{{ volDetail.CacheCapacity }}</span>
           </span>
           <span class="mg-lf-m">
-            <span>低频卷cacheThreshold:</span>
+            <span>{{ $t('volume.infreqcachethreshold') }}:</span>
             <span class="mg-lf-m">{{ volDetail.CacheThreshold }}</span>
           </span>
           <span class="mg-lf-m">
-            <span>低频卷cache的淘汰时间:</span>
+            <span>{{ $t('volume.infreqcachetimeout') }}:</span>
             <span class="mg-lf-m">{{ volDetail.CacheTtl }}</span>
           </span>
         </el-row>
@@ -278,13 +279,16 @@ export default {
         return data1
       }
     },
-    formatVolType(val) {
-      return ['多副本卷', '纠删码卷'][val]
+    formatVolType(val, that) {
+      const replica = that.$t('common.replica')
+      const ec = that.$t('common.ec')
+      return [replica, ec][val]
     },
   },
   mixins: [Mixin],
   data() {
     return {
+      that: this,
       dataList: [],
       originDataList: [],
       inputParams: '', // 输入查询
@@ -298,18 +302,19 @@ export default {
       curVol: {},
       activeName: 'partition',
       volDetail: {},
+      i18n: this.$i18n,
     }
   },
   computed: {
     tabs() {
       const tabs = [
         {
-          label: '数据分区',
+          label: this.$t('common.data') + this.$t('common.partitions'),
           name: 'partition',
           component: 'partition',
         },
         {
-          label: '元数据分区',
+          label: this.$t('common.meta') + this.$t('common.partitions'),
           name: 'metaPartition',
           component: 'MetaPartition',
         }]
@@ -324,23 +329,23 @@ export default {
       const props = [
         {
           value: 'name',
-          label: '卷名',
+          label: this.$t('common.volume'),
         },
         {
           value: 'owner',
-          label: 'owner租户',
+          label: this.$t('common.tenant'),
         },
         {
           value: 'total_size',
-          label: '总容量',
+          label: this.$t('common.total') + this.$t('common.size'),
         },
         {
           value: 'used_size',
-          label: '已使用',
+          label: this.$t('common.used'),
         },
         {
           value: 'usage_ratio',
-          label: '使用率',
+          label: this.$t('common.usage'),
         },
       ]
       const downLoadData = this.dataList.map(item => {
@@ -349,7 +354,7 @@ export default {
           total_size: this.$options.filters.renderSize(item.total_size),
         }
       })
-      generateEXCEL(props, downLoadData, { region: this.clusterName }, '卷详情')
+      generateEXCEL(props, downLoadData, { region: this.clusterName }, this.$t('common.volume') + this.$t('common.detail'))
     },
     sortMethodUsedRatio(a, b) {
       const ausage_ratio = +parseFloat(a.usage_ratio)

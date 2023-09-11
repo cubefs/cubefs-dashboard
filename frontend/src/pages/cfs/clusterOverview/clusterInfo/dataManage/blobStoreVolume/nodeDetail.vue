@@ -23,20 +23,20 @@
         size="mini"
         class="back"
         @click="goBack"
-      >返 回
+      >{{ $t('button.goback') }}
       </el-button>
     </el-row>
     <el-row>
       <UTablePage :data="data" class="list-table" :has-page="false" sort-by-order default-should-sort-key="disk_id">
         <el-table-column
           prop="disk_id"
-          label="磁盘id"
+          :label="$t('common.disk') + 'id'"
           width="90"
           sortable="custom"
         >
         </el-table-column>
         <el-table-column prop="path" label="path" width="180"></el-table-column>
-        <el-table-column label="写入中的条带组id" width="150" prop="volume_ids" sortable="custom">
+        <el-table-column :label="$t('resource.inwritingstripeid')" width="150" prop="volume_ids" sortable="custom">
           <template slot-scope="scope">
             <span v-if="scope.row.volume_ids" class="color9">
               <span v-for="(link, index) in scope.row.volume_ids" :key="link">
@@ -46,8 +46,8 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="disk_load" label="写入中的条带组数" width="150" sortable="custom"></el-table-column>
-        <el-table-column prop="readonly" label="读写信息" width="100" sortable="custom">
+        <el-table-column prop="disk_load" :label="$t('resource.inwritingstripecnt')" width="150" sortable="custom"></el-table-column>
+        <el-table-column prop="readonly" :label="$t('common.writable')" width="100" sortable="custom">
           <template slot-scope="scope">
             <span
               :class="[
@@ -55,12 +55,12 @@
                 `rw-${scope.row.readonly ? 'readonly' : 'readwrite'}`,
               ]"
             >
-              {{ scope.row.readonly ? '只读' : '读写' }}</span>
+              {{ scope.row.readonly ? $t('common.ro') : $t('common.rw') }}</span>
           </template></el-table-column>
-        <el-table-column prop="free_chunk_cnt" label="空闲chunk" width="120" sortable="custom"></el-table-column>
-        <el-table-column prop="used_chunk_cnt" label="已用chunk" width="120" sortable="custom"></el-table-column>
+        <el-table-column prop="free_chunk_cnt" :label="$t('common.free') + ' chunk'" width="120" sortable="custom"></el-table-column>
+        <el-table-column prop="used_chunk_cnt" :label="$t('common.used') + ' chunk'" width="120" sortable="custom"></el-table-column>
 
-        <el-table-column label="使用率" width="100" prop="percentage" sortable="custom">
+        <el-table-column :label="$t('common.usage')" width="100" prop="percentage" sortable="custom">
           <template slot-scope="scope">
             <el-progress
               :percentage="scope.row.percentage"
@@ -73,7 +73,7 @@
               ]"
             >
             </el-progress> </template></el-table-column>
-        <el-table-column prop="status" label="磁盘状态" width="100" sortable="custom">
+        <el-table-column prop="status" :label="$t('common.disk') + $t('common.status')" width="100" sortable="custom">
           <template slot-scope="scope">
             <div
               class="text-center"
@@ -90,16 +90,16 @@
             </DiskRepairStatus>
           </template>
         </el-table-column>
-        <el-table-column prop="size" label="总空间" width="100" sortable="custom">
+        <el-table-column prop="size" :label="$t('common.total') + $t('common.size')" width="100" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.size | readablizeBytes }}
           </template>
         </el-table-column>
-        <el-table-column prop="used" label="已用空间" width="120" sortable="custom">
+        <el-table-column prop="used" :label="$t('common.used')" width="120" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.used | readablizeBytes }}
           </template></el-table-column>
-        <el-table-column prop="free" label="空闲空间" width="120" sortable="custom">
+        <el-table-column prop="free" :label="$t('common.free')" width="120" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.free | readablizeBytes }}
           </template>
@@ -107,7 +107,7 @@
         <el-table-column
           fixed="right"
           prop="cluster"
-          label="操作"
+          :label="$t('common.action')"
           :width="200"
           align="center"
         >
@@ -118,7 +118,7 @@
               size="mini"
               :disabled="row.status > 1 || !isShowoffLine(row.disk_id)"
               @click="changeRW(row)"
-            >{{ row.readonly ? '切读写' : '切只读' }}</el-button>
+            >{{ row.readonly ? $t('common.rw') : $t('common.ro') }}</el-button>
             <!-- <el-popover
               v-if="haveOrder(row, 'NODE_DROP', 'DISK_DROP')"
               placement="top-start"
@@ -158,18 +158,18 @@
             <el-popover
               v-if="haveOrder(row, 'DISK_SET')"
               placement="top-start"
-              title="设置坏盘工单正在审批中"
+              :title="$t('resource.setbrokenjobonfly')"
               trigger="hover"
               :disabled="!haveOrder(row, 'DISK_SET')"
             >
-              <span><a style="color:#00c9c9; cursor: pointer;" class="link" @click.stop.prevent="goOrderDetail(haveOrder(row, 'DISK_SET'))">工单详情</a></span>
+              <span><a style="color:#00c9c9; cursor: pointer;" class="link" @click.stop.prevent="goOrderDetail(haveOrder(row, 'DISK_SET'))">{{ $t('common.worksheet') }}{{ $t('common.detail') }}</a></span>
               <el-button
                 slot="reference"
                 v-auth="'BLOBSTORE_DISKS_SET'"
                 type="text"
                 size="mini"
                 class="dis-btn ml-8"
-              >设置坏盘</el-button>
+              >{{ $t('resource.setbroken') }}</el-button>
             </el-popover>
             <el-button
               v-else
@@ -178,14 +178,14 @@
               size="mini"
               :disabled="row.status > 1 || !isShowoffLine(row.disk_id) || haveOrder(row, 'NODE_DROP', 'DISK_DROP')"
               @click="setBad(row)"
-            >设置坏盘</el-button>
+            >{{ $t('resource.setbroken') }}</el-button>
             <el-button
               v-auth="'BLOBSTORE_DISKS_PROBE'"
               type="text"
               size="mini"
               :disabled="+row.status == 1"
               @click="register(row)"
-            >磁盘注册</el-button>
+            >{{ $t('resource.diskregist') }}</el-button>
           </template>
         </el-table-column>
       </UTablePage>
@@ -250,13 +250,13 @@ export default {
   methods: {
     async register(row) {
       try {
-        await this.$confirm('请确认是否注册该磁盘?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        await this.$confirm(this.$t('resource.confirmregistdisk'), this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
           type: 'warning',
         })
         await registerDisk({ region: this.clusterName, clusterId: this.app.clusterId, path: row.path, host: row.host, disk_id: row.disk_id })
-        this.$message.success('注册成功')
+        this.$message.success(this.$t('resource.registsuc'))
         await this.getData()
       } catch (e) {}
     },
@@ -323,15 +323,15 @@ export default {
     // eslint-disable-next-line camelcase
     async setBad({ disk_id }) {
       try {
-        await this.$confirm('确定设置成坏盘吗', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        await this.$confirm(this.$t('resource.confirmsetbroken'), this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
         })
         const res = await setNodeInfoBad({ region: this.clusterName, clusterId: this.app.clusterId, disk_id })
         if (res.data?.orderDetailUrl) {
           try {
-            await this.$confirm('设置坏盘申请成功, 请前往云工单查看审批详情', '提示', {
-              confirmButtonText: '查看',
+            await this.$confirm(this.$t('resource.brokenjob'), this.$t('common.notice'), {
+              confirmButtonText: this.$t('common.view'),
               type: 'success',
             })
             window.open(res.data?.orderDetailUrl)
@@ -339,7 +339,7 @@ export default {
             this.getData()
           }
         } else {
-          this.$message.success('设置成功')
+          this.$message.success(this.$t('resource.setsuc'))
         }
         await this.getData()
       } catch (e) {}
@@ -347,17 +347,17 @@ export default {
     // eslint-disable-next-line camelcase
     async offLine({ disk_id, host, path }) {
       try {
-        const remark = await this.$prompt('审批成功后,会自动触发磁盘下线', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        const remark = await this.$prompt(this.$t('resource.autooffline'), this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
           inputValue: '',
         })
         const { user_id: userId, user_name: userName } = this.user
         const res = await offLineNodeInfo({ region: this.clusterName, clusterId: this.app.clusterId, disk_id, user_id: userId, host_name: '', user_name: userName, node: host, disk_path: path, remark: `${remark?.value}`, docking_remark: '审批通过,将下线' })
         if (res.data?.orderDetailUrl) {
           try {
-            await this.$confirm('下线操作申请成功, 请前往云工单查看审批详情', '提示', {
-              confirmButtonText: '查看',
+            await this.$confirm(this.$t('resource.cloudjobs'), this.$t('common.notice'), {
+              confirmButtonText: this.$t('common.view'),
               type: 'success',
             })
             window.open(res.data?.orderDetailUrl)
@@ -365,7 +365,7 @@ export default {
             this.getData()
           }
         } else {
-          this.$message.success('下线成功')
+          this.$message.success(this.$t('common.offline') + this.$t('common.xxsuc'))
         }
         await this.getData()
       } catch (e) {}
@@ -374,11 +374,11 @@ export default {
     async changeRW({ disk_id, readonly }) {
       try {
         await this.$confirm(
-          `请确认是否将该磁盘切换为${readonly ? '读写' : '只读'}状态`,
-          '提示',
+          this.$t('resource.setdiskstatus')+ `${readonly ?  this.$t('common.rw'): this.$t('common.ro')}?`,
+          this.$t('common.notice'),
           {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+            confirmButtonText: this.$t('common.yes'),
+            cancelButtonText: this.$t('common.no'),
             type: 'warning',
           },
         )
@@ -388,7 +388,7 @@ export default {
           disk_id,
           readonly: !readonly,
         })
-        this.$message.success('切换成功')
+        this.$message.success(this.$t('resource.setsuc'))
         await this.getData()
       } catch (e) {}
     },

@@ -16,10 +16,10 @@
 
 <template>
   <el-row class="label">
-    <label class="el-form-item__label">过滤选项:</label>
+    <label class="el-form-item__label">{{ $t('component.filters') }}:</label>
     <div class="mini f-l">
       <div v-for="item in options" :key="item.type" class="f-l">
-        <label class="el-form-item__label mini mr-l">{{ item.label }}</label>
+        <label class="el-form-item__label mini mr-l">{{ $t(item.label) }}</label>
         <el-select
           v-model="filterForms[item.filterKey]"
           size="mini"
@@ -44,7 +44,7 @@
 const keyMap = {
   STATUS: {
     type: 'STATUS',
-    label: '状态',
+    label: 'common.status',
     filterKey: 'status',
     options: null, // 需要计算的,这里预留, value最好为字符串
     filterFuction: (item, value) => {
@@ -54,7 +54,7 @@ const keyMap = {
   },
   USEDRATIO: {
     type: 'USEDRATIO',
-    label: '使用率',
+    label: 'common.usage',
     filterKey: 'usage_ratio',
     options: [
       {
@@ -98,15 +98,15 @@ const keyMap = {
   },
   VOLUMNTYPE: {
     type: 'VOLUMNTYPE',
-    label: '卷类型',
+    label: 'common.voltype',
     filterKey: 'vol_type',
     options: [
       {
-        label: '多副本卷',
+        label: 'common.relica',
         value: 0,
       },
       {
-        label: '纠删码卷',
+        label: 'common.ec',
         value: 1,
       },
     ],

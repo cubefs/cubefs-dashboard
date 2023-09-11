@@ -16,7 +16,7 @@
 
 <template>
   <el-dialog
-    title="授权"
+    :title="$t('common.permissions')"
     :visible.sync="dialogFormVisible"
     width="700px"
     @closed="clearData"
@@ -28,17 +28,17 @@
       label-width="25%"
       class="mid-block"
     >
-      <el-form-item label="卷名:" prop="volName">
+      <el-form-item :label="$t('common.volumename') + ':'" prop="volName">
         <el-input v-model="forms.volName" disabled class="input"></el-input>
       </el-form-item>
-      <el-form-item label="租户:" prop="user">
+      <el-form-item :label="$t('common.tenant') + ':'" prop="user">
         <el-select
           v-model="forms.user"
           class="input"
           filterable
           reserve-keyword
           remote
-          placeholder="请输入租户"
+          :placeholder="$t('volume.selectowner')"
           :remote-method="remoteMethod"
         >
           <el-option
@@ -56,7 +56,7 @@
           placeholder="请输入子路径"
         ></el-input>
       </el-form-item> -->
-      <el-form-item label="权限:" prop="auth">
+      <el-form-item :label="$t('common.permissions') + ':'" prop="auth">
         <el-checkbox-group v-model="forms.auth">
           <el-checkbox label="perm:builtin:ReadOnly">readonly</el-checkbox>
           <el-checkbox label="perm:builtin:Writable">writable</el-checkbox>
@@ -64,8 +64,8 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button ref="pol" type="primary" @click="doCheck">确 定</el-button>
-      <el-button ref="pol" type="primary" @click="close">取 消</el-button>
+      <el-button ref="pol" type="primary" @click="doCheck">{{ $t('button.submit') }}</el-button>
+      <el-button ref="pol" type="primary" @click="close">{{ $t('button.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -92,21 +92,21 @@ export default {
         user: [
           {
             required: true,
-            message: '请输入用户ID',
+            message: this.$t('usermgt.inputname'),
             trigger: 'blur',
           },
         ],
         auth: [
           {
             required: true,
-            message: '请选择权限',
+            message: this.$t('volume.selectpermission'),
             trigger: 'blur',
           },
         ],
         volName: [
           {
             required: true,
-            message: '请输入卷名称',
+            message: this.$t('volume.inputvolume'),
             trigger: 'blur',
           },
         ],
@@ -140,7 +140,7 @@ export default {
         cluster_name: this.clusterName,
         policy: auth,
       })
-      this.$message.success('授权成功')
+      this.$message.success(this.$t('volume.grantsuc'))
       this.$emit('refresh')
       this.close()
     },

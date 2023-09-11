@@ -16,7 +16,7 @@
 
 <template>
   <div class="card">
-    <div class="card_title m-b-5">副本{{ indexMap[index] }} <span v-if="index === 0">(主)</span></div>
+    <div class="card_title m-b-5">{{ $t('common.copy') }} {{ indexMap[index] }} <span v-if="index === 0">({{ $t('common.leader') }})</span></div>
     <el-row
       style="padding: 5px 0px"
     >
@@ -36,9 +36,9 @@
     <el-row
       style="padding: 5px 0px"
     >
-      <el-col :span="5"><div class="key_title">状态:</div></el-col>
+      <el-col :span="5"><div class="key_title">{{ $t('common.status') }}:</div></el-col>
       <el-col :span="7"><div class="value_title">{{ replica.Status }}</div></el-col>
-      <el-col :span="5"><div class="key_title">目录数:</div></el-col>
+      <el-col :span="5"><div class="key_title">{{ $t('common.dentries') }}:</div></el-col>
       <el-col :span="7"><div class="value_title">{{ replica.DentryCount }}</div></el-col>
     </el-row>
     <el-row
@@ -87,7 +87,7 @@ export default {
   },
   data() {
     return {
-      indexMap: ['一', '二', '三'],
+      indexMap: ['1', '2', '3'],
     }
   },
   methods: {

@@ -21,22 +21,23 @@
     :visible.sync="dialogVisible"
     width="540px"
   >
-    <el-form ref="form" :model="form" label-width="85px" :rules="rules" style="width: 450px">
-      <el-form-item label="用户名" prop="user_name">
-        <el-input v-model="form.user_name" :disabled="type !== 'create'" placeholder="请输入用户名，推荐用姓名或工号" />
+    <el-form ref="form" :model="form" label-width="100px" :rules="rules" style="width: 450px">
+      <el-form-item :label="$t('common.username')" prop="user_name">
+        <el-input v-model="form.user_name" :disabled="type !== 'create'" :placeholder="$t('usermgt.inputname2')" />
       </el-form-item>
-      <el-form-item label="手机" prop="phone">
-        <el-input v-model="form.phone" :disabled="type === 'delete'" placeholder="请输入手机" />
+      <el-form-item :label="$t('common.phone')" prop="phone">
+        <el-input v-model="form.phone" :disabled="type === 'delete'" :placeholder="$t('common.phone')" />
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model="form.email" :disabled="type === 'delete'" placeholder="请输入邮箱" />
+      <el-form-item :label="$t('common.email')" prop="email">
+        <el-input v-model="form.email" :disabled="type === 'delete'" :placeholder="$t('common.email')" />
       </el-form-item>
-      <el-form-item label="用户角色" prop="roles">
+      <el-form-item :label="$t('common.role')" prop="roles">
         <el-select
           v-model="form.role_ids"
           multiple
           filterable
           :disabled="type === 'delete'"
+          :placeholder = "$t('common.select')"
         >
           <el-option
             v-for="item in roleList"
@@ -48,9 +49,9 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button v-if="type !== 'delete'" type="primary" @click="submit">确 定</el-button>
-      <el-button v-else type="danger" @click="submit">删 除</el-button>
+      <el-button @click="dialogVisible = false">{{ $t('button.cancel') }}</el-button>
+      <el-button v-if="type !== 'delete'" type="primary" @click="submit">{{ $t('button.submit') }}</el-button>
+      <el-button v-else type="danger" @click="submit">{{ $t('button.delete') }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -77,9 +78,9 @@ export default {
       },
       roleList: [],
       rules: {
-        user_name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-        phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+        user_name: [{ required: true, message: this.$t('usermgt.inputname2'), trigger: 'blur' }],
+        phone: [{ required: true, message: this.$t('usermgt.phone'), trigger: 'blur' }],
+        email: [{ required: true, message: this.$t('usermgt.email'), trigger: 'blur' }],
       },
     }
   },
@@ -88,13 +89,13 @@ export default {
       let title = ''
       switch (this.type) {
         case 'create':
-          title = '添加用户'
+          title = this.$t('common.add') + this.$t('common.user')
           break
         case 'edit':
-          title = '编辑'
+          title = this.$t('common.edit')
           break
         case 'delete':
-          title = '删除用户'
+          title = this.$t('common.delete') + this.$t('common.user')
           break
       }
       return title
@@ -151,20 +152,20 @@ export default {
           ...this.form,
           password: 'abcd1234',
         })
-        this.$message.success('创建成功')
+        this.$message.success(this.$t('common.create') + this.$t('common.xxsuc'))
         this.$emit('submit')
       } else if (this.type === 'edit') {
         await userUpdate({
           ...this.form,
           id: this.id,
         })
-        this.$message.success('编辑成功')
+        this.$message.success(this.$t('common.edit') + this.$t('common.xxsuc'))
         this.$emit('submit')
       } else if (this.type === 'delete') {
         await userDelete({
           ids: [this.id],
         })
-        this.$message.success('删除成功')
+        this.$message.success(this.$t('common.delete') + this.$t('common.xxsuc'))
         this.$emit('submit')
       }
       this.dialogVisible = false

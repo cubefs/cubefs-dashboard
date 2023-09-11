@@ -23,7 +23,7 @@
         plain
         o-auth="treeCorsAddBtn || adminCorsAddBtn"
         @click="handleNew"
-      >新增规则
+      >{{ $t('common.create') }}{{ $t('common.rule') }}
       </el-button>
       <el-button
         type="danger"
@@ -32,26 +32,26 @@
         plain
         :class="{ 'disable-btn': !disableDelBtn }"
         @click="handleAllDel"
-      >清空全部规则</el-button>
+      >{{ $t('common.clear') }}{{ $t('common.all') }}{{ $t('common.rule') }}</el-button>
     </div>
     <el-table
       :data="tableData"
       class="main_table"
     >
-      <el-table-column prop="AllowedOrigins" label="来源">
+      <el-table-column prop="AllowedOrigins" :label="$t('filemanage.source')">
         <template slot-scope="scope">{{ scope.row.AllowedOrigins.join(',') }}</template>
       </el-table-column>
-      <el-table-column prop="AllowedMethods" label="允许 Methods">
+      <el-table-column prop="AllowedMethods" :label="$t('filemanage.allowmethods')">
         <template slot-scope="scope">{{ scope.row.AllowedMethods && scope.row.AllowedMethods.join(',') }}</template>
       </el-table-column>
-      <el-table-column prop="AllowedHeaders" label="允许 Headers">
+      <el-table-column prop="AllowedHeaders" :label="$t('filemanage.allowheaders')">
         <template slot-scope="scope">{{ scope.row.AllowedHeaders && scope.row.AllowedHeaders.join(',') }}</template>
       </el-table-column>
-      <el-table-column prop="ExposeHeaders" label="暴露 Headers">
+      <el-table-column prop="ExposeHeaders" :label="$t('filemanage.exposedheaders')">
         <template slot-scope="scope">{{ scope.row.ExposeHeaders && scope.row.ExposeHeaders.join(',') }}</template>
       </el-table-column>
-      <el-table-column prop="MaxAgeSeconds" label="缓存时间"></el-table-column>
-      <el-table-column label="操作" o-auth="treeCorsEditBtn || treeCorsDelBtn || adminCorsEditBtn || adminCorsDelBtn">
+      <el-table-column prop="MaxAgeSeconds" :label="$t('filemanage.cachetime')"></el-table-column>
+      <el-table-column :label="$t('common.action')" o-auth="treeCorsEditBtn || treeCorsDelBtn || adminCorsEditBtn || adminCorsDelBtn">
         <template slot-scope="scope">
           <i
             class="el-icon-edit color_blue"
@@ -108,7 +108,7 @@ export default {
       this.$refs.NewCom.init(false, row, this.tableData, $index)
     },
     handleAllDel() {
-      this.$confirm('确认删除所有？')
+      this.$confirm(this.$t('filemanage.deleteall'))
         .then(_ => {
           this.delAllList()
         })

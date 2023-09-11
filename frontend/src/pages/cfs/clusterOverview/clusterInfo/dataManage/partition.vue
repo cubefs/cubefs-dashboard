@@ -27,11 +27,11 @@
       <div class="search">
         <el-radio-group v-model="radio" @change="onChangeRadio">
           <el-radio label="vol">
-            <span class="label">卷名</span>
+            <span class="label">{{ $t('common.volumename') }}</span>
             <el-select
               v-model="params.name"
               filterable
-              placeholder="请选择卷"
+              :placeholder="$t('resource.selectvol')"
               class="input"
               :disabled="radio !== 'vol'"
               @change="onSelectChange"
@@ -46,10 +46,10 @@
             </el-select>
           </el-radio>
           <el-radio label="id">
-            <span class="label">分区ID</span>
+            <span class="label">{{ $t('common.partitionid') }}</span>
             <el-input
               v-model.trim="params.zoneId"
-              placeholder="请输入分区ID"
+              :placeholder="$t('volume.inputparid')"
               clearable
               class="input"
               :disabled="radio === 'vol'"
@@ -60,32 +60,32 @@
           type="primary"
           class="search-btn"
           @click="onSearchClick"
-        >搜 索</el-button>
+        >{{ $t('button.search') }}</el-button>
         <el-button
           type="primary"
           class="search-btn"
           @click="onExportClick"
-        >导 出</el-button>
+        >{{ $t('button.export') }}</el-button>
       </div>
     </div>
     <u-page-table :data="dataList" :page-size="page.per_page">
       <!-- <el-table-column label="序号" type="index"></el-table-column> -->
       <el-table-column
-        label="分区ID"
+        :label="$t('common.partitionid')"
         prop="PartitionID"
         :width="120"
         sortable
       ></el-table-column>
-      <el-table-column label="卷名" prop="VolName" sortable></el-table-column>
+      <el-table-column :label="$t('common.volumename')" prop="VolName" sortable></el-table-column>
       <el-table-column
-        label="副本数"
+        :label="$t('common.copies')"
         prop="ReplicaNum"
         sortable
         :width="100"
       ></el-table-column>
       <el-table-column
         v-if="isID"
-        label="文件数"
+        :label="$t('common.files')"
         prop="FileCount"
         sortable
       ></el-table-column>
@@ -101,16 +101,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="状态"
+        :label="$t('common.status')"
         prop="status"
         :width="150"
       ></el-table-column>
       <el-table-column
-        label="操作"
+        :label="$t('common.action')"
         :width="150"
       >
         <template slot-scope="scope">
-          <MoreOPerate :count="2">
+          <MoreOPerate :count="2" :i18n="i18n">
             <!-- <el-button
               size="medium"
               type="text"
@@ -120,7 +120,7 @@
               size="medium"
               type="text"
               @click="handleDetail(scope.row)"
-            >详情</el-button>
+            >{{ $t('common.detail') }}</el-button>
           </MoreOPerate>
         </template>
       </el-table-column>
@@ -178,6 +178,7 @@ export default {
       page: {
         per_page: 5, // 页面大小
       },
+      i18n: this.$i18n,
     }
   },
   computed: {},
@@ -265,15 +266,38 @@ export default {
     },
     onExportClick() {
       const XLSX = require('xlsx')
-      const exportData = this.dataList.map(item => ({
+      let exportData = ''
+      const zhexportData = this.dataList.map(item => ({
         分区ID: item.PartitionID,
         卷名: item.VolName,
-        副本数: item.ReplicaNum,
+        Start: item.Start,
+        End: item.End,
+        DentryCount: item.DentryCount,
+        InodeCount: item.InodeCount,
+        MaxInodeID: item.MaxInodeID,
         isRecovering: item.IsRecover,
         Leader: item.Leader,
         Members: item.Members.join(),
         状态: item.Status,
       }))
+      const enexportData = this.dataList.map(item => ({
+        PartitionID: item.PartitionID,
+        VolName: item.VolName,
+        Start: item.Start,
+        End: item.End,
+        DentryCount: item.DentryCount,
+        InodeCount: item.InodeCount,
+        MaxInodeID: item.MaxInodeID,
+        isRecovering: item.IsRecover,
+        Leader: item.Leader,
+        Members: item.Members.join(),
+        Status: item.Status,
+      }))
+      if (localStorage.getItem('language') == 'zh') {
+        exportData = zhexportData
+      } else {
+        exportData = enexportData
+      }
       const wb = XLSX.utils.book_new()
       const ws = XLSX.utils.json_to_sheet(exportData)
       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
@@ -294,7 +318,7 @@ export default {
         id: PartitionID,
         cluster_name: this.clusterName,
       })
-      this.$message.success('操作成功')
+      this.$message.success(this.$t('common.success'))
     },
   },
 }

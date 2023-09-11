@@ -29,13 +29,13 @@
         <el-row class="search">
           <el-input
             v-model.trim="searchData.node_set_id"
-            placeholder="请输入nodesetid"
+            :placeholder="$t('resource.inputnodesetid')"
             clearable
             class="input"
           ></el-input>
           <el-input
             v-model.trim="searchData.inputParams"
-            placeholder="请输入节点IP"
+            :placeholder="$t('resource.inputnodeip')"
             clearable
             class="input"
           ></el-input>
@@ -43,46 +43,46 @@
             type="primary"
             class="search-btn"
             @click="onSearchClick"
-          >搜 索</el-button>
+          >{{ $t('button.search') }}</el-button>
         </el-row>
       </div>
     </div>
     <u-page-table :data="dataList" :page-size="page.per_page" sortable="custom" @sort-change="changeSort">
       <el-table-column
-        label="节点ID"
+        :label="$t('resource.nodeid')"
         prop="id"
         sortable
         :width="100"
       ></el-table-column>
-      <el-table-column label="节点地址">
+      <el-table-column :label="$t('resource.nodeaddr')">
         <template slot-scope="scope">
           <a @click="showDrawer(scope.row)">{{ scope.row.addr }}</a>
         </template>
       </el-table-column>
       <el-table-column label="Zone" prop="zone_name"></el-table-column>
       <el-table-column
-        label="总量"
+        :label="$t('common.total') + $t('common.size')"
         prop="total"
         sortable
         :sort-method="sortMethodTotal"
         :width="100"
       ></el-table-column>
       <el-table-column
-        label="剩余"
+        :label="$t('common.available')"
         prop="available"
         sortable
         :sort-method="sortMethodAvai"
         :width="100"
       ></el-table-column>
       <el-table-column
-        label="已使用"
+        :label="$t('common.used')"
         prop="used"
         :width="120"
         sortable
         :sort-method="sortMethodUsed"
       ></el-table-column>
       <el-table-column
-        label="使用率"
+        :label="$t('common.usage')"
         prop="usage_ratio"
         sortable
         :width="120"
@@ -104,38 +104,38 @@
           >
           </el-progress> </template>
       </el-table-column>
-      <el-table-column label="分区数" prop="partition_count" sortable :width="110">
+      <el-table-column :label="$t('common.partitions')" prop="partition_count" sortable :width="110">
         <template slot-scope="scope">
           <a @click="showDrawer(scope.row, 'partitionList')">{{ scope.row.partition_count }}</a>
         </template>
       </el-table-column>
-      <el-table-column label="节点状态" prop="status" :width="90"></el-table-column>
-      <el-table-column label="读写状态" prop="writable_str" :width="100">
+      <el-table-column :label="$t('common.status')" prop="status" :width="90"></el-table-column>
+      <el-table-column :label="$t('common.writable')" prop="writable_str" :width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.status === 'Active' ? scope.row.writable_str : '------' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" prop="report_time" sortable width="100">
+      <el-table-column :label="$t('common.updatetime')" prop="report_time" sortable width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.report_time | fFormatDate }}</span>
         </template>
       </el-table-column>
       <el-table-column label="nodesetid" prop="node_set_id" sortable :width="110"></el-table-column>
-      <el-table-column label="操作" :width="150">
+      <el-table-column :label="$t('common.action')" :width="150">
         <template slot-scope="scope">
-          <MoreOPerate :count="2">
+          <MoreOPerate :count="2" :i18n="i18n">
             <el-button
               v-auth="'CFS_DATANODE_DECOMMISSION'"
               size="medium"
               type="text"
               @click="handleOffLine(scope.row)"
-            >下线</el-button>
+            >{{ $t('common.offline') }}</el-button>
             <el-button
               v-auth="'CFS_DATANODE_MIGRATE'"
               size="medium"
               type="text"
               @click="openNodeMigrateModal(scope.row)"
-            >迁移</el-button>
+            >{{ $t('common.migrate') }}</el-button>
           </MoreOPerate>
         </template>
       </el-table-column>
@@ -143,29 +143,29 @@
     <node-migrate ref="NodeMigrate" :address-list="dataList.map(item => item.addr)" @refresh="getData"></node-migrate>
     <el-drawer :destroy-on-close="true" :visible.sync="drawer" size="1000px">
       <div slot="title" class="fontType">
-        节点详情
+        {{ $t('common.node') }}{{ $t('common.detail') }}
       </div>
       <div class="fontTypeSpan">
 
         <span
           class="mg-lf-m"
-        ><span>addr:</span><span class="mg-lf-m">{{ curNode.addr }}</span></sp>
+        ><span>addr:</span><span class="mg-lf-m">{{ curNode.addr }}</span></span>
           <span
             class="mg-lf-m"
-          ><span>卷状态:</span><span class="mg-lf-m">{{ curNode.status }}</span></span>
+          ><span>{{ $t('common.status') }}:</span><span class="mg-lf-m">{{ curNode.status }}</span></span>
           <span
             class="mg-lf-m"
-          ><span>writable:</span><span class="mg-lf-m">{{ curNode.writable }}</span></span>
+          ><span>{{ $t('common.writable') }}:</span><span class="mg-lf-m">{{ curNode.writable }}</span></span>
           <span
             class="mg-lf-m"
-          ><span>总空间:</span><span class="mg-lf-m">{{ curNode.total }}</span></span>
+          ><span>{{ $t('common.total') }}{{ $t('common.size') }}:</span><span class="mg-lf-m">{{ curNode.total }}</span></span>
           <span
             class="mg-lf-m"
-          ><span>已使用:</span><span class="mg-lf-m">{{ curNode.used }}</span></span>
+          ><span>{{ $t('common.used') }}:</span><span class="mg-lf-m">{{ curNode.used }}</span></span>
           <span
             class="mg-lf-m"
-          ><span>使用率:</span><span class="mg-lf-m">{{ curNode.usage_ratio }}</span></span>
-        </span></div>
+          ><span>{{ $t('common.usage') }}:</span><span class="mg-lf-m">{{ curNode.usage_ratio }}</span></span>
+        </div>
       <el-tabs v-model="activeName" class="inside">
         <el-tab-pane
           v-for="item in tabs"
@@ -242,17 +242,18 @@ export default {
       activeName: 'diskList',
       tabs: [
         {
-          label: '磁盘列表',
+          label: this.$t('common.disk') + this.$t('common.list'),
           name: 'diskList',
           component: 'DiskList',
         },
         {
-          label: '分区列表',
+          label: this.$t('common.partition') + this.$t('common.list'),
           name: 'partitionList',
           component: 'PartitionList',
         }],
       path: '',
       sort: 'asc',
+      i18n: this.$i18n,
     }
   },
   computed: {},
@@ -320,13 +321,13 @@ export default {
     },
     async handleOffLine({ addr }) {
       try {
-        await this.$confirm(`确定要下线该节点(${addr})?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        await this.$confirm( this.$t('resource.offlinenodeconfirm')+ `(${addr})?`, this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
           type: 'warning',
         })
         await offLineDataNodes({ addrs: [addr], cluster_name: this.clusterName })
-        this.$message.success('下线成功')
+        this.$message.success(this.$t('common.offline') + this.$t('common.xxsuc'))
         this.refresh()
       } catch (e) { }
     },

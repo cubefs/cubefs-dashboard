@@ -87,7 +87,7 @@ export default {
         echart.clear()
         echart.setOption({
           title: {
-            text: '暂无数据',
+            text: this.t('component.nodata'),
             left: 'center',
             top: 'center',
           },

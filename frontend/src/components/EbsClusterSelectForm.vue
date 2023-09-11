@@ -15,11 +15,11 @@
 -->
 
 <template>
-  <el-form-item label="集群">
+  <el-form-item :label="$t('common.cluster')">
     <el-select
       v-model="currentClusterId"
       style="width: 180px"
-      placeholder="请选择"
+      :placeholder="$t('common.select')"
       :clearable="clearable"
       @change="handleChange"
     >

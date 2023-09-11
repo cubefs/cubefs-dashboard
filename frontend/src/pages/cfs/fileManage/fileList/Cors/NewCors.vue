@@ -16,17 +16,17 @@
 
 <template>
   <el-dialog
-    :title="`${isNew === true ? '新增' : '编辑'}规则`"
+    :title="`${isNew === true ? $t('common.create') : $t('common.edit')}` + $t('common.rule')"
     :visible.sync="dialogVisible"
     width="680px"
     :before-close="handleClose"
   >
-    <el-form ref="form" :model="form" label-width="120px" :rules="rules">
-      <el-form-item label="来源" prop="AllowedOrigins">
+    <el-form ref="form" :model="form" label-width="150px" :rules="rules">
+      <el-form-item :label="$t('filemanage.source')" prop="AllowedOrigins">
         <el-input v-model.trim="form.AllowedOrigins" type="textarea"></el-input>
-        <span class="color9">来源可以设置多个，以逗号(,)分割，最多能有一个通配符 *，但不建议填写通配符 *</span>
+        <span class="color9">{{ $t('filemanage.sourcetips') }}</span>
       </el-form-item>
-      <el-form-item label="允许 Methods" prop="AllowedMethods">
+      <el-form-item :label="$t('filemanage.allowmethods')" prop="AllowedMethods">
         <el-checkbox-group v-model="form.AllowedMethods">
           <el-checkbox label="GET"></el-checkbox>
           <el-checkbox label="POST"></el-checkbox>
@@ -35,21 +35,21 @@
           <el-checkbox label="HEAD"></el-checkbox>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="允许 Headers" prop="AllowedHeaders">
+      <el-form-item :label="$t('filemanage.allowheaders')" prop="AllowedHeaders">
         <el-input v-model="form.AllowedHeaders" type="textarea"></el-input>
-        <span class="color9">允许 Headers 可以设置多个，以逗号(,)分割，最多能有一个通配符 *</span>
+        <span class="color9">{{ $t('filemanage.allowheadertips') }}</span>
       </el-form-item>
-      <el-form-item label="暴露 Headers">
+      <el-form-item :label="$t('filemanage.exposedheaders')">
         <el-input v-model="form.ExposeHeaders" type="textarea"></el-input>
-        <span class="color9">暴露 Headers 可以设置多个，以逗号(,)分割，不允许出现通配符 *</span>
+        <span class="color9">{{ $t('filemanage.exposedheadertips') }}</span>
       </el-form-item>
-      <el-form-item label="缓存时间（秒）">
+      <el-form-item :label="$t('filemanage.cachetime')">
         <el-input v-model="form.MaxAgeSeconds" type="number"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="handleClose">取 消</el-button>
-      <el-button type="primary" @click="handleApply">确 定</el-button>
+      <el-button @click="handleClose">{{ $t('button.cancel') }}</el-button>
+      <el-button type="primary" @click="handleApply">{{ $t('button.submit') }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -75,12 +75,12 @@ export default {
       rules: {
         AllowedOrigins: [{
           required: true,
-          message: '请输入来源',
+          message: this.$t('filemanage.entersource'),
           trigger: 'blur'
         }],
         AllowedMethods: [{
           required: true,
-          message: '请选择Methods',
+          message: this.$t('filemanage.choosemethods'),
           trigger: 'blur'
         }]
       }
@@ -179,7 +179,7 @@ export default {
         }
         if (sing.length > 1) {
           this.$message.warning(
-            '每个以逗号分割的内容中，最多能有只一个通配符（*）'
+            this.$t('filemanage.onewildcard')
           )
           return true
         }

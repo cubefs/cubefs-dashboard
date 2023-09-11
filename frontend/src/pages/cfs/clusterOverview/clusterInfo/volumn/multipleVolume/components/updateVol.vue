@@ -24,7 +24,7 @@
 -->
 <template>
   <el-dialog
-    title="更新卷"
+    :title="$t('common.updata') + $t('common.volume')"
     :visible.sync="dialogFormVisible"
     width="800px"
     :destroy-on-close="true"
@@ -37,19 +37,19 @@
       label-width="25%"
       class="mid-block"
     >
-      <el-form-item prop="CacheCapacity" label="卷cache容量大小">
+      <el-form-item prop="CacheCapacity" :label="$t('volume.volumecachesize')">
         <el-input v-model.number="formData.CacheCapacity"></el-input>
       </el-form-item>
       <el-form-item prop="CacheThreshold" label="cacheThreeshold">
         <el-input v-model.number="formData.CacheThreshold"></el-input>
       </el-form-item>
-      <el-form-item prop="CacheTtl" label="卷cache淘汰时间">
+      <el-form-item prop="CacheTtl" :label="$t('volume.volumecachettl')">
         <el-input v-model.number="formData.CacheTtl"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button ref="pol" type="primary" :loading="loading" @click="save">确 定</el-button>
-      <el-button ref="pol" type="primary" @click="close">取 消</el-button>
+      <el-button ref="pol" type="primary" :loading="loading" @click="save">{{ $t('button.submit') }}</el-button>
+      <el-button ref="pol" type="primary" @click="close">{{ $t('button.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -70,13 +70,13 @@ export default {
       },
       rules: {
         CacheCapacity: [
-          { required: true, message: '必填项', trigger: 'blur' },
+          { required: true, message: this.$t('common.required'), trigger: 'blur' },
         ],
         CacheThreshold: [
-          { required: true, message: '必填项', trigger: 'blur' },
+          { required: true, message: this.$t('common.required'), trigger: 'blur' },
         ],
         CacheTtl: [
-          { required: true, message: '必填项', trigger: 'blur' },
+          { required: true, message: this.$t('common.required'), trigger: 'blur' },
         ],
       },
       loading: false,
@@ -124,7 +124,7 @@ export default {
         this.loading = true
         await updateVol(params)
         this.loading = false
-        this.$message.success('更新成功')
+        this.$message.success(this.$t('common.update') + this.$t('common.xxsuc'))
         this.$emit('refresh')
         this.close()
       } catch (e) {

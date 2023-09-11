@@ -17,10 +17,10 @@
 <template>
   <el-card>
     <div class="bar">
-      <el-input v-model="user_name" prefix-icon="el-icon-search" placeholder="请输入用户名" style="width: 240px" clearable />
+      <el-input v-model="user_name" prefix-icon="el-icon-search" :placeholder="$t('usermgt.inputname')" style="width: 240px" clearable />
       <div>
-        <el-button v-auth="'AUTH_USER_DELETE'" type="text" icon="el-icon-delete" style="color: #ed4014">删除</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="addUser">添加用户</el-button>
+        <el-button v-auth="'AUTH_USER_DELETE'" type="text" icon="el-icon-delete" style="color: #ed4014">{{ $t('button.delete') }}</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addUser">{{ $t('common.add') }}{{ $t('common.user') }}</el-button>
       </div>
     </div>
     <o-page-table
@@ -63,12 +63,12 @@ export default {
           selectable: this.selectInit,
         },
         {
-          title: '姓名',
+          title: this.$t('common.name'),
           key: 'user_name',
           width: 200,
         },
         {
-          title: '角色',
+          title: this.$t('common.role'),
           key: 'roles',
           render: (h, { row }) => {
             return <div>
@@ -81,22 +81,22 @@ export default {
           },
         },
         {
-          title: '手机',
+          title: this.$t('common.phone'),
           key: 'phone',
         },
         {
-          title: '邮箱',
+          title: this.$t('common.email'),
           key: 'email',
         },
         {
-          title: '操作',
+          title: this.$t('common.manage'),
           key: '',
           width: 200,
           render: (h, { row }) => {
             return <div>
-              <el-button v-auth="AUTH_USER_UPDATE" type='text' onClick={() => this.editUser(row)}>编辑</el-button>
-              <el-button v-auth="AUTH_USER_PASSWORD_UPDATE" type='text' onClick={() => this.updatePassword(row)}>修改密码</el-button>
-              <el-button v-auth="AUTH_USER_DELETE" type='text' style={ row.id === 1 ? {} : { color: '#ed4014' } } disabled={row.id === 1} onClick={() => this.deleteUser(row)}>删除</el-button>
+              <el-button v-auth="AUTH_USER_UPDATE" type='text' onClick={() => this.editUser(row)}>{ this.$t('common.edit') }</el-button>
+              <el-button v-auth="AUTH_USER_PASSWORD_UPDATE" type='text' onClick={() => this.updatePassword(row)}>{this.$t('common.passwd')}</el-button>
+              <el-button v-auth="AUTH_USER_DELETE" type='text' style={ row.id === 1 ? {} : { color: '#ed4014' } } disabled={row.id === 1} onClick={() => this.deleteUser(row)}>{ this.$t('common.delete') }</el-button>
             </div>
           },
         },
@@ -121,19 +121,19 @@ export default {
       }
     },
     updatePassword(row) {
-      this.$prompt('<div>请输入新密码<div style="color: red; font-size: 12px;">密码长度大于等于8小于等于16<br />密码只能包含数字、大写字母、小写字母、特殊字符（~!@#$%^&*_.?），且至少两种类型以上</div><div>', '修改密码', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$prompt('<div>' + this.$t('usermgt.inputpasswd') + '<div style="color: red; font-size: 12px;">' + this.$t('usermgt.passwdlen') + '<br />' + this.$t('usermgt.passwdrule') + '</div><div>', this.$t('usermgt.chgpasswd'), {
+        confirmButtonText: this.$t('common.submit'),
+        cancelButtonText: this.$t('common.cancel'),
         inputValidator: this.checkPassword,
-        inputErrorMessage: '密码格式不正确',
+        inputErrorMessage: this.$t('usermgt.wrongpasswd'),
         dangerouslyUseHTMLString: true,
       }).then(async ({ value }) => {
         await passwordUpdate({
           user_name: row.user_name,
           password: value,
         })
-        this.$message.success('修改密码成功')
-      })
+        this.$message.success(this.$t('usermgt.updatesuc'))
+      }).catch(() => {})
     },
     checkPassword(str) {
       // 密码只能包含数字、大写字母、小写字母、特殊字符（~!@#$%^&*_.?），且至少两种类型以上

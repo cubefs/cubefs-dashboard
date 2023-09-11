@@ -18,18 +18,18 @@
   <div>
     <el-card>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="集群列表" name="first">
+        <el-tab-pane :label="$t('common.cluster') + $t('common.list')" name="first">
           <el-button
             v-auth="'CLUSTER_CREATE'"
             class="fl-rt mg-bt-s"
             type="primary"
             @click="showDialog('add')"
-          >上架集群</el-button>
+          >{{ $t('common.add') }}{{ $t('common.cluster') }}</el-button>
           <o-page-table :columns="tableColumns" :form-data="formData" :data="tableData"></o-page-table>
         </el-tab-pane>
       </el-tabs>
       <el-dialog
-        :title="`${dataId ? '修改' : '上架'}集群`"
+        :title="`${dataId ? $t('common.edit') : $t('common.add')}` + $t('common.cluster')"
         :visible.sync="dialogFormVisible"
         width="800px"
 
@@ -48,8 +48,8 @@
           not-ctrl
         ></o-form>
         <div slot="footer" class="dialog-footer">
-          <el-button ref="pol" type="primary" @click="doCheck">确 定</el-button>
-          <el-button ref="pol" type="primary" @click="close">取 消</el-button>
+          <el-button ref="pol" type="primary" @click="doCheck">{{ $t('button.submit') }}</el-button>
+          <el-button ref="pol" type="primary" @click="close">{{ $t('button.cancel') }}</el-button>
         </div>
       </el-dialog>
     </el-card>
@@ -79,7 +79,7 @@ export default {
     tableColumns() {
       return [
         {
-          title: '集群名',
+          title: this.$t('cfsclusteroverview.clustername'),
           key: 'name',
           render: (h, { row }) => {
             return (<a
@@ -91,43 +91,43 @@ export default {
           },
         },
         {
-          title: 'Meta总容量',
+          title: this.$t('cfsclusteroverview.metasize'),
           key: 'meta_total',
         },
         {
-          title: 'Meta使用量',
+          title: this.$t('cfsclusteroverview.metaused'),
           key: 'meta_used',
         },
         {
-          title: 'Meta使用率',
+          title: this.$t('cfsclusteroverview.metausage'),
           key: 'meta_used_ratio',
         },
         {
-          title: 'Data总容量',
+          title: this.$t('cfsclusteroverview.datasize'),
           key: 'data_total',
         },
         {
-          title: 'Data使用量',
+          title: this.$t('cfsclusteroverview.dataused'),
           key: 'data_used',
         },
         {
-          title: 'Data使用率',
+          title: this.$t('cfsclusteroverview.datausage'),
           key: 'data_used_ratio',
         },
         {
-          title: 'master域名',
+          title: this.$t('cfsclusteroverview.masteraddress'),
           key: 'domain',
         },
         {
-          title: 's3域名',
+          title: this.$t('cfsclusteroverview.s3address'),
           key: 's3_endpoint',
         },
         {
-          title: 'tag',
+          title: this.$t('cfsclusteroverview.tag'),
           key: 'tag',
         },
         {
-          title: '操作',
+          title: this.$t('common.action'),
           render: (h, { row }) => {
             return (
               <div>
@@ -137,7 +137,7 @@ export default {
                   size="medium"
                   class="ft-16"
                   icon="el-icon-edit-outline"
-                  title="编辑"
+                  title={ this.$t('common.edit') }
                   onClick={() => {
                     this.showDialog(row)
                   }}>
@@ -150,7 +150,7 @@ export default {
     },
     formList() {
       const consulAddr = {
-        title: '纠删码(blobstore)地址',
+        title: this.$t('cfsclusteroverview.blobstoreaddr'),
         key: 'consul_addr',
         type: 'input',
         rule: {
@@ -160,14 +160,14 @@ export default {
             const regIp =
                   /^https?:\/\/(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
             if (!value) {
-              cb(new Error('请输入blobstore地址'))
+              cb(new Error(this.$t('cfsclusteroverview.inputbsaddr')))
             } else {
               const ipArr = value.split('\n').filter((item) => {
                 return !!item
               })
               for (const ip of ipArr) {
                 if (!regIp.test(ip)) {
-                  cb(new Error('输入的地址含有不合法的ip'))
+                  cb(new Error(this.$t('cfsclusteroverview.illegalip')))
                   break
                 }
               }
@@ -178,7 +178,7 @@ export default {
         },
         props: {
           type: 'textarea',
-          placeholder: '请输入blobstore地址,一定要加协议，例如(http|https)://ip:port',
+          placeholder: this.$t('cfsclusteroverview.bsaddrrule'),
           autosize: {
             minRows: 2,
             maxRows: 3,
@@ -188,20 +188,20 @@ export default {
       return {
         children: [
           {
-            title: '集群名:',
+            title: this.$t('cfsclusteroverview.clustername'),
             key: 'name',
             type: 'input',
             rule: {
               required: true,
-              message: '请输入集群名',
+              message: this.$t('cfsclusteroverview.inputclustername'),
               trigger: 'blur',
             },
             props: {
-              placeholder: !this.dataId ? '请输入集群名' : '',
+              placeholder: !this.dataId ? this.$t('cfsclusteroverview.inputclustername') : '',
             },
           },
           {
-            title: 'Master地址:',
+            title: this.$t('cfsclusteroverview.masteraddress'),
             key: 'master_addr',
             type: 'input',
             rule: {
@@ -212,14 +212,14 @@ export default {
                 const regIp =
                   /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
                 if (!value) {
-                  cb(new Error('请输入Master地址'))
+                  cb(new Error(this.$t('cfsclusteroverview.inputmasteraddr')))
                 } else {
                   const ipArr = value.split('\n').filter((item) => {
                     return !!item
                   })
                   for (const ip of ipArr) {
                     if (!regIp.test(ip)) {
-                      cb(new Error('输入的地址含有不合法的ip'))
+                      cb(new Error(this.$t('cfsclusteroverview.illegalip')))
                       break
                     }
                   }
@@ -230,7 +230,7 @@ export default {
             },
             props: {
               type: 'textarea',
-              placeholder: '请输入Master地址(多个以回车分割),只需要填ip:port就行，例如xxx.xxx.xxx.xxx:xxx',
+              placeholder: this.$t('cfsclusteroverview.inputmasteraddrrule'),
               autosize: {
                 minRows: 2,
                 maxRows: 3,
@@ -238,35 +238,35 @@ export default {
             },
           },
           {
-            title: '是否关联纠删码集群',
+            title: this.$t('cfsclusteroverview.attacheccluster'),
             key: 'vol_type',
             renderContent: (h, item, formData) => {
               return (
                 <el-radio-group v-model={formData.vol_type} disabled={Boolean(this.dataId)}>
-                  <el-radio label={1}>是</el-radio>
-                  <el-radio label={0}>否</el-radio>
+                  <el-radio label={1}>{ this.$t('common.yes') }</el-radio>
+                  <el-radio label={0}>{ this.$t('common.no') }</el-radio>
                 </el-radio-group>
               )
             },
             rule: {
               required: true,
-              message: '请选择卷类型',
+              message: this.$t('cfsclusteroverview.volumetype'),
               trigger: 'change',
             },
             defaultValue: 0,
           },
           this.formValue.vol_type === 1 ? consulAddr : undefined,
           {
-            title: '机房:',
+            title: this.$t('common.idc'),
             key: 'idc',
             type: 'input',
             rule: {
               required: true,
-              message: '输入机房',
+              message: this.$t('cfsclusteroverview.inputidc'),
               trigger: 'blur',
             },
             props: {
-              placeholder: !this.dataId ? '请输入机房' : '',
+              placeholder: !this.dataId ? this.$t('cfsclusteroverview.inputidc') : '',
             },
           },
           {
@@ -275,24 +275,24 @@ export default {
             type: 'input',
             rule: {
               required: false,
-              message: '请输入cli',
+              message: this.$t('cfsclusteroverview.inputcli'),
               trigger: 'blur',
             },
             props: {
-              placeholder: !this.dataId ? '请输入cli' : '',
+              placeholder: !this.dataId ? this.$t('cfsclusteroverview.inputcli') : '',
             },
           },
           {
-            title: 'master域名:',
+            title: this.$t('cfsclusteroverview.masteraddress'),
             key: 'domain',
             type: 'input',
             rule: {
               required: false,
-              message: '请输入域名',
+              message: this.$t('cfsclusteroverview.inputmasteraddr'),
               trigger: 'blur',
             },
             props: {
-              placeholder: !this.dataId ? '请输入域名' : '',
+              placeholder: !this.dataId ? this.$t('cfsclusteroverview.inputmasteraddr') : '',
             },
           },
           {
@@ -301,7 +301,7 @@ export default {
             type: 'input',
             props: {
               type: 'textarea',
-              placeholder: '请输入s3 endpoint，一定要加协议，例如(http|https)://ip:port, (http|https)://域名',
+              placeholder: this.$t('cfsclusteroverview.s3addrrule'),
               autosize: {
                 minRows: 2,
                 maxRows: 3,
@@ -321,7 +321,7 @@ export default {
                   })
                   for (const ip of ipArr) {
                     if (!regIp.test(ip) && !regDomain.test(ip) ) {
-                      cb(new Error('输入的地址不正确'))
+                      cb(new Error(this.$t('cfsclusteroverview.illegaladdr')))
                       break
                     }
                   }
@@ -404,7 +404,7 @@ export default {
         publishCluster = upDateCluster
       }
       await publishCluster(params)
-      this.$message.success(`${this.dataId ? '修改' : '上架'}成功`)
+      this.$message.success(`${this.dataId ? this.$t('common.edit') : this.$t('common.add')}this.$t('common.xxsuc')`)
       this.getClusterList()
       this.close()
     },

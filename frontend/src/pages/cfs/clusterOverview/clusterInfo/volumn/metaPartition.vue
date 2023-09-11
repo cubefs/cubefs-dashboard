@@ -17,10 +17,10 @@
 <template>
   <el-card class="container">
     <div class="mg-bt-s flex">
-      <span class="fontType"><span>总节点数:</span> <span class="mg-lf-m"></span>{{ info.node }}</span>
-      <span class="fontType mg-lf-m"><span>总分区数:</span> <span class="mg-lf-m"></span>{{ info.partition }}</span>
-      <span class="fontType mg-lf-m"><span>损坏分区数:</span> <span class="mg-lf-m"></span><span class="bad_partition" @click="showDialog('MP状态')">{{ badMetaPartitionNum }}</span>/{{ (badMetaPartitionNum / info.partition * 100).toFixed()+'%' || '0%' }}</span>
-      <span class="fontType mg-lf-m"><span>总容量:</span> <span class="mg-lf-m"></span>{{ info.total | renderSize }}</span>
+      <span class="fontType"><span>{{ $t('common.total') }}{{ $t('common.nodes') }}:</span> <span class="mg-lf-m"></span>{{ info.node }}</span>
+      <span class="fontType mg-lf-m"><span>{{ $t('common.total') }} {{ $t('common.partitions') }}:</span> <span class="mg-lf-m"></span>{{ info.partition }}</span>
+      <span class="fontType mg-lf-m"><span>{{ $t('common.broken') }}{{ $t('common.partitions') }}:</span> <span class="mg-lf-m"></span><span class="bad_partition" @click="showDialog($t('volume.mpstatus'))">{{ badMetaPartitionNum }}</span>/{{ (badMetaPartitionNum / info.partition * 100).toFixed()+'%' || '0%' }}</span>
+      <span class="fontType mg-lf-m"><span>{{ $t('common.total') }}{{ $t('common.size') }}:</span> <span class="mg-lf-m"></span>{{ info.total | renderSize }}</span>
       <div class="mg-lf-m progress">
         <span>{{ info.used |renderSize }}/{{ (isNaN(info.used/info.total*100) ? 0 : info.used/info.total*100).toFixed(0)+'%' }}</span>
         <el-progress
@@ -48,10 +48,10 @@
         @filterData="filterData"
       ></FilterTableData>
       <div class="search">
-        <span class="label">分区ID</span>
+        <span class="label">{{ $t('common.partition') }}ID</span>
         <el-input
           v-model.trim="params.zoneId"
-          placeholder="请输入分区ID"
+          :placeholder="$t('volume.inputparid')"
           clearable
           class="input"
           @keyup.native.enter="getData"
@@ -60,12 +60,12 @@
           type="primary"
           class="search-btn"
           @click="onSearchClick"
-        >搜 索</el-button>
+        >{{ $t('button.search') }}</el-button>
         <el-button
           type="primary"
           class="search-btn"
           @click="onExportClick"
-        >导 出</el-button>
+        >{{ $t('button.export') }}</el-button>
       </div>
     </div>
     <!-- 分页参数预留可能后端会分页,目前前端分页 -->
@@ -113,15 +113,15 @@
           <div v-for="item in scope.row.Members" :key="item">{{ item }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="status" :width="90"></el-table-column>
+      <el-table-column :label="$t('common.status')" prop="status" :width="90"></el-table-column>
       <el-table-column
-        label="操作"
+        :label="$t('common.action')"
         :width="120"
         align="center"
         fixed="right"
       >
         <template slot-scope="scope">
-          <MoreOPerate :count="2">
+          <MoreOPerate :count="2" :i18n="i18n">
             <!-- <el-button
               size="medium"
               type="text"
@@ -131,7 +131,7 @@
               size="medium"
               type="text"
               @click="handleDetail(scope.row)"
-            >inode详情</el-button>
+            >inode{{ $t('common.detail') }}</el-button>
           </MoreOPerate>
         </template>
       </el-table-column>
@@ -139,69 +139,69 @@
     <Detail ref="detail" />
     <el-dialog
       v-if="MetaPartitionDialogVisible"
-      title="坏MP"
+      :title="$t('common.brokenmp')"
       width="65%"
       :visible.sync="MetaPartitionDialogVisible"
       center
       top="5vh"
     >
-      <div>缺少副本的分区</div>
+      <div>{{ $t('volume.copymiss') }}</div>
       <el-table
         max-height="350"
         :data="LackReplicaMetaPartitionIDs"
         style="width: 100%"
       >
         <el-table-column
-          label="序号"
+          :label="$t('common.id')"
           type="index"
         >
         </el-table-column>
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="id"
         >
           <template slot-scope="scope">
             <div>{{ scope.row }}</div>
           </template></el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.action')"
         >
           <template slot-scope="scope">
             <el-button
               size="medium"
               type="text"
               @click="showDetail(scope.row, 1)"
-            >详情</el-button>
+            >{{ $t('common.detail') }}</el-button>
           </template>
           ></el-table-column>
       </el-table>
-      <div>缺少leader的分区</div>
+      <div>{{ $t('volume.leadermiss') }}</div>
       <el-table
         max-height="300"
         :data="CorruptMetaPartitionIDs"
         style="margin-top:5px"
       >
         <el-table-column
-          label="序号"
+          :label="$t('common.id')"
           type="index"
         >
         </el-table-column>
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="id"
         >
           <template slot-scope="scope">
             <div>{{ scope.row }}</div>
           </template></el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.action')"
         >
           <template slot-scope="scope">
             <el-button
               size="medium"
               type="text"
               @click="showDetail(scope.row, 1)"
-            >详情</el-button>
+            >{{ $t('common.action') }}</el-button>
           </template>
           ></el-table-column>
       </el-table>
@@ -216,7 +216,7 @@
     </el-dialog>
     <el-dialog
       v-if="MetaPartitionDetailDialogVisible"
-      title="坏MP详情"
+      :title="$t('common.brokenmp') + $t('common.detail')"
       width="65%"
       :visible.sync="MetaPartitionDetailDialogVisible"
       center
@@ -226,11 +226,11 @@
         style="width: 100%"
       >
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="PartitionID"
           :width="80"
         ></el-table-column>
-        <el-table-column label="卷名" prop="VolName"></el-table-column>
+        <el-table-column :label="$t('common.volume')" prop="VolName"></el-table-column>
         <el-table-column label="Start" prop="Start"></el-table-column>
         <el-table-column label="End" prop="End"></el-table-column>
         <el-table-column
@@ -263,7 +263,7 @@
             <div v-for="item in scope.row.Members" :key="item">{{ item }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="状态" prop="Status" :width="90"></el-table-column>
+        <el-table-column :label="$t('common.status')" prop="Status" :width="90"></el-table-column>
       </el-table>
     </el-dialog>
   </el-card>
@@ -332,6 +332,7 @@ export default {
         total: 0,
         used: 0,
       },
+      i18n: this.$i18n,
     }
   },
   computed: {},
@@ -435,7 +436,7 @@ export default {
         id: PartitionID,
         cluster_name: this.clusterName,
       })
-      this.$message.success('操作成功')
+      this.$message.success(this.$t('common.success'))
     },
   },
 }

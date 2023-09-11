@@ -14,6 +14,8 @@
  * permissions and limitations under the License.
  */
 
+import lang from '@/i18n'
+
 const RouterViewHoc = {
   name: 'RouterViewHoc',
   render(h) {
@@ -25,7 +27,8 @@ export const clusterDefaultRoutes = {
   path: 'cluster',
   name: 'cluster',
   meta: {
-    title: '集群管理',
+    // title: '集群管理',
+    title: 'router.cluster',
   },
   component: RouterViewHoc,
   children: [
@@ -34,7 +37,8 @@ export const clusterDefaultRoutes = {
       name: 'clusterList',
       component: () => import('@/pages/cfs/clusterOverview'),
       meta: {
-        title: '集群列表',
+        // title: '集群列表',
+        title: 'router.clusterlist',
       },
     },
   ],
@@ -44,7 +48,8 @@ export const clusterDetailRoutes = {
   path: 'clusterDetail',
   name: 'clusterDetail',
   meta: {
-    title: '集群详情',
+    // title: '集群详情',
+    title: 'router.clusterdetail',
   },
   component: RouterViewHoc,
   children: [],
@@ -56,14 +61,16 @@ export const clusterDetailChildren = [
     name: 'clusterInfo',
     component: () => import('@/pages/cfs/clusterOverview/clusterInfo'),
     meta: {
-      title: '集群概览',
+      // title: '集群概览',
+      title: 'router.clusteroverview',
     },
   },
   {
     path: 'volManage',
     name: 'volManage',
     meta: {
-      title: '卷管理',
+      // title: '卷管理',
+      title: 'router.volume',
     },
     component: () => import('@/pages/cfs/clusterOverview/clusterInfo/volumn/index.vue'),
   },
@@ -71,7 +78,8 @@ export const clusterDetailChildren = [
     path: 'dataManage',
     name: 'dataManage',
     meta: {
-      title: '数据管理',
+      // title: '数据管理',
+      title: 'router.data',
     },
     component: () => import('@/pages/cfs/clusterOverview/clusterInfo/dataManage/index.vue'),
   },
@@ -79,7 +87,8 @@ export const clusterDetailChildren = [
     path: 'metaDataManage',
     name: 'metaDataManage',
     meta: {
-      title: '元数据管理',
+      // title: '元数据管理',
+      title: 'router.meta',
     },
     component: () => import('@/pages/cfs/clusterOverview/clusterInfo/metaDataManage/metaPartition.vue'),
   },
@@ -87,7 +96,8 @@ export const clusterDetailChildren = [
     path: 'resourceManage',
     name: 'resourceManage',
     meta: {
-      title: '节点管理',
+      // title: '节点管理',
+      title: 'router.node',
     },
     component: () => import('@/pages/cfs/clusterOverview/clusterInfo/resourceManage/index.vue'),
   },
@@ -95,7 +105,8 @@ export const clusterDetailChildren = [
     path: 'fileManage',
     name: 'fileManage',
     meta: {
-      title: '文件管理',
+      // title: '文件管理',
+      title: 'router.file',
       menuLinkGroup: true,
     },
     component: RouterViewHoc,
@@ -104,7 +115,8 @@ export const clusterDetailChildren = [
         path: '',
         name: 'fileManageList',
         meta: {
-          title: '卷列表',
+          // title: '卷列表',
+          title: 'router.volumelist',
         },
         component: () => import('@/pages/cfs/fileManage/index'),
       },
@@ -112,7 +124,8 @@ export const clusterDetailChildren = [
         path: 'fileList',
         name: 'fileList',
         meta: {
-          title: '文件上传列表',
+          // title: '文件上传列表',
+          title: 'router.uploadlist',
         },
         component: () => import('@/pages/cfs/fileManage/fileList/index'),
       },
@@ -122,7 +135,8 @@ export const clusterDetailChildren = [
     path: 'clusterEvent',
     name: 'clusterEvent',
     meta: {
-      title: '集群事件',
+      // title: '集群事件',
+      title: 'router.events',
     },
     component: () => import('@/pages/cfs/clusterOverview/clusterInfo/events/index.vue'),
   },

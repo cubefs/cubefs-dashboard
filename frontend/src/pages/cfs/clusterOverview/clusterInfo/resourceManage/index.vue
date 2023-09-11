@@ -17,14 +17,14 @@
 <template>
   <div>
     <el-radio-group v-model="activeName" style="margin-bottom: 10px;">
-      <el-radio-button label="node">多副本节点</el-radio-button>
-      <el-radio-button label="blobStoreNode" :disabled="!ebsClusterList || !ebsClusterList.length">纠删码节点</el-radio-button>
-      <el-radio-button label="metaNode">元数据节点</el-radio-button>
+      <el-radio-button label="node">{{ $t('common.replica') }}{{ $t('common.nodes') }}</el-radio-button>
+      <el-radio-button label="blobStoreNode" :disabled="!ebsClusterList || !ebsClusterList.length">{{ $t('common.ec') }}{{ $t('common.nodes') }}</el-radio-button>
+      <el-radio-button label="metaNode">{{ $t('common.meta') }}{{ $t('common.nodes') }}</el-radio-button>
     </el-radio-group>
     <div class="mg-bt-s flex" v-if="activeName !== 'blobStoreNode'">
-      <span class="fontType"><span>总节点数:</span> <span class="mg-lf-m"></span>{{ info.node }}</span>
-      <span class="fontType mg-lf-m"><span>总分区数:</span> <span class="mg-lf-m"></span>{{ info.partition }}</span>
-      <span class="fontType mg-lf-m"><span>总容量:</span> <span class="mg-lf-m"></span>{{ info.total |renderSize }}</span>
+      <span class="fontType"><span>{{ $t('common.total') }}{{ $t('common.nodes') }}:</span> <span class="mg-lf-m"></span>{{ info.node }}</span>
+      <span class="fontType mg-lf-m"><span>{{ $t('common.total') }}{{ $t('common.partitions') }}:</span> <span class="mg-lf-m"></span>{{ info.partition }}</span>
+      <span class="fontType mg-lf-m"><span>{{ $t('common.total') }}{{ $t('common.size') }}:</span> <span class="mg-lf-m"></span>{{ info.total |renderSize }}</span>
       <div class="mg-lf-m progress">
         <span>{{ info.used |renderSize }}/{{ (info.used/info.total*100).toFixed(0)+'%' }}</span>
         <el-progress
