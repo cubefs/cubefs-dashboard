@@ -16,6 +16,12 @@
 
 <template>
   <div class="container">
+    <div class="language">
+          <el-select v-model="language" @change="changeLang">
+            <el-option value="zh" label="简体中文"></el-option>
+            <el-option value="en" label="English"></el-option>
+          </el-select>
+    </div>
     <Logo class="logo" />
     <div class="description">
       Infinite Storage, Limitless Value
@@ -180,6 +186,7 @@ export default {
       },
       loading: false,
       signupLoading: false,
+      language: this.$i18n.locale,
     }
   },
   computed: {
@@ -281,6 +288,11 @@ export default {
         return true
       }
       return false
+    },
+    changeLang() {
+      const langType = this.language
+      localStorage.setItem("language", langType)
+      this.$i18n.locale = langType
     },
   },
 }
@@ -397,4 +409,20 @@ export default {
 .back-icon:hover {
   color: #FFFFFF
 }
+
+.language {
+  margin-left: auto;
+  width: 100px;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+::v-deep {
+  .language .el-select .el-input__inner{
+    color: #fff;
+    background: none;
+    border: 0px;
+  }
+}
 </style>
+

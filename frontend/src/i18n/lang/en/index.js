@@ -124,7 +124,7 @@ export default {
     scaleup: 'Scale up',
     search: 'Search',
     select: 'Please select',
-    signup: 'Signup ',
+    signup: 'SignUp ',
     size: 'Size',
     status: 'Status ',
     stripe: 'Stripe ',

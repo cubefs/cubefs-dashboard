@@ -124,6 +124,7 @@ export default {
     scaleup: '扩容',
     search: '查询',
     select: '请选择',
+    signoutsucc: '注销成功',
     signup: '注册',
     size: '容量',
     status: '状态',
