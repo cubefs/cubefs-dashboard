@@ -14,7 +14,6 @@
  * permissions and limitations under the License.
  */
 
-import lang from '@/i18n'
 
 const RouterViewHoc = {
   name: 'RouterViewHoc',

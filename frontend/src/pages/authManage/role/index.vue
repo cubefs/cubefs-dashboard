@@ -43,6 +43,7 @@
 
 <script>
 import RoleDialog from './roleDialog.vue'
+import lang from '@/i18n/lang/zh'
 export default {
   components: {
     RoleDialog,
@@ -102,7 +103,7 @@ export default {
   },
   methods: {
     afterSendHook(data) {
-      const codeList = Object.keys(this.$i18n.messages[this.$i18n.locale].privileges)
+      const codeList = Object.keys(lang.privileges)
       data.forEach(item => {
         item.origin_permissions = item.permissions
         item.permissions = item.permissions.filter(_item => _item.is_check).filter(_item => codeList.includes(_item.auth_code))

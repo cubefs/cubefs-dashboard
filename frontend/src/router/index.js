@@ -19,7 +19,6 @@ import Router from 'vue-router'
 import cfsRoutes, { clusterDetailChildren } from './cfs'
 import ErrorPage from '@/components/common/ErrorPage'
 import store from '@/store/index'
-import lang from '@/i18n'
 const namespace = require('../../package.json').namespace
 
 const originalPush = Router.prototype.push

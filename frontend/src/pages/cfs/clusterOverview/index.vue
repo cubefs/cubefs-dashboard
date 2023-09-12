@@ -25,14 +25,13 @@
             type="primary"
             @click="showDialog('add')"
           >{{ $t('common.add') }}{{ $t('common.cluster') }}</el-button>
-          <o-page-table :columns="tableColumns" :form-data="formData" :data="tableData"></o-page-table>
+          <o-page-table :columns="tableColumns" :form-data="formData" :data="tableData" :total="tabletotal" :current-page="tablepage" :page-size="tableperpage"></o-page-table>
         </el-tab-pane>
       </el-tabs>
       <el-dialog
         :title="`${dataId ? $t('common.edit') : $t('common.add')}` + $t('common.cluster')"
         :visible.sync="dialogFormVisible"
         width="800px"
-
         @closed="clearData"
       >
         <o-form
@@ -73,6 +72,9 @@ export default {
       },
       tableData: [],
       dialogFormVisible: false,
+      tabletotal: '',
+      tablepage: 1,
+      tableperpage: 15,
     }
   },
   computed: {
@@ -346,6 +348,9 @@ export default {
     async getClusterList() {
       const res = await getClusterList()
       this.tableData = res.data.clusters || []
+      this.tabletotal = res.data.count || 0
+      this.tablepage = res.data.page
+      this.tableperpage = res.data.per_page
     },
     showDialog(type) {
       this.dialogFormVisible = true
