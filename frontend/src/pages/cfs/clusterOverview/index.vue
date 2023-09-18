@@ -272,7 +272,7 @@ export default {
             },
           },
           {
-            title: 'cli:',
+            title: 'Cli:',
             key: 'cli',
             type: 'input',
             rule: {
@@ -298,7 +298,7 @@ export default {
             },
           },
           {
-            title: 's3 endpoint:',
+            title: 'S3Endpoint:',
             key: 's3_endpoint',
             type: 'input',
             props: {

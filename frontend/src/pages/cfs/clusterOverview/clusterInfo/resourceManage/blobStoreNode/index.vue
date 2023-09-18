@@ -58,7 +58,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="size" :label="$t('common.total') + $t('common.size')" :width="90" sortable="custom">
+        <el-table-column prop="size" :label="$t('common.total') + $t('common.size')" :width="110" sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.size | readablizeBytes }}
           </template></el-table-column>

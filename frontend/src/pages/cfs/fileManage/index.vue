@@ -17,13 +17,13 @@
 <template>
   <el-card>
     <el-form :inline="true">
-      <el-form-item :label="$t('filemanage.volname')">
+      <el-form-item :label="$t('common.volumename')">
         <el-input v-model.trim="searchForm.name" :placeholder="$t('filemanage.input')" clearable></el-input>
       </el-form-item>
       <el-form-item :label="$t('filemanage.tenant')">
         <el-input v-model.trim="searchForm.owner" :placeholder="$t('filemanage.input')" clearable></el-input>
       </el-form-item>
-      <el-form-item :label="$t('filemanage.status')">
+      <el-form-item :label="$t('common.status')">
         <el-select v-model.trim="searchForm.status" :placeholder="$t('filemanage.select')" clearable>
           <el-option label="Normal" value="Normal" />
           <el-option label="Marked delete" value="Marked delete" />
@@ -43,7 +43,7 @@
       :page-size.sync="page.per_page"
       :total="page.total"
     >
-      <el-table-column :label="$t('filemanage.volname')" prop="name">
+      <el-table-column :label="$t('common.volumename')" prop="name">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -59,7 +59,7 @@
           <div>{{ scope.row.owner }}</div>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('filemanage.status')" prop="status">
+      <el-table-column :label="$t('common.status')" prop="status">
         <template slot-scope="scope">
           <div>{{ scope.row.status }}</div>
         </template>

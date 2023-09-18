@@ -89,7 +89,7 @@ export default {
           key: 'email',
         },
         {
-          title: this.$t('common.manage'),
+          title: this.$t('common.action'),
           key: '',
           width: 200,
           render: (h, { row }) => {

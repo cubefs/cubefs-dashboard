@@ -100,7 +100,7 @@
       <el-table-column
         :label="$t('common.partitionid')"
         prop="PartitionID"
-        :width="90"
+        :width="120"
         sortable
       ></el-table-column>
       <el-table-column :label="$t('common.volumename')" prop="VolName" sortable></el-table-column>

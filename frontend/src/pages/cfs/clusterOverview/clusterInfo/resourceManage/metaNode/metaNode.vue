@@ -77,9 +77,9 @@
           <span>{{ scope.row.writable + '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.updatetime')" prop="report_time" sortable width="100">
+      <el-table-column :label="$t('common.updatetime')" prop="report_time" sortable width="130">
         <template slot-scope="scope">
-          <span>{{ scope.row.report_time | fFormatDate }}</span>
+          <span>{{ scope.row.report_time | fFormatDate | formatDate }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('common.action')">
@@ -136,6 +136,9 @@ export default {
   filters: {
     fFormatDate(v) {
       return formatDate(v)
+    },
+    formatDate(val) {
+      return val.replace(" ", "\n")
     },
   },
   mixins: [Mixin],
@@ -333,5 +336,9 @@ export default {
 
 ::v-deep.el-drawer__body {
   overflow: auto;
+}
+
+::v-deep .el-table .cell {
+  white-space: pre-line;
 }
 </style>

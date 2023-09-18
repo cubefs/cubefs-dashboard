@@ -200,7 +200,7 @@ export default {
           break
         case 'logout':
           userLogout().then(() => {
-            this.$message.success(this.$t('signoutsucc'))
+            this.$message.success(this.$t('common.signoutsucc'))
             localStorage.removeItem('userInfo')
             this.$router.push({ name: 'loginPage' })
           })

@@ -77,7 +77,7 @@
         :label="$t('common.total') + $t('common.size')"
         prop="total_size"
         sortable
-        :width="90"
+        :width="110"
         :sort-method="sortMethodTotal"
       >
         <template slot-scope="scope">
@@ -126,13 +126,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="inode"
+        label="Inode"
         prop="inode_count"
         sortable
         width="100"
       ></el-table-column>
       <el-table-column
-        label="dentry"
+        label="Dentry"
         prop="dentry_count"
         sortable
         width="110"
@@ -140,9 +140,13 @@
       <el-table-column
         :label="$t('common.createtime')"
         prop="create_time"
-        :width="100"
+        :width="120"
         sortable
-      ></el-table-column>
+      >
+      <template slot-scope="scope">
+          {{ scope.row.create_time | formatDate }}
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('common.business')" prop="business"></el-table-column>
       <el-table-column :label="$t('common.action')" :width="80">
         <template slot-scope="scope">
@@ -309,6 +313,10 @@ export default {
       const replica = that.$t('common.replica')
       const ec = that.$t('common.ec')
       return [replica, ec][val]
+    },
+    
+    formatDate(val) {
+      return val.replace(" ", "\n")
     },
   },
   mixins: [Mixin],
@@ -565,5 +573,9 @@ p {
 /*2.隐藏滚动条，太丑了*/
 ::v-deep .el-drawer__container ::-webkit-scrollbar {
   width: 10px;
+}
+
+.el-table .cell {
+  white-space: pre-line;
 }
 </style>

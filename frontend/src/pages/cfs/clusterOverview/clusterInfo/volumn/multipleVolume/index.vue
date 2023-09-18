@@ -65,7 +65,7 @@
       <el-table-column
         :label="$t('common.copies')"
         prop="dp_replica_num"
-        :width="100"
+        :width="80"
       ></el-table-column>
       <el-table-column :label="$t('filemanage.tenant')" prop="owner" :width="120"></el-table-column>
       <el-table-column :label="$t('common.status')" prop="status" :width="80"></el-table-column>
@@ -73,7 +73,7 @@
         :label="$t('common.total') + $t('common.size')"
         prop="total_size"
         sortable
-        :width="90"
+        :width="120"
         :sort-method="sortMethodTotal"
       >
         <template slot-scope="scope">
@@ -113,7 +113,6 @@
       <el-table-column label="MP" prop="mp_cnt" sortable :width="80">
         <template slot-scope="scope">
           <a @click="showDrawer(scope.row, 'metaPartition')">{{ scope.row.mp_cnt }}</a>
-
         </template>
       </el-table-column>
       <el-table-column label="DP" prop="dp_cnt" sortable :width="80">
@@ -137,8 +136,12 @@
         :label="$t('common.createtime')"
         prop="create_time"
         sortable
-        width="100"
-      ></el-table-column>
+        width="120"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.create_time | formatDate }}
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('common.business')" prop="business"></el-table-column>
       <el-table-column :label="$t('common.action')" :width="80">
         <template slot-scope="scope">
@@ -284,6 +287,9 @@ export default {
       const ec = that.$t('common.ec')
       return [replica, ec][val]
     },
+    formatDate(val) {
+      return val.replace(" ", "\n")
+    }
   },
   mixins: [Mixin],
   data() {
@@ -539,5 +545,9 @@ p {
 /*2.隐藏滚动条，太丑了*/
 ::v-deep .el-drawer__container ::-webkit-scrollbar {
   width: 10px;
+}
+
+.el-table .cell {
+  white-space: pre-line;
 }
 </style>

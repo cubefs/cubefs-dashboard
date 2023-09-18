@@ -275,11 +275,9 @@ export default {
     source: '来源',
     sourcetips: '来源可以设置多个，以逗号(,)分割，最多能有一个通配符 *，但不建议填写通配符 *',
     standard: '标准存储',
-    status: '状态',
     tenant: 'Owner租户',
     tips1: '文件管理操作需要先配置跨域才能放开，且跨域来源需包含访问域名，例如',
     upaddr: '上传文件至 ',
-    volname: '卷名',
     whichcluster: '所在集群',  
   },
   clusterinfo: {

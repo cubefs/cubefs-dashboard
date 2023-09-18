@@ -65,14 +65,14 @@
         prop="total"
         sortable
         :sort-method="sortMethodTotal"
-        :width="100"
+        :width="110"
       ></el-table-column>
       <el-table-column
         :label="$t('common.available')"
         prop="available"
         sortable
         :sort-method="sortMethodAvai"
-        :width="100"
+        :width="110"
       ></el-table-column>
       <el-table-column
         :label="$t('common.used')"
@@ -115,9 +115,9 @@
           <span>{{ scope.row.status === 'Active' ? scope.row.writable_str : '------' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.updatetime')" prop="report_time" sortable width="100">
+      <el-table-column :label="$t('common.updatetime')" prop="report_time" sortable width="130">
         <template slot-scope="scope">
-          <span>{{ scope.row.report_time | fFormatDate }}</span>
+          <span>{{ scope.row.report_time | fFormatDate | formatDate}}</span>
         </template>
       </el-table-column>
       <el-table-column label="nodesetid" prop="node_set_id" sortable :width="110"></el-table-column>
@@ -208,6 +208,9 @@ export default {
   filters: {
     fFormatDate(v) {
       return formatDate(v)
+    },
+    formatDate(val) {
+      return val.replace(" ", "\n")
     },
   },
   mixins: [Mixin, NodeMixin],
@@ -420,5 +423,9 @@ export default {
 /*2.隐藏滚动条，太丑了*/
 ::v-deep .el-drawer__container ::-webkit-scrollbar {
   display: none;
+}
+
+::v-deep .el-table .cell {
+  white-space: pre-line;
 }
 </style>
