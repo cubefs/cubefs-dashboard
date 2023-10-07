@@ -101,8 +101,8 @@ export default {
       this.CorruptMetaPartitionIDs = res1.data.CorruptMetaPartitionIDs
       this.badMetaPartition = this.newArrFn(res1.data.LackReplicaMetaPartitionIDs.concat(res1.data.CorruptMetaPartitionIDs))
       this.badMetaPartitionNum = this.badMetaPartition.length
-      this.chartData.push({ data: [{ name: '正常', value: this.dataPartition - this.badDataPartitionNum }, { name: '损坏', value: this.badDataPartitionNum }], title: 'DP状态' })
-      this.chartData.push({ data: [{ name: '正常', value: this.metaPartition - this.badMetaPartitionNum }, { name: '损坏', value: this.badMetaPartitionNum }], title: 'MP状态' })
+      this.chartData.push({ data: [{ name: this.$t('common.health'), value: this.dataPartition - this.badDataPartitionNum }, { name: this.$t('common.broken'), value: this.badDataPartitionNum }], title: 'DP' + this.$t('common.status') })
+      this.chartData.push({ data: [{ name: this.$t('common.health'), value: this.metaPartition - this.badMetaPartitionNum }, { name: this.$t('common.broken'), value: this.badMetaPartitionNum }], title: 'MP' + this.$t('common.status') })
     },
     calcMpDpData() {
       const { data_total: dataTotal, data_used: dataUsed, meta_total: metaTotal, meta_used: metaUsed } = this.curClusterInfo.clusterInfo
@@ -120,17 +120,20 @@ export default {
       }
       const dataInfo = calcData(dataTotal, dataUsed)
       const metaInfo = calcData(metaTotal, metaUsed)
-      this.mpDpchartData.push({ data: [{ name: '已使用', value: dataInfo.used }, {name: '未使用', value: dataInfo.noUsed}], title: '数据使用率' })
-      this.mpDpchartData.push({ data: [{ name: '已使用', value: metaInfo.used }, {name: '未使用', value: metaInfo.noUsed}], title: '元数据使用率' })
+      this.mpDpchartData.push({ data: [{ name: this.$t('common.used'), value: dataInfo.used }, {name: this.$t('common.free'), value: dataInfo.noUsed}], title: this.$t('common.data') + this.$t('common.usage') })
+      this.mpDpchartData.push({ data: [{ name: this.$t('common.used'), value: metaInfo.used }, {name: this.$t('common.free'), value: metaInfo.noUsed}], title: this.$t('common.meta') + this.$t('common.usage') })
     },
     showDialog(name) {
-      if (name === '磁盘状态') {
+      const disk = this.$t('common.disk') + this.$t('common.status')
+      const DP = 'DP' + this.$t('common.status')
+      const MP = 'MP' + this.$t('common.status')
+      if (name === disk) {
         this.DiskDialogVisible = true
       }
-      if (name === 'DP状态') {
+      if (name === DP) {
         this.DataPartitionDialogVisible = true
       }
-      if (name === 'MP状态') {
+      if (name === MP) {
         this.MetaPartitionDialogVisible = true
       }
     },
@@ -156,7 +159,7 @@ export default {
     },
     async batchOfflineDisk() {
       if (!this.seletedDisk.length) {
-        this.$message.warning('请至少勾选一个需要下线的磁盘')
+        this.$message.warning(this.$t('resource.choosedisk'))
       }
       // await batchOfflineDisk(params)
     },

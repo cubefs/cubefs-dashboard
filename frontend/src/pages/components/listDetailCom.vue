@@ -16,13 +16,13 @@
 
 <template>
   <el-dialog
-    title="详情"
+    :title="$t('common.detail')"
     :visible.sync="dialogVisible"
     width="50%"
     :before-close="handleClose"
   >
     <el-card v-if="applyInfo" shadow="hover">
-      <div class="detail_title">申请信息</div>
+      <div class="detail_title">{{ $t('component.applyinfo')}}</div>
       <ul class="more_ul">
         <li v-for="i in applyInfo" :key="i.key">
           <div
@@ -51,7 +51,7 @@
       </ul>
     </el-card>
     <el-card v-if="approverInfo" shadow="hover">
-      <div class="detail_title">审核信息</div>
+      <div class="detail_title">{{ $t('component.approvalinfo')}}</div>
       <div class="more_ul">
         <el-row
           v-for="i in approverInfo"
@@ -72,7 +72,7 @@
       </div>
     </el-card>
     <el-card v-if="regionInfo" shadow="hover">
-      <div class="detail_title">区域信息</div>
+      <div class="detail_title">{{ $t('component.regioninfo')}}</div>
       <div v-for="(i, index) in regionInfo" :key="index">
         <el-row
           v-if="i.type!=='endpoint' && i.key"
@@ -89,13 +89,13 @@
         >
           <el-col :span="6">{{ `Endpoint(${i.name})` }}</el-col>
           <el-col :span="10">{{ i.key }}</el-col>
-          <el-col v-if="i.remark" :span="2">备注</el-col>
+          <el-col v-if="i.remark" :span="2">{{ $t('component.remark')}}</el-col>
           <el-col :span="4">{{ i.remark }}</el-col>
         </el-row>
       </div>
     </el-card>
     <el-card v-if="otherInfo" shadow="hover">
-      <div class="detail_title">其他信息</div>
+      <div class="detail_title">{{ $t('component.otherinfo')}}</div>
       <el-row v-for="i in otherInfo" :key="i.key" class="more_row" :gutter="20">
         <el-col :span="8">{{ i.name }}</el-col>
         <el-col

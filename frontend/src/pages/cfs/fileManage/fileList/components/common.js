@@ -21,7 +21,7 @@ export function putPresignature(params) {
   return new Promise((resolve, reject) => {
     const { putSignUrl, env, zone, vol, prefix, file_name, content_type, part_num, user } = params
     if (!putSignUrl) {
-      const err = new Error('params入参中缺少上传预签名url字段: putSignUrl ')
+      const err = new Error(this.$t('filemanage.lacksign'))
       reject(err)
       return
     }
@@ -93,7 +93,7 @@ export async function upload(urls, fileList, xhrOptions, prefix, chunkSize) {
         }
       }, e => {
         errorCount++
-        if (errorCount < 2 && e !== '手动取消') {
+        if (errorCount < 2 && e !== this.$t('filemanage.cancelmanually')) {
           wrapRequestFn(resolve, reject) // 重试
         } else {
           reject(e)

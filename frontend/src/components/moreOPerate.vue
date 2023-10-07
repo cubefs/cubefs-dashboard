@@ -29,7 +29,7 @@ export default {
     },
     title: {
       type: String,
-      default: '更多操作',
+      default: 'component.moremg',
     },
     type: {
       type: String,
@@ -47,9 +47,13 @@ export default {
       type: Boolean,
       default: true,
     },
+    i18n: {
+      type: Object,
+      required: true,
+    },
   },
   render(h, context) {
-    const { count, title, type, poperClass, width, visibleArrow } = context.props
+    const { count, title, type, poperClass, width, visibleArrow,i18n } = context.props
     context.children = context.children.filter(item => {
       return item.tag
     })
@@ -67,7 +71,7 @@ export default {
               type, poperClass, width, visibleArrow,
             },
             scopedSlots: {
-              header: props => h('span', title),
+              header: props => h('span', i18n.t(title)),
               list: props =>
                 h('ul', {}, [...renderLi(h, children.slice(count - 1))]),
             },

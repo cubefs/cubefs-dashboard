@@ -16,7 +16,7 @@
 
 <template>
   <el-dialog
-    title="创建卷"
+    :title="$t('common.create') + $t('common.volume')"
     :visible.sync="dialogFormVisible"
     width="800px"
     @closed="clearData"
@@ -28,19 +28,19 @@
       label-width="25%"
       class="mid-block"
     >
-      <el-form-item label="集群:" prop="clusterName">
+      <el-form-item :label="$t('common.cluster') + ':'" prop="clusterName">
         <el-input v-model="forms.clusterName" class="input" disabled></el-input>
       </el-form-item>
-      <el-form-item label="卷名:" prop="volName">
+      <el-form-item :label="$t('common.volumename') + ':'" prop="volName">
         <el-input
           v-model="forms.volName"
           class="input"
-          placeholder="请输入卷名"
+          :placeholder="$t('volume.inputvolume')"
         ></el-input>
         <el-tooltip
           class="item"
           effect="dark"
-          content="必须以字母开头,可有下划线,数字,字母,中划线"
+          :content="$t('volume.volumenamerule')"
           placement="top"
         >
           <i class="el-icon-question fontS16"></i>
@@ -51,18 +51,18 @@
           :disabled="errDisable"
         >故障域</el-checkbox> -->
       </el-form-item>
-      <el-form-item label="容量:" prop="size">
+      <el-form-item :label="$t('common.size') + ':'" prop="size">
         <el-input
           v-model.number="forms.size"
           class="input"
-          placeholder="请输入容量"
+          :placeholder="$t('volume.inputsize')"
         ></el-input>&nbsp; GB
       </el-form-item>
-      <el-form-item label="缓存容量:" prop="cache_cap">
+      <el-form-item :label="$t('volume.cachesize') + ':'" prop="cache_cap">
         <el-input
           v-model.number="forms.cache_cap"
           class="input"
-          placeholder="请输入缓存容量"
+          :placeholder="$t('volume.inputcachesize')"
         ></el-input>&nbsp; GB
       </el-form-item>
       <el-form-item label="owner:" prop="owner">
@@ -70,19 +70,19 @@
           <el-option v-for="item in userList" :label="item.user_id" :value="item.user_id" :key="item.user_id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="业务:" prop="work">
+      <el-form-item :label="$t('common.business')+ ':'" prop="work">
         <el-input
           v-model="forms.work"
           type="textarea"
           :rows="2"
-          placeholder="请输入业务内容"
+          :placeholder="this.$t('volume.inputbusiness')"
           class="input"
         ></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button ref="pol" type="primary" @click="doCheck">确 定</el-button>
-      <el-button ref="pol" type="primary" @click="close">取 消</el-button>
+      <el-button ref="pol" type="primary" @click="doCheck">{{ $t('button.submit') }}</el-button>
+      <el-button ref="pol" type="primary" @click="close">{{ $t('button.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -116,7 +116,7 @@ export default {
         clusterName: [
           {
             required: true,
-            message: '请输入集群名称',
+            message: this.$t('cfsclusteroverview.inputclustername'),
             trigger: 'blur',
           },
         ],
@@ -127,9 +127,9 @@ export default {
             validator: (rule, value, cb) => {
               const reg = /^[a-zA-Z][a-zA-Z_0-9-]*$/
               if (!value) {
-                cb(new Error('请输入卷名称'))
+                cb(new Error(this.$t('volume.inputvolume')))
               } else if (!reg.test(value)) {
-                cb(new Error('必须以字母开头,可有下划线,数字,字母,中划线'))
+                cb(new Error(this.$t('volume.volumenamerule')))
               }
               cb()
             },
@@ -138,28 +138,28 @@ export default {
         size: [
           {
             required: true,
-            message: '请输入容量',
+            message: this.$t('volume.inputsize'),
             trigger: 'blur',
           },
         ],
         cache_cap: [
           {
             required: true,
-            message: '请输入缓存容量',
+            message: this.$t('volume.inputcachesize'),
             trigger: 'blur',
           },
         ],
         work: [
           {
             required: true,
-            message: '请填写业务',
+            message: this.$t('volume.inputbusiness'),
             trigger: 'blur',
           },
         ],
         owner: [
           {
             required: true,
-            message: '请选择用户',
+            message: this.$t('volume.selectowner'),
             trigger: 'blur',
           },
         ]
@@ -226,7 +226,7 @@ export default {
         owner,
         vol_type: 1,
       })
-      this.$message.success('创建成功')
+      this.$message.success(this.$t('common.create') + this.$t('common.xxsuc'))
       this.$emit('refresh')
       this.close()
     },

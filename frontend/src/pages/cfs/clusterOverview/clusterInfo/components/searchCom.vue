@@ -19,21 +19,21 @@
     <el-row>
       <el-form :inline="true" :model="forms">
         <EbsClusterSelectForm v-model="forms.clusterId"></EbsClusterSelectForm>
-        <el-form-item label="卷：">
+        <el-form-item :label="$t('common.volume') + '：'">
           <el-input
             v-model="forms.volumn"
             style="width: 180px"
-            placeholder="请输入卷id"
+            :placeholder="$t('resource.inputvolumeid')"
             clearable
             :disabled="!!forms.status"
           >
           </el-input>
         </el-form-item>
-        <el-form-item label="状态：">
+        <el-form-item :label="$t('common.status') + '：'">
           <el-select
             v-model="forms.status"
             style="width: 180px"
-            placeholder="请选择"
+            :placeholder="$t('common.select')"
             :disabled="!!forms.volumn"
             clearable
           >
@@ -49,8 +49,8 @@
           type="primary"
           icon="el-icon-search"
           @click="searchClick"
-        >搜索</el-button>
-        <el-button type="plain" @click="reset">重置</el-button>
+        >{{ $t('button.search') }}</el-button>
+        <el-button type="plain" @click="reset">{{ $t('button.reset') }}</el-button>
       </el-form>
     </el-row>
   </div>

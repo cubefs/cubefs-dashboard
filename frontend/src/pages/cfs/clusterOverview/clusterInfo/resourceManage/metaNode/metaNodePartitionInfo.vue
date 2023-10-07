@@ -21,7 +21,7 @@
         <el-row class="search">
           <el-input
             v-model.trim="inputParams"
-            placeholder="请输入分区ID"
+            :placeholder="$t('volume.inputparid')"
             clearable
             class="input"
           ></el-input>
@@ -29,7 +29,7 @@
             type="primary"
             class="search-btn"
             @click="onsearch"
-          >搜 索</el-button>
+          >{{ $t('button.search') }}</el-button>
         </el-row>
       </el-col>
     </el-row>
@@ -37,12 +37,12 @@
       <u-page-table :data="dataList" :page-size="page.per_page">
         <!-- <el-table-column label="序号" type="index"></el-table-column> -->
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="partition_id"
           sortable
         ></el-table-column>
         <el-table-column
-          label="卷名"
+          :label="$t('common.volumename')"
           prop="vol_name"
           sortable
         ></el-table-column>
@@ -55,15 +55,15 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column :label="$t('common.action')">
           <template slot-scope="scope">
-            <MoreOPerate :count="2">
+            <MoreOPerate :count="2" :i18n="i18n">
               <el-button
                 v-auth="'CFS_METAPARTITION_DECOMMISSION'"
                 size="medium"
                 type="text"
                 @click="handleOffLine(scope.row)"
-              >下线</el-button>
+              >{{ $t('common.offline') }}</el-button>
             </MoreOPerate>
           </template>
         </el-table-column>
@@ -105,6 +105,7 @@ export default {
       page: {
         per_page: 5, // 页面大小
       },
+      i18n: this.$i18n,
     }
   },
   computed: {
@@ -134,9 +135,9 @@ export default {
     async handleOffLine({ partition_id }) {
       const nodeAddr = this.addr
       try {
-        await this.$confirm(`确定要下线该分区(${partition_id})磁盘?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        await this.$confirm(this.$t('resource.offlineconfirm') + '(' +`${partition_id}` + ')' + this.$t('common.disk') + '?', this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
           type: 'warning',
         })
         await offLineMetaNodePartitions({
@@ -146,7 +147,7 @@ export default {
             id: partition_id,
           }],
         })
-        this.$message.success('下线成功')
+        this.$message.success(this.$t('common.offline') + this.$t('common.xxsuc'))
         this.onsearch()
       } catch (e) {}
     },

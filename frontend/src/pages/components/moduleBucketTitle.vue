@@ -28,7 +28,7 @@
         plain
         size="medium"
         @click="goBack"
-      >返回列表</el-button></el-col>
+      >{{ $t('component.goback') }}</el-button></el-col>
     </el-row>
     <div class="bucket_msg color9">
       <slot></slot>

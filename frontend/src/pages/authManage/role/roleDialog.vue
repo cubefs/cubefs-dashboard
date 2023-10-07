@@ -21,12 +21,12 @@
     :visible.sync="dialogVisible"
     width="950px"
   >
-    <el-form ref="form" :model="form" label-width="90px" :rules="rules" style="width: 900px">
-      <el-form-item label="角色Code" prop="role_code">
-        <el-input v-model="form.role_code" :disabled="type !== 'create'" placeholder="请输入角色Code,只能包含输入英文、数字和下划线" style="width: 790px" />
+    <el-form ref="form" :model="form" label-width="120px" :rules="rules" style="width: 900px">
+      <el-form-item :label="$t('common.role') + $t('common.code')" prop="role_code">
+        <el-input v-model="form.role_code" :disabled="type !== 'create'" :placeholder="$t('rolemgt.inputcode') + ', ' + $t('rolemgt.inputrule')" style="width: 790px" />
       </el-form-item>
-      <el-form-item label="角色名称" prop="role_name">
-        <el-input v-model="form.role_name" :disabled="type !== 'create'" placeholder="请输入角色名称" style="width: 790px" />
+      <el-form-item :label="$t('common.role') + $t('common.name')" prop="role_name">
+        <el-input v-model="form.role_name" :disabled="type !== 'create'" :placeholder="$t('rolemgt.inputname')" style="width: 790px" />
       </el-form-item>
       <!-- <div>角色权限</div>
       <div v-for="item in codeList" :key="item.title">
@@ -42,33 +42,34 @@
           </el-checkbox-group>
         </el-form-item>
       </div> -->
-      <el-form-item label="角色权限" prop="roles">
+      <el-form-item :label="$t('common.role') + ' ' + $t('common.privilege')" prop="roles">
         <el-table :data="codeList" style="width: 97%" :header-cell-style="{ background: '#f8f9fc', color: '#606266', fontWeight: '550' }">
-          <el-table-column prop="title" label="模块" width="120" />
-          <el-table-column label="权限">
+          <el-table-column prop="title" :label="$t('common.modules')" width="120" />
+          <el-table-column :label="$t('common.privilege')">
             <template slot-scope="scope">
               <el-checkbox
                 v-for="item in scope.row.children"
                 :key="item.id"
                 v-model="item.checked"
-                :title="$t(item.id)"
+                :title="$t('privileges.'+item.id)"
                 :disabled="type === 'delete'"
                 @change="value => {
                   itemSelect(value, item, scope.row)
                 }"
               >
-                <el-tooltip v-if="item.id === 'CFS_USERS_CREATE' || item.id === 'CFS_VOLS_CREATE'" placement="top" content="选择该权限请先选择租户管理，否则不生效">
+                <el-tooltip v-if="item.id === 'CFS_USERS_CREATE' || item.id === 'CFS_VOLS_CREATE'" placement="top" :content="$t('rolemgt.tenantcheckedfirst')">
                   <div>
-                    <i class="el-icon-question" /> {{ $t(item.id) }}
+                    <i class="el-icon-question" /> {{ $t('privileges.'+item.id) }}
                   </div>
                 </el-tooltip>
                 <span v-else>
-                  {{ $t(item.id) }}
+                  <!-- {{ $t(item.id) }} -->
+                  {{ $t('privileges.'+item.id) }}
                 </span>
               </el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="全选" width="100">
+          <el-table-column :label="$t('common.all')" width="100">
             <template slot-scope="scope">
               <el-checkbox
                 v-model="scope.row.all"
@@ -85,9 +86,9 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button v-if="type !== 'delete'" type="primary" @click="submit">确 定</el-button>
-      <el-button v-else type="danger" @click="submit">删 除</el-button>
+      <el-button @click="dialogVisible = false">{{ $t('button.cancel') }}</el-button>
+      <el-button v-if="type !== 'delete'" type="primary" @click="submit">{{ $t('button.submit') }}</el-button>
+      <el-button v-else type="danger" @click="submit">{{ $t('button.delete') }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -99,7 +100,7 @@ import {
   roleUpdate,
   roleDelete,
 } from '@/api/auth'
-import { codeList, backendAuthids } from '@/utils/auth'
+import { backendAuthids, getCodeList } from '@/utils/auth'
 
 export default {
   name: 'UserDialog',
@@ -116,10 +117,10 @@ export default {
       authList: [],
       rules: {
         role_code: [
-          { required: true, message: '请输入角色Code', trigger: 'blur' },
-          { pattern: /^[a-zA-Z0-9_]+$/, message: '仅允许包含输入英文、数字和下划线', trigger: 'blur' },
+          { required: true, message: this.$t('rolemgt.inputcode'), trigger: 'blur' },
+          { pattern: /^[a-zA-Z0-9_]+$/, message: this.$t('rolemgt.inputrule'), trigger: 'blur' },
         ],
-        role_name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+        role_name: [{ required: true, message: this.$t('rolemgt.inputname'), trigger: 'blur' }],
       },
       codeList: [],
       codeMap: {},
@@ -130,13 +131,13 @@ export default {
       let title = ''
       switch (this.type) {
         case 'create':
-          title = '添加角色'
+          title = this.$t('common.add') + this.$t('common.role')
           break
         case 'edit':
-          title = '修改角色权限'
+          title = this.$t('common.edit') + this.$t('common.privilege')
           break
         case 'delete':
-          title = '删除角色'
+          title = this.$t('common.delete') + this.$t('common.role')
           break
       }
       return title
@@ -153,7 +154,7 @@ export default {
         role_name: '',
         permission_ids: [],
       }
-      this.codeList = codeList.map(item => ({
+      this.codeList = getCodeList(this).map(item => ({
         title: item.title,
         children: item.children.map(_item => ({
           checked: false,
@@ -197,7 +198,7 @@ export default {
       }, {})
     },
     echoCode() {
-      this.codeList = codeList.map(item => ({
+      this.codeList = getCodeList(this).map(item => ({
         title: item.title,
         children: item.children.map(_item => ({
           checked: false,
@@ -257,20 +258,20 @@ export default {
           permission_ids: [...this.form.permission_ids, ...backendAuthids],
           password: 'abcd1234',
         })
-        this.$message.success('创建成功')
+        this.$message.success(this.$t('common.created') + this.$t('common.xxsuc'))
         this.$emit('submit')
       } else if (this.type === 'edit') {
         await roleUpdate({
           ...this.form,
           id: this.id,
         })
-        this.$message.success('编辑成功')
+        this.$message.success(this.$t('common.edit') + this.$t('common.xxsuc'))
         this.$emit('submit')
       } else if (this.type === 'delete') {
         await roleDelete({
           ids: [this.id],
         })
-        this.$message.success('删除成功')
+        this.$message.success(this.$t('common.deleted') + this.$t('common.xxsuc'))
         this.$emit('submit')
       }
       this.dialogVisible = false

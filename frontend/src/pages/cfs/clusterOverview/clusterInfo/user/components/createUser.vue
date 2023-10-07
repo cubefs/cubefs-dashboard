@@ -16,7 +16,7 @@
 
 <template>
   <el-dialog
-    title="创建租户"
+    :title="$t('common.create') + $t('common.tenant')"
     :visible.sync="dialogFormVisible"
     width="800px"
     :append-to-body="true"
@@ -29,31 +29,31 @@
       label-width="25%"
       class="mid-block"
     >
-      <el-form-item label="租户ID:" prop="user">
+      <el-form-item :label="$t('tenant.tenantid')+ ':'" prop="user">
         <el-input
           v-model="forms.user"
           class="input"
-          placeholder="请输入租户ID"
+          :placeholder="$t('tenant.inputtenantid')"
         ></el-input>
         <el-tooltip
           class="item"
           effect="dark"
-          content="必须以字母开头,可有下划线,数字,字母"
+          :content="$t('tenant.idrule')"
           placement="top"
         >
           <i class="el-icon-question fontS16"></i>
         </el-tooltip>
       </el-form-item>
-      <el-form-item label="租户说明:" prop="description">
+      <el-form-item :label="$t('tenant.tenantdescrp')" prop="description">
         <el-input
           v-model="forms.description"
           type="textarea"
           :rows="2"
-          placeholder="请输入租户说明"
+          :placeholder="$t('tenant.inputdescrp')"
           class="input"
         ></el-input>
       </el-form-item>
-      <el-form-item label="租户类型:" prop="accountType">
+      <el-form-item :label="$t('common.tenant') + $t('common.type') + ':'" prop="accountType">
         <el-radio-group v-model="forms.accountType">
           <!-- <el-radio :label="1">root</el-radio>
           <el-radio :label="2">admin</el-radio> -->
@@ -62,8 +62,8 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button ref="pol" type="primary" @click="doCheck">确 定</el-button>
-      <el-button ref="pol" type="primary" @click="close">取 消</el-button>
+      <el-button ref="pol" type="primary" @click="doCheck">{{ $t('button.submit') }}</el-button>
+      <el-button ref="pol" type="primary" @click="close">{{ $t('button.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -93,9 +93,9 @@ export default {
             validator: (rule, value, cb) => {
               const reg = /^[a-zA-Z][a-zA-Z_0-9]*$/
               if (!value) {
-                cb(new Error('请输入租户ID'))
+                cb(new Error(this.$t('tenant.inputtenantid')))
               } else if (!reg.test(value)) {
-                cb(new Error('必须以字母开头,可有下划线,数字,字母'))
+                cb(new Error(this.$t('tenant.idrule')))
               }
               cb()
             },
@@ -127,7 +127,7 @@ export default {
         description,
         cluster_name: this.clusterName,
       })
-      this.$message.success('创建租户成功')
+      this.$message.success(this.$t('tenant.createtenantsuc'))
       this.$emit('refresh')
       this.close()
     },

@@ -22,22 +22,22 @@
           v-for="page in pageSizes"
           :key="page"
           :value="page"
-          :label="`${page}条/页`"
+          :label="`${page}` + $t('common.itermperpages')"
         >
         </el-option>
       </el-select>
-      <button type="button" class="w20" :disabled="currentPage === 1" title="首页" @click="onClick(1)">首页</button>
+      <button type="button" class="w20" :disabled="currentPage === 1" :title="$t('common.homepage')" @click="onClick(1)">{{ $t('common.homepage') }}</button>
       <button
         type="button"
         class="w20"
-        title="上一页"
+        :title="$t('common.previous')"
         :disabled="currentPage === 1"
         @click="onClick(2)"
       >
-        上一页
+        {{ $t('common.previous') }}
       </button>
       <!-- <div class="content"><span>{{ currentPage }}</span></div> -->
-      <button class="w20" title="下一页" :disabled="!marker" @click="onClick(3)">下一页</button>
+      <button class="w20" :title="$t('common.next')" :disabled="!marker" @click="onClick(3)">{{ $t('common.next') }}</button>
       <slot name="help"></slot>
     </div>
     <div class="more-data">
@@ -102,7 +102,7 @@ export default {
         } else return
       } else if (type === 3) {
         if (!this.marker) {
-          this.$message.warning('没有更多数据了')
+          this.$message.warning($t('common.nomoredata'))
           return
         }
         this.currentPage++

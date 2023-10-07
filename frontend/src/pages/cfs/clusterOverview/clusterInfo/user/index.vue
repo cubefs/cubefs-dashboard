@@ -22,40 +22,40 @@
         icon="el-icon-circle-plus"
         type="primary"
         @click.stop="createUser"
-      >创建租户</el-button>
+      >{{ $t('common.create') }}{{ $t('common.tenant') }}</el-button>
       <div style="display: flex;">
         <el-input
           v-model="params.userID"
           class="m-r-15"
-          placeholder="请输入租户ID"
+          :placeholder="$t('tenant.inputtenantid')"
           clearable
         ></el-input>
         <el-button
           type="primary"
           @click="getData"
-        >搜 索</el-button>
+        >{{ $t('button.search') }}</el-button>
       </div>
     </div>
     <el-row class="userInfo">
       <u-page-table :data="dataList" :page-size="page.per_page">
         <!-- <el-table-column label="序号" type="index"></el-table-column> -->
-        <el-table-column label="租户ID" prop="user_id"></el-table-column>
-        <el-table-column label="租户类型" prop="user_type"></el-table-column>
+        <el-table-column :label="$t('tenant.tenantid')" prop="user_id"></el-table-column>
+        <el-table-column :label="$t('common.tenant') + $t('common.type')" prop="user_type"></el-table-column>
         <el-table-column label="AK" prop="access_key"></el-table-column>
         <el-table-column label="SK" prop="secret_key"></el-table-column>
-        <el-table-column label="创建时间" prop="create_time"></el-table-column>
+        <el-table-column :label="$t('common.createtime')" prop="create_time"></el-table-column>
       </u-page-table>
     </el-row>
     <el-row>
       <el-row>
         <el-col :span="12">
-          <div class="detail_title">授权详情</div>
+          <div class="detail_title">{{ $t('common.permissions') }} {{ $t('common.detail') }}</div>
         </el-col>
         <el-col :span="12">
           <el-row class="search">
             <el-input
               v-model.trim="params.volName"
-              placeholder="请输入卷名"
+              :placeholder="$t('volume.inputvolume')"
               clearable
               class="input"
             ></el-input>
@@ -63,18 +63,18 @@
               type="primary"
               class="search-btn"
               @click="getData"
-            >搜 索</el-button>
+            >{{ $t('button.search') }}</el-button>
           </el-row>
         </el-col>
       </el-row>
       <el-row>
         <u-page-table :data="dataListAuth" :page-size="pageAuth.per_page">
           <!-- <el-table-column label="序号" type="index"></el-table-column> -->
-          <el-table-column label="租户ID" prop="user_id"></el-table-column>
-          <el-table-column label="卷名" prop="volume"></el-table-column>
+          <el-table-column :label="$t('tenant.tenantid')" prop="user_id"></el-table-column>
+          <el-table-column :label="$t('common.volume')" prop="volume"></el-table-column>
           <!-- <el-table-column label="子目录" prop="business_team"></el-table-column> -->
-          <el-table-column label="业务" prop="business"></el-table-column>
-          <el-table-column label="权限" prop="policy">
+          <el-table-column :label="$t('common.business')" prop="business"></el-table-column>
+          <el-table-column :label="$t('common.permissions')" prop="policy">
             <template slot-scope="scope">
               <el-radio
                 v-for="item in scope.row.policy"

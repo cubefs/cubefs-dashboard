@@ -17,21 +17,21 @@
 <template>
   <el-card>
     <el-form :inline="true">
-      <el-form-item label="卷名称">
-        <el-input v-model.trim="searchForm.name" placeholder="请输入" clearable></el-input>
+      <el-form-item :label="$t('common.volumename')">
+        <el-input v-model.trim="searchForm.name" :placeholder="$t('filemanage.input')" clearable></el-input>
       </el-form-item>
-      <el-form-item label="owner租户">
-        <el-input v-model.trim="searchForm.owner" placeholder="请输入" clearable></el-input>
+      <el-form-item :label="$t('filemanage.tenant')">
+        <el-input v-model.trim="searchForm.owner" :placeholder="$t('filemanage.input')" clearable></el-input>
       </el-form-item>
-      <el-form-item label="状态">
-        <el-select v-model.trim="searchForm.status" placeholder="请选择" clearable>
+      <el-form-item :label="$t('common.status')">
+        <el-select v-model.trim="searchForm.status" :placeholder="$t('filemanage.select')" clearable>
           <el-option label="Normal" value="Normal" />
           <el-option label="Marked delete" value="Marked delete" />
           <el-option label="Unknown" value="Unknown" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="search">查询</el-button>
+        <el-button type="primary" @click="search">{{ $t('common.search') }}</el-button>
       </el-form-item>
     </el-form>
     <u-page-table
@@ -43,7 +43,7 @@
       :page-size.sync="page.per_page"
       :total="page.total"
     >
-      <el-table-column label="卷名称" prop="name">
+      <el-table-column :label="$t('common.volumename')" prop="name">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -54,33 +54,34 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="owner租户" prop="owner">
+      <el-table-column :label="$t('filemanage.tenant')" prop="owner">
         <template slot-scope="scope">
           <div>{{ scope.row.owner }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="status">
+      <el-table-column :label="$t('common.status')" prop="status">
         <template slot-scope="scope">
           <div>{{ scope.row.status }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="是否配置s3">
+      <el-table-column :label="$t('filemanage.s3ornot')">
         <template slot="header">
           <el-tooltip
             class="item"
             effect="dark"
-            content="管理文件请先配置s3地址"
+            :content="$t('filemanage.s3needed')"
             placement="top-start"
           >
-            <span><i class="el-icon-question"></i> 是否配置s3 </span>
+            <span><i class="el-icon-question"></i> {{ $t('filemanage.s3ornot') }} </span>
           </el-tooltip>
         </template>
-        <template slot-scope="scope">
-          <span>{{ s3Endpoint ? "是" : '否' }}</span>
+        <!-- <template slot-scope="scope"> -->
+        <template>
+          <span>{{ s3Endpoint ? $t('common.yes') : $t('common.no') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="master域名" prop="master_addr"></el-table-column>
-      <el-table-column label="创建时间" prop="create_time">
+      <el-table-column :label="$t('common.master')" prop="master_addr"></el-table-column>
+      <el-table-column :label="$t('common.createtime')" prop="create_time">
         <template slot-scope="scope">
           <div>{{ scope.row.create_time }}</div>
         </template>
@@ -139,7 +140,7 @@ export default {
     },
     gotoFileList(row) {
       if (!this.s3Endpoint) {
-        this.$message.warning('没有s3配置，请到资源管理页面配置s3 endpoint')
+        this.$message.warning(this.$t('filemanage.nos3'))
         return;
       }
       this.$router.push({

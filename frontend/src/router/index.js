@@ -39,6 +39,9 @@ const RouterViewHoc = {
   },
 }
 
+
+const DEFAULT_TITLE = 'DEFAULT_TITLE';
+
 const router = new Router({
   mode: 'history',
   base: '',
@@ -49,6 +52,7 @@ const router = new Router({
       return { x: 0, y: 0 }
     }
   },
+
   routes: [
     {
       path: '/',
@@ -62,7 +66,8 @@ const router = new Router({
           path: 'authManage',
           name: 'authManage',
           meta: {
-            title: '权限管理',
+            // title: '权限管理',
+            title: 'router.privilege',
           },
           component: RouterViewHoc,
           children: [
@@ -70,7 +75,8 @@ const router = new Router({
               path: 'userManage',
               name: 'userManage',
               meta: {
-                title: '用户管理',
+                // title: '用户管理',
+                title:  'router.user',
               },
               component: () => import('@/pages/authManage/user/index'),
             },
@@ -78,7 +84,8 @@ const router = new Router({
               path: 'roleManage',
               name: 'roleManage',
               meta: {
-                title: '角色管理',
+                // title: '角色管理',
+                title: 'router.role' ,
               },
               component: () => import('@/pages/authManage/role/index'),
             },

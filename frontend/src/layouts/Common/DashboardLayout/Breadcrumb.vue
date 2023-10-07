@@ -50,7 +50,7 @@ export default {
               breadcrumbRender(h, { route: parent.$route })
             )
           : (
-          <span>{title || '未命名'}</span>
+          <span>{ parent.$t(title) || parent.$t('noname')}</span>
             )
       },
     },

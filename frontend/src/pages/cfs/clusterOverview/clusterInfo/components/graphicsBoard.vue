@@ -41,14 +41,14 @@
     </el-card>
     <el-dialog
       v-if="DiskDialogVisible"
-      title="坏磁盘"
+      :title="$t('common.broken')"
       width="65%"
       top="10vh"
       :visible.sync="DiskDialogVisible"
       center
     >
       <div style="margin-bottom: 10px; text-align: right;">
-        <el-button type="primary" @click="batchOfflineDisk">批量下线</el-button>
+        <el-button type="primary" @click="batchOfflineDisk">{{ $t('common.batch') }}{{ $t('common.offline') }}</el-button>
       </div>
       <el-table
         :data="diskTableData"
@@ -57,7 +57,7 @@
       >
         <el-table-column type="selection" width="80"></el-table-column>
         <el-table-column
-          label="序号"
+          :label="$t('common.id')"
           type="index"
         >
         </el-table-column>
@@ -74,7 +74,7 @@
     </el-dialog>
     <el-dialog
       v-if="DataPartitionDetailDialogVisible"
-      title="坏DP详情"
+      :title="$t('common.broken') + 'DP' + $t('common.detail')"
       width="65%"
       :visible.sync="DataPartitionDetailDialogVisible"
       center
@@ -84,13 +84,13 @@
         style="width: 100%"
       >
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="PartitionID"
           :width="100"
         ></el-table-column>
-        <el-table-column label="卷名" prop="VolName"></el-table-column>
+        <el-table-column :label="$t('common.volumename')" prop="VolName"></el-table-column>
         <el-table-column
-          label="副本数"
+          :label="$t('common.copies')"
           prop="ReplicaNum"
         ></el-table-column>
         <el-table-column label="isRecovering" :width="100">
@@ -105,7 +105,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="状态"
+          :label="$t('common.status')"
           prop="Status"
           :width="150"
         ></el-table-column>
@@ -113,146 +113,146 @@
     </el-dialog>
     <el-dialog
       v-if="DataPartitionDialogVisible"
-      title="坏DP"
+      :title="$t('common.broken') + 'DP'"
       width="65%"
       :visible.sync="DataPartitionDialogVisible"
       center
       top="5vh"
     >
-      <div>缺少副本的分区</div>
+      <div>{{ $t('volume.copymiss') }}</div>
       <el-table
         max-height="350"
         :data="LackReplicaDataPartitionIDs"
         style="width: 100%"
       >
         <el-table-column
-          label="序号"
+          :label="$t('common.id')"
           type="index"
         >
         </el-table-column>
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="id"
         >
           <template slot-scope="scope">
             <div>{{ scope.row }}</div>
           </template></el-table-column>
         <el-table-column
-          label="副本数"
+          :label="$t('common.copies')"
           prop="ReplicaNum"
         ></el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.action')"
         >
           <template slot-scope="scope">
             <el-button
               size="medium"
               type="text"
               @click="showDetail(scope.row, 2)"
-            >详情</el-button>
+            >{{ $t('common.detail') }}</el-button>
           </template>
           ></el-table-column>
       </el-table>
-      <div>缺少leader的分区</div>
+      <div>{{ $t('volume.leadermiss') }}</div>
       <el-table
         max-height="300"
         :data="CorruptDataPartitionIDs"
         style="margin-top:5px"
       >
         <el-table-column
-          label="序号"
+          :label="$t('common.id')"
           type="index"
         >
         </el-table-column>
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="id"
         >
           <template slot-scope="scope">
             <div>{{ scope.row }}</div>
           </template></el-table-column>
         <el-table-column
-          label="副本数"
+          :label="$t('common.copies')"
           prop="ReplicaNum"
         ></el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.action')"
         >
           <template slot-scope="scope">
             <el-button
               size="medium"
               type="text"
               @click="showDetail(scope.row, 2)"
-            >详情</el-button>
+            >{{ $t('common.detail') }}</el-button>
           </template>
           ></el-table-column>
       </el-table>
     </el-dialog>
     <el-dialog
       v-if="MetaPartitionDialogVisible"
-      title="坏MP"
+      :title="$t('common.broken') + 'MP'"
       width="65%"
       :visible.sync="MetaPartitionDialogVisible"
       center
       top="5vh"
     >
-      <div>缺少副本的分区</div>
+      <div>{{ $t('volume.copymiss') }}</div>
       <el-table
         max-height="350"
         :data="LackReplicaMetaPartitionIDs"
         style="width: 100%"
       >
         <el-table-column
-          label="序号"
+          :label="$t('common.id')"
           type="index"
         >
         </el-table-column>
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="id"
         >
           <template slot-scope="scope">
             <div>{{ scope.row }}</div>
           </template></el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.action')"
         >
           <template slot-scope="scope">
             <el-button
               size="medium"
               type="text"
               @click="showDetail(scope.row, 1)"
-            >详情</el-button>
+            >{{ $t('common.detail') }}</el-button>
           </template>
           ></el-table-column>
       </el-table>
-      <div>缺少leader的分区</div>
+      <div>{{ $t('volume.leadermiss') }}</div>
       <el-table
         max-height="300"
         :data="CorruptMetaPartitionIDs"
         style="margin-top:5px"
       >
         <el-table-column
-          label="序号"
+          :label="$t('common.id')"
           type="index"
         >
         </el-table-column>
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="id"
         >
           <template slot-scope="scope">
             <div>{{ scope.row }}</div>
           </template></el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.action')"
         >
           <template slot-scope="scope">
             <el-button
               size="medium"
               type="text"
               @click="showDetail(scope.row, 1)"
-            >详情</el-button>
+            >{{ $t('common.detail') }}</el-button>
           </template>
           ></el-table-column>
       </el-table>
@@ -267,7 +267,7 @@
     </el-dialog>
     <el-dialog
       v-if="MetaPartitionDetailDialogVisible"
-      title="坏MP详情"
+      :title="$t('common.broken') + 'MP' + $t('common.detail')"
       width="65%"
       :visible.sync="MetaPartitionDetailDialogVisible"
       center
@@ -277,11 +277,11 @@
         style="width: 100%"
       >
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="PartitionID"
           :width="80"
         ></el-table-column>
-        <el-table-column label="卷名" prop="VolName"></el-table-column>
+        <el-table-column :label="$t('common.volumename')" prop="VolName"></el-table-column>
         <el-table-column label="Start" prop="Start"></el-table-column>
         <el-table-column label="End" prop="End"></el-table-column>
         <el-table-column
@@ -314,7 +314,7 @@
             <div v-for="item in scope.row.Members" :key="item">{{ item }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="状态" prop="Status" :width="90"></el-table-column>
+        <el-table-column :label="$t('common.status')" prop="Status" :width="90"></el-table-column>
       </el-table>
     </el-dialog>
   </div>
@@ -368,6 +368,9 @@ export default {
         },
       ],
       seletedDisk: [],
+      health: this.$t('common.health'),
+      unhealthy: this.$t('common.unhealthy'),
+      broken: this.$t('common.broken'),
     }
   },
   computed: {
@@ -425,8 +428,8 @@ export default {
         this.badDiskNum += tempData[i].bad_disks?.length || 0
         this.dataPartition += tempData[i].partition_count
       }
-      this.chartData.push({ data: [{ name: '正常', value: this.diskNum - this.badDiskNum }, { name: '损坏', value: this.badDiskNum }], title: '磁盘状态' })
-      this.chartData.push({ data: [{ name: '正常', value: normalNode }, { name: '异常', value: badNode }], title: '数据节点数量' })
+      this.chartData.push({ data: [{ name: 'common.health', value: this.diskNum - this.badDiskNum }, { name: 'common.broken', value: this.badDiskNum }], title: 'common.disk' })
+      this.chartData.push({ data: [{ name: 'common.health', value: normalNode }, { name: 'common.unhealthy', value: badNode }], title: 'common.datanodes' })
     },
     async getMetaPartition() {
       const res = await getMetaNodeList({
@@ -443,7 +446,7 @@ export default {
         }
         this.metaPartition += item.partition_count
       })
-      this.chartData.push({ data: [{ name: '正常', value: normalNode }, { name: '异常', value: badNode }], title: '元数据节点数量' })
+      this.chartData.push({ data: [{ name: 'common.health', value: normalNode }, { name: 'common.unhealthy', value: badNode }], title: 'common.metanodes' })
     },
     async getMpDpStatus() {
       const res = await getBadDataP({ cluster_name: this.curClusterInfo.clusterName })
@@ -477,17 +480,20 @@ export default {
       }
       const dataInfo = calcData(dataTotal, dataUsed)
       const metaInfo = calcData(metaTotal, metaUsed)
-      this.mpDpchartData.push({ data: [{ name: '已使用', value: dataInfo.used }, {name: '未使用', value: dataInfo.noUsed}], title: '数据使用率' })
-      this.mpDpchartData.push({ data: [{ name: '已使用', value: metaInfo.used }, {name: '未使用', value: metaInfo.noUsed}], title: '元数据使用率' })
+      this.mpDpchartData.push({ data: [{ name: 'common.used' , value: dataInfo.used }, {name: 'common.free' , value: dataInfo.noUsed}], title: 'common.datausage' })
+      this.mpDpchartData.push({ data: [{ name: 'common.used' , value: metaInfo.used }, {name: 'common.free' , value: metaInfo.noUsed}], title: 'common.metausage' })
     },
     showDialog(name) {
-      if (name === '磁盘状态') {
+      const disk = this.$t('common.disk')
+      const DP = 'DP' + this.$t('common.status')
+      const MP = 'MP' + this.$t('common.status')
+      if (name === disk) {
         this.DiskDialogVisible = true
       }
-      if (name === 'DP状态') {
+      if (name === DP) {
         this.DataPartitionDialogVisible = true
       }
-      if (name === 'MP状态') {
+      if (name === MP) {
         this.MetaPartitionDialogVisible = true
       }
     },
@@ -513,7 +519,7 @@ export default {
     },
     async batchOfflineDisk() {
       if (!this.seletedDisk.length) {
-        this.$message.warning('请至少勾选一个需要下线的磁盘')
+        this.$message.warning(this.$t('resource.choosedisk'))
       }
       // await batchOfflineDisk(params)
     },

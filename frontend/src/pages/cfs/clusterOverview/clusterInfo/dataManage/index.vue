@@ -19,15 +19,15 @@
     <div class="mg-bt-s">
       <div>
         <el-radio-group v-model="activeName" style="margin-bottom: 10px;">
-          <el-radio-button label="partition">多副本</el-radio-button>
-          <el-radio-button label="blobstoreVolume" :disabled="!ebsClusterList || !ebsClusterList.length">纠删码</el-radio-button>
+          <el-radio-button label="partition">{{ $t('common.copies') }}</el-radio-button>
+          <el-radio-button label="blobstoreVolume" :disabled="!ebsClusterList || !ebsClusterList.length">{{ $t('common.ec') }}</el-radio-button>
         </el-radio-group>
       </div>
       <div v-if="activeName === 'partition'" class="flex">
-        <span class="fontType"><span>总节点数:</span> <span class="mg-lf-m"></span>{{ info.node }}</span>
-        <span class="fontType mg-lf-m"><span>总分区数:</span> <span class="mg-lf-m"></span>{{ info.partition }}</span>
-        <span class="fontType mg-lf-m"><span>损坏分区数:</span> <span class="mg-lf-m"></span><span class="bad_partition" @click="showDialog('DP状态')">{{ badDataPartitionNum }}</span>/{{ (badDataPartitionNum / info.partition * 100).toFixed()+'%' || '0%' }}</span>
-        <span class="fontType mg-lf-m"><span>总容量:</span> <span class="mg-lf-m"></span>{{ info.total |renderSize }}</span>
+        <span class="fontType"><span>{{ $t('common.total') }}{{ $t('common.nodes') }}:</span> <span class="mg-lf-m"></span>{{ info.node }}</span>
+        <span class="fontType mg-lf-m"><span>{{ $t('common.total') }}{{ $t('common.partitions') }}:</span> <span class="mg-lf-m"></span>{{ info.partition }}</span>
+        <span class="fontType mg-lf-m"><span>{{ $t('common.broken') }}{{ $t('common.partitions') }}:</span> <span class="mg-lf-m"></span><span class="bad_partition" @click="showDialog('DP' + this.$t('common.status'))">{{ badDataPartitionNum }}</span>/{{ (badDataPartitionNum / info.partition * 100).toFixed()+'%' || '0%' }}</span>
+        <span class="fontType mg-lf-m"><span>{{ $t('common.total') }}{{ $t('common.size') }}:</span> <span class="mg-lf-m"></span>{{ info.total |renderSize }}</span>
         <div class="mg-lf-m progress">
           <span>{{ info.used |renderSize }}/{{ (info.used/info.total*100).toFixed(0)+'%' }}</span>
           <el-progress
@@ -54,7 +54,7 @@
     />
     <el-dialog
       v-if="DataPartitionDetailDialogVisible"
-      title="坏DP详情"
+      :title="$t('common.broken') + 'DP' + $t('common.details')"
       width="65%"
       :visible.sync="DataPartitionDetailDialogVisible"
       center
@@ -64,13 +64,13 @@
         style="width: 100%"
       >
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="PartitionID"
           :width="100"
         ></el-table-column>
-        <el-table-column label="卷名" prop="VolName"></el-table-column>
+        <el-table-column :label="$t('common.volumename')" prop="VolName"></el-table-column>
         <el-table-column
-          label="副本数"
+          :label="$t('common.copies')"
           prop="ReplicaNum"
         ></el-table-column>
         <el-table-column label="isRecovering" :width="100">
@@ -85,7 +85,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="状态"
+          :label="$t('common.status')"
           prop="Status"
           :width="150"
         ></el-table-column>
@@ -93,77 +93,77 @@
     </el-dialog>
     <el-dialog
       v-if="DataPartitionDialogVisible"
-      title="坏DP"
+      :title="$t('common.broken') + 'DP'"
       width="65%"
       :visible.sync="DataPartitionDialogVisible"
       center
       top="5vh"
     >
-      <div>缺少副本的分区</div>
+      <div>{{ $t('volume.copymiss') }}</div>
       <el-table
         max-height="350"
         :data="LackReplicaDataPartitionIDs"
         style="width: 100%"
       >
         <el-table-column
-          label="序号"
+          :label="$t('common.id')"
           type="index"
         >
         </el-table-column>
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="id"
         >
           <template slot-scope="scope">
             <div>{{ scope.row }}</div>
           </template></el-table-column>
         <el-table-column
-          label="副本数"
+          :label="$t('common.copies')"
           prop="ReplicaNum"
         ></el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.action')"
         >
           <template slot-scope="scope">
             <el-button
               size="medium"
               type="text"
               @click="showDetail(scope.row, 2)"
-            >详情</el-button>
+            >{{ $t('common.detail') }}</el-button>
           </template>
           ></el-table-column>
       </el-table>
-      <div>缺少leader的分区</div>
+      <div>{{ $t('volume.leadermiss') }}</div>
       <el-table
         max-height="300"
         :data="CorruptDataPartitionIDs"
         style="margin-top:5px"
       >
         <el-table-column
-          label="序号"
+          :label="$t('common.id')"
           type="index"
         >
         </el-table-column>
         <el-table-column
-          label="分区ID"
+          :label="$t('common.partitionid')"
           prop="id"
         >
           <template slot-scope="scope">
             <div>{{ scope.row }}</div>
           </template></el-table-column>
         <el-table-column
-          label="副本数"
+          :label="$t('common.copies')"
           prop="ReplicaNum"
         ></el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.action')"
         >
           <template slot-scope="scope">
             <el-button
               size="medium"
               type="text"
               @click="showDetail(scope.row, 2)"
-            >详情</el-button>
+            >{{ $t('common.detail') }}</el-button>
           </template>
           ></el-table-column>
       </el-table>

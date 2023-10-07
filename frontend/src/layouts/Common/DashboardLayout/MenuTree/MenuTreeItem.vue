@@ -36,7 +36,7 @@
               activeIcon : (menu.menuLinkItem && $route.path === menu.path) || (!menu.menuLinkItem && $route.path.includes(menu.path)) || $route.path.includes(menu.linkGroup)
             }"
           />
-          <div>{{ menu.title }}</div>
+          <div>{{ $t(menu.title) }}</div>
         </div>
       </div>
       <span
@@ -46,7 +46,7 @@
         class="button"
         @click="toggle(i)"
       >
-        {{ menu.title }}
+        {{ $t(menu.title) }} 
         <i class="expand-icon el-icon-arrow-right"></i>
       </span>
       <el-collapse-transition>

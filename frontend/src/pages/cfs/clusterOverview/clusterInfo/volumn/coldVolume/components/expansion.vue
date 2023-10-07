@@ -28,20 +28,20 @@
       label-width="25%"
       class="mid-block"
     >
-      <el-form-item label="卷名:" prop="volName">
+      <el-form-item :label="$t('common.cluster')+ ':'" prop="volName">
         <el-input v-model="forms.volName" disabled class="input"></el-input>
       </el-form-item>
-      <el-form-item label="当前容量:" prop="size">
+      <el-form-item :label="$t('volume.cursize') + ':'" prop="size">
         <el-input v-model="forms.size" disabled class="input"></el-input>&nbsp;
         GB
       </el-form-item>
-      <el-form-item label="目标容量:" prop="targetSize">
+      <el-form-item :label="$t('volume.tarsize') + ':'" prop="targetSize">
         <el-input v-model.number="forms.targetSize" class="input"></el-input>&nbsp; GB
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button ref="pol" type="primary" @click="doCheck">确 定</el-button>
-      <el-button ref="pol" type="primary" @click="close">取 消</el-button>
+      <el-button ref="pol" type="primary" @click="doCheck">{{ $t('button.submit') }}</el-button>
+      <el-button ref="pol" type="primary" @click="close">{{ $t('button.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -62,7 +62,7 @@ export default {
       dialogFormVisible: false,
       zoneList: [
         {
-          text: '东莞智享',
+          text: this.$t('volume.dgzx'),
           value: 'tests',
         },
       ],
@@ -70,14 +70,14 @@ export default {
   },
   computed: {
     title() {
-      return this.type === 'expansion' ? '扩容' : '缩容'
+      return this.type === 'expansion' ? this.$t('common.scaleup') : this.$t('common.down')
     },
     rules() {
       return {
         volName: [
           {
             required: true,
-            message: '请输入卷名称',
+            message: this.$t('volume.inputvolume'),
             trigger: 'blur',
           },
         ],
@@ -91,13 +91,13 @@ export default {
                   ? +value < +this.forms.size
                   : +value > +this.forms.size
               if (!value) {
-                callback(new Error('请输入容量'))
+                callback(new Error(this.$t('volume.inputsize')))
               } else if (isError) {
                 callback(
                   new Error(
-                    `输入的容量不能${
-                      this.type === 'expansion' ? '小' : '大'
-                    }于当前容量`,
+                    `${
+                      this.type === 'expansion' ? this.$t('volume.inputsize2less') : this.$t('volume.inputsize2greater')
+                    }`,
                   ),
                 )
               } else {
@@ -136,12 +136,12 @@ export default {
         capacity: +targetSize || 0,
         cluster_name: this.clusterName,
       }
-      if (this.title === '扩容') {
+      if (this.title === this.$t('common.scaleup')) {
         await expandVol(params)
       } else {
         await shrinkVol(params)
       }
-      this.$message.success(this.title + '成功')
+      this.$message.success(this.title + this.$t('common.xxsuc'))
       this.$emit('refresh')
       this.close()
     },

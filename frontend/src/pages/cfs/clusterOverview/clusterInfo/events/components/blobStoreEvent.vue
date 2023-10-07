@@ -24,15 +24,15 @@
         <template slot="title">
           <div class="flex-title">
             <div class="color3">
-              <span>任务:</span>
+              <span>{{ $t('common.task') }}:</span>
               <span class="color9">balance</span>
             </div>
             <div v-auth="'BLOBSTORE_CONFIG_SET'">
               <el-switch
                 v-if="!!balance.status"
                 :value="balance.status"
-                inactive-text="关 "
-                active-text="开 "
+                :inactive-text="$t('common.off')"
+                :active-text="$t('common.on')"
                 active-value="true"
                 inactive-value="false"
                 active-color="#00c9c9"
@@ -47,10 +47,10 @@
           <el-table-column prop="finishing_cnt" label="finishing_cnt" width="110" fixed="left"></el-table-column>
           <el-table-column prop="preparing_cnt" label="preparing_cnt" width="130" fixed="left"></el-table-column>
           <el-table-column prop="worker_doing_cnt" label="worker_doing_cnt" width="150" fixed="left"></el-table-column>
-          <el-table-column prop="shard_cnt" label="最近20分钟任务情况" align="center" width="1800">
+          <el-table-column prop="shard_cnt" :label="$t('resource.tasksin20min')" align="center" width="1800">
             <template slot-scope="scope">
               <el-row v-if="scope.row.finished_cnt.length || scope.row.shard_cnt.length" style="display: flex">
-                <div style="width :120px">序号</div>
+                <div style="width :120px">{{ $t('common.id') }}</div>
                 <div
                   v-for="(item, index) in 20"
                   :key="index"
@@ -58,7 +58,7 @@
                 >{{ 20 - index }}</div>
               </el-row>
               <el-row v-if="scope.row.finished_cnt.length" style="display: flex">
-                <div style="width :120px">每分钟完成数</div>
+                <div style="width :120px">{{ $t('common.success') }}/min</div>
                 <div
                   v-for="(item, index) in scope.row.finished_cnt"
                   :key="index"
@@ -83,15 +83,15 @@
         <template slot="title">
           <div class="flex-title">
             <div class="color3">
-              <span>任务:</span>
+              <span>{{ $t('common.task') }}:</span>
               <span class="color9">blob_delete</span>
             </div>
             <div v-auth="'BLOBSTORE_CONFIG_SET'">
               <el-switch
                 v-if="!!blob_delete.status"
                 :value="blob_delete.status"
-                inactive-text="关"
-                active-text="开"
+                :inactive-text="$t('common.off')"
+                :active-text="$t('common.on')"
                 active-value="true"
                 inactive-value="false"
                 active-color="#00c9c9"
@@ -106,13 +106,13 @@
           <el-table-column prop="host_name" label="host_name" width="100" fixed="left"></el-table-column>
           <el-table-column prop="host" label="host" width="100" fixed="left">
             <template slot-scope="scope">
-              {{ `${(scope.row.host || '').replace('down', '宕机')}` }}
+              {{ `${(scope.row.host || '').replace('down', $t('common.down'))}` }}
             </template>
           </el-table-column>
-          <el-table-column prop="shard_cnt" label="最近20分钟任务情况" align="center" width="1800">
+          <el-table-column prop="shard_cnt" :label="$t('resource.tasksin20min')" align="center" width="1800">
             <template slot-scope="scope">
               <el-row v-if="scope.row.success_per_min.length || scope.row.failed_per_min.length" style="display: flex">
-                <div style="width :120px">序号</div>
+                <div style="width :120px">{{ $t('common.id') }}</div>
                 <div
                   v-for="(item, index) in 20"
                   :key="index"
@@ -120,7 +120,7 @@
                 >{{ 20 - index }}</div>
               </el-row>
               <el-row v-if="scope.row.success_per_min.length" style="display: flex">
-                <div style="width :120px">每分钟完成数</div>
+                <div style="width :120px">{{ $t('common.success') }}/min</div>
                 <div
                   v-for="(item, index) in scope.row.success_per_min"
                   :key="index"
@@ -128,7 +128,7 @@
                 >{{ item }}</div>
               </el-row>
               <el-row v-if="scope.row.failed_per_min.length" style="display: flex">
-                <div style="width :120px">每分钟失败数</div>
+                <div style="width :120px">{{ $t('common.failed') }}/min</div>
                 <div
                   v-for="(item, index) in scope.row.failed_per_min"
                   :key="index"
@@ -145,15 +145,15 @@
         <template slot="title">
           <div class="flex-title">
             <div class="color3">
-              <span>任务:</span>
+              <span>{{ $t('common.task') }}:</span>
               <span class="color9">disk_drop</span>
             </div>
             <div v-auth="'BLOBSTORE_CONFIG_SET'">
               <el-switch
                 v-if="!!disk_drop.status"
                 :value="disk_drop.status"
-                inactive-text="关"
-                active-text="开"
+                :inactive-text="$t('common.off')"
+                :active-text="$t('common.on')"
                 active-value="true"
                 inactive-value="false"
                 active-color="#00c9c9"
@@ -171,10 +171,10 @@
           <el-table-column prop="preparing_cnt" label="preparing_cnt" width="120" fixed="left"></el-table-column>
           <el-table-column prop="total_tasks_cnt" label="total_tasks_cnt" width="120" fixed="left"></el-table-column>
           <el-table-column prop="worker_doing_cnt" label="worker_doing_cnt" width="140" fixed="left"></el-table-column>
-          <el-table-column prop="shard_cnt" label="最近20分钟任务情况" align="center" width="1800">
+          <el-table-column prop="shard_cnt" :label="$t('resource.tasksin20min')" align="center" width="1800">
             <template slot-scope="scope">
               <el-row v-if="scope.row.finished_cnt.length || scope.row.shard_cnt.length" style="display: flex">
-                <div style="width :120px">序号</div>
+                <div style="width :120px">{{ $t('common.id') }}</div>
                 <div
                   v-for="(item, index) in 20"
                   :key="index"
@@ -182,7 +182,7 @@
                 >{{ 20 - index }}</div>
               </el-row>
               <el-row v-if="scope.row.finished_cnt.length" style="display: flex">
-                <div style="width :120px">每分钟完成数</div>
+                <div style="width :120px">{{ $t('common.success') }}/min</div>
                 <div
                   v-for="(item, index) in scope.row.finished_cnt"
                   :key="index"
@@ -207,15 +207,15 @@
         <template slot="title">
           <div class="flex-title">
             <div class="color3">
-              <span>任务:</span>
+              <span>{{ $t('common.task') }}:</span>
               <span class="color9">disk_repair</span>
             </div>
             <div v-auth="'BLOBSTORE_CONFIG_SET'">
               <el-switch
                 v-if="disk_repair.status"
                 :value="disk_repair.status"
-                inactive-text="关"
-                active-text="开"
+                :inactive-text="$t('common.off')"
+                :active-text="$t('common.on')"
                 active-value="true"
                 inactive-value="false"
                 active-color="#00c9c9"
@@ -233,10 +233,10 @@
           <el-table-column prop="preparing_cnt" label="preparing_cnt" width="120" fixed="left"></el-table-column>
           <el-table-column prop="total_tasks_cnt" label="total_tasks_cnt" width="120" fixed="left"></el-table-column>
           <el-table-column prop="worker_doing_cnt" label="worker_doing_cnt" width="140" fixed="left"></el-table-column>
-          <el-table-column prop="shard_cnt" label="最近20分钟任务情况" align="center" width="1800">
+          <el-table-column prop="shard_cnt" :label="$t('resource.tasksin20min')" align="center" width="1800">
             <template slot-scope="scope">
               <el-row v-if="scope.row.finished_cnt.length || scope.row.shard_cnt.length" style="display: flex">
-                <div style="width :120px">序号</div>
+                <div style="width :120px">{{ $t('common.id') }}</div>
                 <div
                   v-for="(item, index) in 20"
                   :key="index"
@@ -244,7 +244,7 @@
                 >{{ 20 - index }}</div>
               </el-row>
               <el-row v-if="scope.row.finished_cnt.length" style="display: flex">
-                <div style="width :120px">每分钟完成数</div>
+                <div style="width :120px">{{ $t('common.success') }}/min</div>
                 <div
                   v-for="(item, index) in scope.row.finished_cnt"
                   :key="index"
@@ -269,15 +269,15 @@
         <template slot="title">
           <div class="flex-title">
             <div class="color3">
-              <span>任务:</span>
+              <span>{{ $t('common.task') }}:</span>
               <span class="color9">shard_repair</span>
             </div>
             <div v-auth="'BLOBSTORE_CONFIG_SET'">
               <el-switch
                 v-if="shard_repair.status"
                 :value="shard_repair.status"
-                active-text="开"
-                inactive-text="关"
+                :inactive-text="$t('common.off')"
+                :active-text="$t('common.on')"
                 active-value="true"
                 inactive-value="false"
                 active-color="#00c9c9"
@@ -295,10 +295,10 @@
               {{ `${(scope.row.host || '').replace('down', '宕机')}` }}
             </template>
           </el-table-column>
-          <el-table-column prop="shard_cnt" label="最近20分钟任务情况" align="center" width="1800">
+          <el-table-column prop="shard_cnt" :label="$t('resource.tasksin20min')" align="center" width="1800">
             <template slot-scope="scope">
               <el-row v-if="scope.row.success_per_min.length || scope.row.failed_per_min.length" style="display: flex">
-                <div style="width :120px">序号</div>
+                <div style="width :120px">{{ $t('common.id') }}</div>
                 <div
                   v-for="(item, index) in 20"
                   :key="index"
@@ -306,7 +306,7 @@
                 >{{ 20 - index }}</div>
               </el-row>
               <el-row v-if="scope.row.success_per_min.length" style="display: flex">
-                <div style="width :120px">每分钟完成数</div>
+                <div style="width :120px">{{ $t('common.success') }}/min</div>
                 <div
                   v-for="(item, index) in scope.row.success_per_min"
                   :key="index"
@@ -314,7 +314,7 @@
                 >{{ item }}</div>
               </el-row>
               <el-row v-if="scope.row.failed_per_min.length" style="display: flex">
-                <div style="width :120px">每分钟失败数</div>
+                <div style="width :120px">{{ $t('common.failed') }}/min</div>
                 <div
                   v-for="(item, index) in scope.row.failed_per_min"
                   :key="index"
@@ -331,15 +331,15 @@
         <template slot="title">
           <div class="flex-title">
             <div class="color3">
-              <span>任务:</span>
+              <span>{{ $t('common.task') }}:</span>
               <span class="color9">volume_inspect</span>
             </div>
             <div v-auth="'BLOBSTORE_CONFIG_SET'">
               <el-switch
                 v-if="volume_inspect.status"
                 :value="volume_inspect.status"
-                inactive-text="关"
-                active-text="开"
+                :inactive-text="$t('common.off')"
+                :active-text="$t('common.on')"
                 active-value="true"
                 inactive-value="false"
                 active-color="#00c9c9"
@@ -351,10 +351,10 @@
           </div>
         </template>
         <u-table :data="volume_inspect.list" is-need-client-paging>
-          <el-table-column prop="shard_cnt" label="最近20分钟任务情况" align="center" width="1800">
+          <el-table-column prop="shard_cnt" :label="$t('resource.tasksin20min')" align="center" width="1800">
             <template slot-scope="scope">
               <el-row v-if="scope.row.finished_per_min.length || scope.row.time_out_per_min.length" style="display: flex">
-                <div style="width :120px">序号</div>
+                <div style="width :120px">{{ $t('common.id') }}</div>
                 <div
                   v-for="(item, index) in 20"
                   :key="index"
@@ -362,7 +362,7 @@
                 >{{ 20 - index }}</div>
               </el-row>
               <el-row v-if="scope.row.finished_per_min.length" style="display: flex">
-                <div style="width :120px">每分钟完成数</div>
+                <div style="width :120px">{{ $t('common.success') }}/min</div>
                 <div
                   v-for="(item, index) in scope.row.finished_per_min"
                   :key="index"
@@ -370,7 +370,7 @@
                 >{{ item }}</div>
               </el-row>
               <el-row v-if="scope.row.time_out_per_min.length" style="display: flex">
-                <div style="width :120px">每分钟超时数</div>
+                <div style="width :120px">{{ $t('common.timeout') }}/min</div>
                 <div
                   v-for="(item, index) in scope.row.time_out_per_min"
                   :key="index"
@@ -505,11 +505,11 @@ export default {
       const { region, clusterId } = this.forms
       try {
         await this.$confirm(
-          `请确认是否进行${v === 'true' ? '开启' : '关闭'}操作`,
-          '提示',
+          this.$t('common.confirmto') + `${v === 'true' ? this.$t('common.on') : this.$t('common.off')}`,
+          this.$t('common.notice'),
           {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+            confirmButtonText: this.$t('common.yes'),
+            cancelButtonText: this.$t('common.no'),
             type: 'warning',
           },
         )
@@ -520,7 +520,7 @@ export default {
           value: v,
         })
         this[k].status = v
-        this.$message.success('操作成功')
+        this.$message.success(this.$t('common.success'))
         setTimeout(() => {
           this.getForms(this.forms)
         }, 60 * 1000)

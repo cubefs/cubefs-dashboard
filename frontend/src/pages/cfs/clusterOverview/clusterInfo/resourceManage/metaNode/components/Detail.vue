@@ -18,17 +18,17 @@
   <el-dialog
     top="3vh"
     :append-to-body="true"
-    title="mp详情"
+    :title="'mp' + $t('common.detail')"
     :visible.sync="dialogFormVisible"
     width="1000px"
     @closed="onClose"
   >
     <el-row class="m-b">
       <el-col :span="6">ID: {{ data.PartitionID }}</el-col>
-      <el-col :span="6">副本数: {{ data.ReplicaNum }}</el-col>
+      <el-col :span="6">{{ $t('common.copies') }}: {{ data.ReplicaNum }}</el-col>
       <el-col :span="6">
         <el-row>
-          <el-col :span="4"> 卷名: </el-col>
+          <el-col :span="4"> {{ $t('common.volumename') }}: </el-col>
           <el-col :span="20" class="m-r">
             {{ data.VolName }}
           </el-col>
@@ -55,7 +55,7 @@
       <div>Response:</div>
       <u-page-table :data="data.Response" :has-page="false">
         <el-table-column label="applyId" prop="ApplyID" :width="100"></el-table-column>
-        <el-table-column label="目录数" prop="DentryCount"></el-table-column>
+        <el-table-column :label="$t('common.dentries')" prop="DentryCount"></el-table-column>
         <el-table-column label="status" prop="Status" :width="100">
         </el-table-column>
         <el-table-column label="inodeCount" prop="InodeCount"></el-table-column>

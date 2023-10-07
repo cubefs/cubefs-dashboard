@@ -16,7 +16,7 @@
 
 <template>
   <el-dialog
-    title="创建dp"
+    :title="$t('common.create') + 'dp'"
     :visible.sync="dialogFormVisible"
     width="700px"
     @closed="clearData"
@@ -28,20 +28,20 @@
       label-width="25%"
       class="mid-block"
     >
-      <el-form-item label="卷名:" prop="volName">
+      <el-form-item :label="$t('common.volumename') + ':'" prop="volName">
         <el-input v-model="forms.name" disabled class="input"></el-input>
       </el-form-item>
-      <el-form-item label="数量:" prop="count">
+      <el-form-item :label="$t('common.quality') + ':'" prop="count">
         <el-input
           v-model.number="forms.count"
           class="input"
-          placeholder="请输入数量"
+          :placeholder="$t('volume.inputquality')"
         ></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button ref="pol" type="primary" @click="doCheck">确 定</el-button>
-      <el-button ref="pol" type="primary" @click="close">取 消</el-button>
+      <el-button ref="pol" type="primary" @click="doCheck">{{ $t('button.submit') }}</el-button>
+      <el-button ref="pol" type="primary" @click="close">{{ $t('button.cancel') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -66,20 +66,20 @@ export default {
         count: [
           {
             required: true,
-            message: '请输入数量',
+            message: this.$t('volume.inputquality'),
             trigger: 'blur',
           },
           {
             max: 50,
             type: 'number',
             trigger: 'blur',
-            message: '上限值为50'
+            message: this.$t('volume.up50'),
           }
         ],
         name: [
           {
             required: true,
-            message: '请输入卷名称',
+            message: this.$t('volume.inputvolume'),
             trigger: 'blur',
           },
         ],
@@ -108,7 +108,7 @@ export default {
         count: +count,
         cluster_name: this.clusterName,
       })
-      this.$message.success('创建dp成功')
+      this.$message.success(this.$t('volume.dpsuc'))
       this.$emit('refresh')
       this.close()
     },

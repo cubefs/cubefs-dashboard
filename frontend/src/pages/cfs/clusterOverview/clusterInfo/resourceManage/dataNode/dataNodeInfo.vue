@@ -17,17 +17,17 @@
 <template>
   <div>
     <div v-auth="'CFS_DISKS_DECOMMISSION'" class="operate-wrap">
-      <span>批量操作</span>
+      <span>{{ $t('common.batch') }}</span>
       <el-select v-model="operateType" style="width: 100px;margin: 0 20px 0 10px;">
-        <el-option :value="1" label="下线"></el-option>
+        <el-option :value="1" :label="$t('common.offline')"></el-option>
       </el-select>
-      <el-button type="primary" @click="batchOperate">执行</el-button>
+      <el-button type="primary" @click="batchOperate">{{ $t('common.run') }}</el-button>
     </div>
     <u-page-table :data="dataList" :page-size="page.per_page" @selection-change="handleSelectionChange">
       <!-- <el-table-column label="序号" type="index"></el-table-column> -->
       <el-table-column type="selection" width="80"></el-table-column>
-      <el-table-column label="磁盘路径" prop="path" sortable></el-table-column>
-      <el-table-column label="分区数" prop="partitions" sortable>
+      <el-table-column :label="$t('resource.diskpath')" prop="path" sortable></el-table-column>
+      <el-table-column :label="$t('common.partitions')" prop="partitions" sortable>
         <template slot-scope="scope">
           <a @click="toPath(scope.row.path)">{{ scope.row.partitions }}</a>
           <!-- <router-link
@@ -44,40 +44,40 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="总量"
+        :label="$t('common.total') + $t('common.size')"
         prop="total"
         sortable
         :sort-method="sortMethodTotal"
       ></el-table-column>
       <el-table-column
-        label="已分配"
+        :label="$t('common.allocated')"
         prop="allocated"
         sortable
         :sort-method="sortMethodAvai"
       ></el-table-column>
       <el-table-column
-        label="已使用"
+        :label="$t('common.used')"
         prop="used"
         sortable
         :sort-method="sortMethodUsed"
       ></el-table-column>
       <el-table-column
-        label="使用率"
+        :label="$t('common.usage')"
         prop="usage_ratio"
         sortable
         :sort-method="sortMethodUsedRatio"
       ></el-table-column>
-      <el-table-column label="状态" prop="status"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column :label="$t('common.status')" prop="status"></el-table-column>
+      <el-table-column :label="$t('common.action')">
         <template slot-scope="scope">
-          <MoreOPerate :count="2">
+          <MoreOPerate :count="2" :i18n="i18n">
             <el-button
               v-auth="'CFS_DISKS_DECOMMISSION'"
               size="medium"
               type="text"
               :disabled="!scope.row.partitions"
               @click="handleOffLine(scope.row)"
-            >下线</el-button>
+            >{{ $t('common.offline') }}</el-button>
           </MoreOPerate>
         </template>
       </el-table-column>
@@ -118,6 +118,7 @@ export default {
       },
       selectedData: [],
       operateType: 1,
+      i18n: this.$i18n,
     }
   },
   computed: {
@@ -163,9 +164,9 @@ export default {
     },
     async handleOffLine({ path }) {
       try {
-        await this.$confirm(`确定要下线节点(${this.addr})的磁盘(${path})?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        await this.$confirm( this.$t('resource.offlinenodedisk') + `(${this.addr} : ${path})`, this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
           type: 'warning',
         })
         await offLineDisks({
@@ -173,7 +174,7 @@ export default {
           addr: this.addr,
           cluster_name: this.clusterName,
         })
-        this.$message.success('下线成功')
+        this.$message.success(this.$t('common.offline') + this.$t('common.xxsuc'))
         this.refresh()
       } catch (e) { }
     },
@@ -185,22 +186,22 @@ export default {
     },
     async batchOperate() {
       if (!this.operateType) {
-        this.$message.warning('请选择操作')
+        this.$message.warning(this.$t('resource.chooseaction'))
         return
       }
       if (!this.selectedData.length) {
-        this.$message.warning('请至少勾选一项')
+        this.$message.warning(this.$t('resource.least1'))
         return
       }
       try {
-        await this.$confirm('确定要批量下线吗?', '提示', { type: 'warning' })
+        await this.$confirm(this.$t('resource.confirmbatchoffline'), this.$t('common.notice'), { type: 'warning' })
         const disks = this.selectedData.map(item => item.path)
         await offLineDisks({
           cluster_name: this.clusterName,
           addr: this.addr || '',
           disks,
         })
-        this.$message.success('下线成功')
+        this.$message.success(this.$t('common.offline') + this.$t('common.xxsuc'))
         this.refresh()
       } catch (e) { }
     },

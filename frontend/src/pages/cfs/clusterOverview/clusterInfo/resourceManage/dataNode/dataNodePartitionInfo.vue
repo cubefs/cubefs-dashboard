@@ -19,7 +19,7 @@
     <el-row class="filter-wrap">
       <div style="margin-right: 10px;">
         <el-row class="filter">
-          <span style="margin-right: 10px">过滤选项</span>
+          <span style="margin-right: 10px">{{ $t('common.filters') }}</span>
           <el-checkbox-group v-model="checkList" style="margin-right: 10px;" @change="OnCheckedChange">
             <el-checkbox
               v-for="label in checkBoxStatusList"
@@ -28,18 +28,18 @@
             ></el-checkbox>
           </el-checkbox-group>
           <div v-auth="'CFS_DATAPARTITION_DECOMMISSION'">
-            <span>批量操作</span>
+            <span>{{ $t('common.batch') }}</span>
             <el-select v-model="operateType" style="width: 100px;margin: 0 20px 0 10px;flex: 1 0 100px;">
-              <el-option :value="1" label="下线"></el-option>
+              <el-option :value="1" :label="$t('common.offline')"></el-option>
             </el-select>
-            <el-button type="primary" @click="batchOperate">执行</el-button>
+            <el-button type="primary" @click="batchOperate">{{ $t('common.run') }}</el-button>
           </div>
         </el-row>
       </div>
       <el-row class="search">
         <el-input
           v-model.trim="inputParams"
-          placeholder="请输入分区ID或磁盘路径"
+          :placeholder="$t('resource.inputdiskpath')"
           clearable
           class="input"
         ></el-input>
@@ -47,46 +47,46 @@
           type="primary"
           class="search-btn"
           @click="onsearch"
-        >搜 索</el-button>
+        >{{ $t('button.search') }}</el-button>
       </el-row>
     </el-row>
     <el-row class="userInfo">
       <u-page-table :data="dataList" :page-size="page.per_page" @selection-change="handleSelectionChange">
         <!-- <el-table-column label="序号" type="index"></el-table-column> -->
         <el-table-column type="selection" width="80"></el-table-column>
-        <el-table-column label="分区ID" prop="id" sortable></el-table-column>
+        <el-table-column :label="$t('common.partitionid')" prop="id" sortable></el-table-column>
         <el-table-column
-          label="磁盘路径"
+          :label="$t('resource.diskpath')"
           prop="path"
           sortable
         ></el-table-column>
         <el-table-column
-          label="容量"
+          :label="$t('common.total') + $t('common.size')"
           prop="size"
           sortable
           :sort-method="sortMethodTotal"
         ></el-table-column>
         <el-table-column
-          label="已使用"
+          :label="$t('common.used')"
           prop="used"
           sortable
           :sort-method="sortMethodUsed"
         ></el-table-column>
-        <el-table-column label="副本">
+        <el-table-column :label="$t('common.copies')">
           <template slot-scope="scope">
             <div v-for="item in scope.row.replicas" :key="item">{{ item }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="状态" prop="status"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column :label="$t('common.status')" prop="status"></el-table-column>
+        <el-table-column :label="$t('common.action')">
           <template slot-scope="scope">
-            <MoreOPerate :count="2">
+            <MoreOPerate :count="2" :i18n="i18n">
               <el-button
                 v-auth="'CFS_DATAPARTITION_DECOMMISSION'"
                 size="medium"
                 type="text"
                 @click="handleOffLine(scope.row)"
-              >下线</el-button>
+              >{{ $t('common.offline') }}</el-button>
             </MoreOPerate>
           </template>
         </el-table-column>
@@ -134,6 +134,7 @@ export default {
       },
       selectedData: [],
       operateType: 1,
+      i18n: this.$i18n,
     }
   },
   computed: {
@@ -196,9 +197,9 @@ export default {
     },
     async handleOffLine({ id }) {
       try {
-        await this.$confirm(`确定要下线该分区(${id})磁盘?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        await this.$confirm( this.$t('resource.offlineconfirm') + `(${id})?`, this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
           type: 'warning',
         })
         await offLineDataNodePartitions({
@@ -208,7 +209,7 @@ export default {
             id,
           }],
         })
-        this.$message.success('下线成功')
+        this.$message.success(this.$t('common.offline') + this.$t('common.xxsuc'))
         this.onsearch()
       } catch (e) { }
     },
@@ -217,21 +218,21 @@ export default {
     },
     async batchOperate() {
       if (!this.operateType) {
-        this.$message.warning('请选择操作')
+        this.$message.warning(this.$t('resource.chooseaction'))
         return
       }
       if (!this.selectedData.length) {
-        this.$message.warning('请至少勾选一项')
+        this.$message.warning(this.$t('resource.least1'))
         return
       }
       try {
-        await this.$confirm('确定要批量下线吗?', '提示', { type: 'warning' })
+        await this.$confirm(this.$t('resource.confirmbatchoffline'), this.$t('common.notice'), { type: 'warning' })
         const partitions = this.selectedData.map(item => ({ node_addr: this.addr || '', id: item.id }))
         await offLineDataNodePartitions({
           cluster_name: this.clusterName,
           partitions,
         })
-        this.$message.success('下线成功')
+        this.$message.success(this.$t('common.offline') + this.$t('common.xxsuc'))
         this.getData({ diskPath: this.path, id: this.inputParams })
       } catch (e) { }
     },

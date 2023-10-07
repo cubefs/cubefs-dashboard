@@ -38,7 +38,7 @@ export const putFile = (params, options) => {
     putPresignature(params).then(async res => {
       const uploadUrl = options.getDataFun({ res, params: params })
       if (!uploadUrl.length) {
-        throw new Error('不能从接口中取到预签名url，请检查接口或入参getDataFun方法是否正确')
+        throw new Error(this.$t('filemanage.lacksignurl'))
       }
       const fileList = getChunksFiles(options, params)
       upload(uploadUrl, fileList, options.xhrOptions, params.prefix, params.chunkSize).then(async (data) => {

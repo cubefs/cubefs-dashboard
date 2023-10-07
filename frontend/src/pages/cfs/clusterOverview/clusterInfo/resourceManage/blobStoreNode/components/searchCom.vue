@@ -17,8 +17,8 @@
 <template>
   <div>
     <el-form :inline="true" :model="forms">
-      <el-form-item v-if="hasStatus" label="状态：">
-        <el-select v-model="forms.status" placeholder="请选择" clearable style="width: 180px">
+      <el-form-item v-if="hasStatus" :label="$t('common.status') + '：'">
+        <el-select v-model="forms.status" :placeholder="$t('common.select')" clearable style="width: 180px">
           <el-option
             v-for="item in statusList"
             :key="item.value"
@@ -27,8 +27,8 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="机房：">
-        <el-select v-model="forms.idc" placeholder="请选择" clearable style="width: 180px">
+      <el-form-item :label="$t('common.idc') + '：'">
+        <el-select v-model="forms.idc" :placeholder="$t('common.select')" clearable style="width: 180px">
           <el-option
             v-for="item in ebsIdcList"
             :key="item.value"
@@ -37,15 +37,15 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-if="hasHost" label="主机：">
-        <el-input v-model="forms.host" placeholder="请输入" clearable style="width: 180px" @clear="clearHost">
+      <el-form-item v-if="hasHost" :label="$t('common.host') + '：'">
+        <el-input v-model="forms.host" :placeholder="$t('filemanage.input')" clearable style="width: 180px" @clear="clearHost">
         </el-input>
       </el-form-item>
       <el-button
         type="primary"
         icon="el-icon-search"
         @click="searchClick"
-      >搜索</el-button>
+      >{{ $t('button.search') }}</el-button>
     </el-form>
   </div>
 </template>

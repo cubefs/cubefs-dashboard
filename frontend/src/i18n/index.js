@@ -17,17 +17,22 @@
 /* ------------------------------------------------------ */
 /* ------- auto generated code by vue-i18n-transform------- */
 import Vue from 'vue'
+import locale from 'element-ui/lib/locale'
 import language from './lang'
 import VueI18n from 'vue-i18n'
+
+Vue.prototype.isRtl = localStorage.getItem('language') === 'zh'
 
 Vue.use(VueI18n)
 
 export const i18n = new VueI18n({
-  locale: 'zh',
-  fallbackLocale: 'zh',
+  locale: localStorage.getItem('language') || 'zh',
+  fallbackLocale: localStorage.getItem('language') || 'zh',
   messages: language,
   formatFallbackMessages: true,
   silentTranslationWarn: true, // 浏览器控制台不显示warning
 })
+
+locale.i18n((key, value) => i18n.t(key, value))
 
 export default i18n

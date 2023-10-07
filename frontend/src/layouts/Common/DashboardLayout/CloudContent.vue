@@ -29,7 +29,13 @@
         :src="require('@/assets/images/nav-logo.png')"
         style="height: 30px"
       />
-      <div class="role">当前角色:
+      <div class="lang">
+        <el-select v-model="language" @change="changeLang">
+          <el-option value="zh" label="简体中文"></el-option>
+          <el-option value="en" label="English"></el-option>
+        </el-select>
+      </div>
+      <div class="role">{{ $t('layout.currentrole')}}: 
         <el-tooltip effect="dark" :content="roleList.join()" placement="bottom">
           <span>{{ roleList[0] }}</span>
         </el-tooltip>
@@ -39,8 +45,8 @@
           {{ userInfo?.user_name }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="docs">使用文档</el-dropdown-item>
-          <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+          <el-dropdown-item command="docs">{{ $t('layout.help')}}</el-dropdown-item>
+          <el-dropdown-item command="logout">{{ $t('layout.signout') }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </el-header>
@@ -70,7 +76,7 @@
         <div class="main-inner">
           <div class="main-top">
             <breadcrumb v-if="!$route.meta.breadcrumbHide" class="m-b-15"></breadcrumb>
-            <p class="current-cluster" v-if="!['clusterList', 'authManage'].includes($route.name)">当前集群: {{ clusterName || '无' }}</p>
+            <p class="current-cluster" v-if="!['clusterList', 'authManage'].includes($route.name)">{{ $t('layout.currentcluster') }}: {{ clusterName || $t('layout.null') }}</p>
           </div>
           <main-content></main-content>
         </div>
@@ -108,6 +114,7 @@ export default {
       sidebarExpand: true,
       width: 195,
       roleList: [],
+      language: this.$i18n.locale,
     }
   },
   computed: {
@@ -168,7 +175,7 @@ export default {
         .map(v => {
           const { meta = {}, children, path, name } = v
           const item = {
-            title: meta.title || '未命名',
+            title: meta.title || this.$t('noname'),
             name,
             icon: meta.menuIcon,
             expand: meta.menuExpandDefault,
@@ -193,12 +200,17 @@ export default {
           break
         case 'logout':
           userLogout().then(() => {
-            this.$message.success('注销成功')
+            this.$message.success(this.$t('common.signoutsucc'))
             localStorage.removeItem('userInfo')
             this.$router.push({ name: 'loginPage' })
           })
           break
       }
+    },
+    changeLang() {
+      const langType = this.language
+      localStorage.setItem("language", langType)
+      this.$i18n.locale = langType
     },
   },
 }
@@ -231,10 +243,17 @@ export default {
 .header-dropdown:hover {
   background: #5c5776;
 }
-.role {
+
+.lang {
   margin-left: auto;
+  width: 100px;
+}
+
+.role {
+  margin-left: 20px;
   margin-right:5px;
 }
+
 // 菜单栏样式
 .sidebar {
   transition: width 0.5s ease;
@@ -325,6 +344,11 @@ export default {
     .scrollbar-wrapper {
       margin-bottom: 0 !important;
     }
+  }
+  .lang .el-select .el-input__inner{
+    color: #fff;
+    background-color: #1a123f;
+    border: 0px;
   }
 }
 </style>
