@@ -78,7 +78,7 @@
           </el-tooltip>
         </div>
         <el-form-item prop="user_name">
-          <el-input v-model="signupForm.user_name" autocomplete="off" placeholder="$t('usermgt.inputaccount')" />
+          <el-input v-model="signupForm.user_name" autocomplete="off" :placeholder="$t('usermgt.inputaccount')" />
         </el-form-item>
         <div v-if="!isPassword">
           <div class="label">
@@ -102,7 +102,7 @@
         </div>
         <div v-else>
           <div class="label">
-            {{ $t('common.old') }}{{ $('common.passwd') }}
+            {{ $t('common.old') }}{{ $t('common.passwd') }}
             <el-tooltip class="item" effect="dark" placement="right">
               <div slot="content">{{ $t('usermgt.passwdlen') }}<br />{{ $t('usermgt.passwdrule') }}</div>
               <i class="el-icon-question"></i>
@@ -112,7 +112,7 @@
             <el-input v-model="signupForm.old_password" type="password" :placeholder="$t('usermgt.inputoldpasswd')" />
           </el-form-item>
           <div class="label">
-            {{ $t('common.new') }}{{ $('common.passwd') }}
+            {{ $t('common.new') }}{{ $t('common.passwd') }}
             <el-tooltip class="item" effect="dark" placement="right">
               <div slot="content">{{ $t('usermgt.passwdlen') }}<br />{{ $t('usermgt.passwdrule') }}</div>
               <i class="el-icon-question"></i>
