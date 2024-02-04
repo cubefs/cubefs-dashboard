@@ -48,11 +48,6 @@ type CreateInput struct {
 
 func (input *CreateInput) Check() error {
 	switch input.VolType {
-	case int(enums.VolTypeLowFrequency):
-		input.ReplicaNumber = 1
-		if input.CacheCap <= 0 {
-			return errors.New("cache_cap should great than 0")
-		}
 	case int(enums.VolTypeStandard):
 		if input.ReplicaNumber <= 0 {
 			return errors.New("replica_number should great than 0")
@@ -92,7 +87,7 @@ func Create(c *gin.Context) {
 		ginutils.Send(c, codes.InvalidArgs.Code(), err.Error(), nil)
 		return
 	}
-	if input.VolType == int(enums.VolTypeLowFrequency) {
+	if input.VolType == int(enums.VolTypeLowFrequency) && in.CacheCap > 0 {
 		in.FollowerRead = true
 		in.ReplicaNumber = 1
 	}
