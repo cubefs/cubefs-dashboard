@@ -38,7 +38,7 @@ func Cors() gin.HandlerFunc {
 		if origin != "" {
 			c.Header("Access-Control-Allow-Origin", origin)
 			c.Header("Access-Control-Allow-Methods", "POST,GET,OPTIONS,PUT,DELETE,UPDATE,HEAD")
-			c.Header("Access-Control-Allow-Headers", strings.Join(allowHeaders,","))
+			c.Header("Access-Control-Allow-Headers", strings.Join(allowHeaders, ","))
 			c.Header("Access-Control-Expose-Headers", "*")
 			c.Header("Access-Control-Allow-Credentials", "true")
 		}

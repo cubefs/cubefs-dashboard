@@ -60,8 +60,10 @@ func Create(c *gin.Context) {
 		ginutils.Send(c, codes.ThirdPartyError.Code(), err.Error(), nil)
 		return
 	}
+	clusterId, _ := c.Get(ginutils.Cluster)
 	userModel := &model.User{
 		Name:       data.UserID,
+		ClusterId:  clusterId.(int64),
 		Role:       in.Type,
 		AccessKey:  types.EncryptStr(data.AccessKey),
 		SecretKey:  types.EncryptStr(data.SecretKey),

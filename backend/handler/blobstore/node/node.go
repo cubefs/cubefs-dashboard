@@ -272,10 +272,10 @@ func Offline(c *gin.Context) {
 }
 
 type ConfigReloadInput struct {
-	Nodes   []string `json:"nodes" binding:"required"`
-	Key     string   `json:"key" binding:"required"`
-	Value   string   `json:"value" binding:"required"`
-	cluster string
+	Nodes     []string `json:"nodes" binding:"required"`
+	Key       string   `json:"key" binding:"required"`
+	Value     string   `json:"value" binding:"required"`
+	clusterId int64
 }
 
 func ConfigReload(c *gin.Context) {
@@ -283,7 +283,11 @@ func ConfigReload(c *gin.Context) {
 	if !ginutils.Check(c, input) {
 		return
 	}
-	input.cluster = c.Param(ginutils.Cluster)
+	cluster, err := ginutils.GetCluster(c)
+	if err != nil {
+		return
+	}
+	input.clusterId = cluster.Id
 	poolSize := 30
 	if len(input.Nodes) < poolSize {
 		poolSize = len(input.Nodes)
@@ -291,16 +295,16 @@ func ConfigReload(c *gin.Context) {
 	tp := pool.New(poolSize, poolSize)
 	errChan := make(chan configReloadErr, poolSize)
 	go configReload(c, input, tp, errChan)
-	err := map[string]string{}
+	errRes := map[string]string{}
 	for e := range errChan {
-		err[e.Node] = e.Err
+		errRes[e.Node] = e.Err
 	}
-	if len(err) != 0 {
-		log.Errorf("reload error. args:%+v, err:%+v", input, err)
-		ginutils.Send(c, codes.OK.Code(), codes.ThirdPartyError.Msg(), err)
+	if len(errRes) != 0 {
+		log.Errorf("reload error. args:%+v, err:%+v", input, errRes)
+		ginutils.Send(c, codes.OK.Code(), codes.ThirdPartyError.Msg(), errRes)
 		return
 	}
-	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), nil)
+	ginutils.Success(c, nil)
 }
 
 type configReloadErr struct {
@@ -335,20 +339,20 @@ func configReload(c *gin.Context, input *ConfigReloadInput, tp pool.TaskPool, er
 func recordConfigFailure(node string, input *ConfigReloadInput, err error) {
 	failure := &model.NodeConfigFailure{
 		Node:         node,
-		Cluster:      input.cluster,
+		ClusterId:    input.clusterId,
 		Key:          input.Key,
 		Value:        input.Value,
 		FailedReason: err.Error(),
 		CreatedAt:    time.Now(),
 	}
 	if err = failure.Insert(); err != nil {
-		log.Errorf("record failure failed. err:%v, node[%s], cluster[%s]", err, node, input.cluster)
+		log.Errorf("record failure failed. err:%v, node[%s], cluster[%d]", err, node, input.clusterId)
 	}
 }
 
 func recordConfigSuccess(node string, input *ConfigReloadInput) {
-	if err := new(model.NodeConfig).Upsert(node, input.cluster, input.Key, input.Value); err != nil {
-		log.Errorf("record success failed. err:%v, node[%s], cluster[%s]", err, node, input.cluster)
+	if err := new(model.NodeConfig).Upsert(node, input.Key, input.Value, input.clusterId); err != nil {
+		log.Errorf("record success failed. err:%v, node[%s], cluster[%d]", err, node, input.clusterId)
 	}
 }
 
@@ -361,8 +365,12 @@ func ConfigInfo(c *gin.Context) {
 	if !ginutils.Check(c, input) {
 		return
 	}
+	cluster, err := ginutils.GetCluster(c)
+	if err != nil {
+		return
+	}
 	info := &model.NodeConfig{Configuration: map[string]string{}}
-	if err := info.One(input.Node, c.Param(ginutils.Cluster)); err != nil {
+	if err := info.One(input.Node, cluster.Id); err != nil {
 		log.Errorf("info.One failed.node:%s, err:%+v", input.Node, err)
 		ginutils.Send(c, codes.DatabaseError.Code(), err.Error(), nil)
 		return
@@ -375,8 +383,12 @@ func ConfigFailures(c *gin.Context) {
 	if !ginutils.Check(c, input) {
 		return
 	}
+	cluster, err := ginutils.GetCluster(c)
+	if err != nil {
+		return
+	}
 	failure := &model.NodeConfigFailure{}
-	if err := failure.One(input.Node, c.Param(ginutils.Cluster)); err != nil {
+	if err := failure.One(input.Node, cluster.Id); err != nil {
 		log.Errorf("failure.One failed.node:%s, err:%+v", input.Node, err)
 		ginutils.Send(c, codes.DatabaseError.Code(), err.Error(), nil)
 		return
