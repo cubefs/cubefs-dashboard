@@ -79,7 +79,7 @@ func (o *OpType) Find(record *bool) ([]OpType, error) {
 	return optypes, err
 }
 
-func (o *OpType) FindByUniqKey(uri, method string) (*OpType, error)  {
+func (o *OpType) FindByUniqKey(uri, method string) (*OpType, error) {
 	if uri == "" || method == "" {
 		return nil, errors.New("uri and method are required")
 	}
@@ -101,6 +101,8 @@ func getDefaultOpTypes() []OpType {
 		{Method: "POST", URI: prefix + "/clusters/create", NameEN: "create cluster", NameCN: "创建集群", Record: true},
 		{Method: "PUT", URI: prefix + "/clusters/update", NameEN: "update cluster", NameCN: "更新集群", Record: true},
 		{Method: "GET", URI: prefix + "/clusters/list", NameEN: "list cluster", NameCN: "获取集群列表"},
+		{Method: "PUT", URI: prefix + "/clusters/status", NameEN: "list cluster", NameCN: "更新集群状态", Record: true},
+		{Method: "DELETE", URI: prefix + "/clusters/remove", NameEN: "list cluster", NameCN: "删除集群", Record: true},
 
 		// blobstore.clusters
 		{Method: "GET", URI: prefix + "/blobstore/:cluster/clusters/list", NameEN: "list clusters", NameCN: "获取cluster列表", Record: false},

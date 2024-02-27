@@ -26,15 +26,15 @@ import (
 type NodeConfig struct {
 	Id            int64        `gorm:"primaryKey" json:"id"`
 	Node          string       `gorm:"type:varchar(255);index;not null;default:''" json:"node"`
-	Cluster       string       `gorm:"type:varchar(255);not null;default:''" json:"cluster"`
+	ClusterId     int64        `gorm:"type:bigint(20);not null;default:0" json:"cluster_id"`
 	Configuration types.MapStr `gorm:"type:varchar(2048);not null;default:'{}'" json:"configuration"`
 	UpdatedAt     time.Time    `json:"updated_at"`
 }
 
-func (e *NodeConfig) Upsert(node, cluster, key, value string) error {
+func (e *NodeConfig) Upsert(node, key, value string, clusterId int64) error {
 	db := mysql.GetDB()
-	nodeConf := &NodeConfig{Node: node, Cluster: cluster, Configuration: map[string]string{}}
-	err := db.Where("node = ? and cluster = ? ", node, cluster).First(nodeConf).Error
+	nodeConf := &NodeConfig{Node: node, ClusterId: clusterId, Configuration: map[string]string{}}
+	err := db.Where("node = ? and cluster_id = ? ", node, clusterId).First(nodeConf).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return err
 	}
@@ -45,10 +45,10 @@ func (e *NodeConfig) Upsert(node, cluster, key, value string) error {
 	return db.Save(nodeConf).Error
 }
 
-func (e *NodeConfig) One(node, cluster string) error {
-	selector := map[string]string{
-		"node":    node,
-		"cluster": cluster,
+func (e *NodeConfig) One(node string, clusterId int64) error {
+	selector := map[string]interface{}{
+		"node":       node,
+		"cluster_id": clusterId,
 	}
 	return mysql.GetDB().Where(selector).Last(e).Error
 }
@@ -56,7 +56,7 @@ func (e *NodeConfig) One(node, cluster string) error {
 type NodeConfigFailure struct {
 	Id           int64     `gorm:"primaryKey" json:"id"`
 	Node         string    `gorm:"type:varchar(255);not null;default:''" json:"node"`
-	Cluster      string    `gorm:"type:varchar(255);not null;default:''" json:"cluster"`
+	ClusterId    int64     `gorm:"type:bigint(20);not null;default:0" json:"cluster_id"`
 	Key          string    `gorm:"type:varchar(255);not null;default:''" json:"key"`
 	Value        string    `gorm:"type:varchar(255);not null;default:''" json:"value"`
 	FailedReason string    `gorm:"type:varchar(255);not null;default:''"  json:"failed_reason"`
@@ -67,10 +67,10 @@ func (e *NodeConfigFailure) Insert() error {
 	return mysql.GetDB().Create(e).Error
 }
 
-func (e *NodeConfigFailure) One(node, cluster string) error {
-	selector := map[string]string{
-		"node":    node,
-		"cluster": cluster,
+func (e *NodeConfigFailure) One(node string, clusterId int64) error {
+	selector := map[string]interface{}{
+		"node":       node,
+		"cluster_id": clusterId,
 	}
 	return mysql.GetDB().Where(selector).Last(e).Error
 }

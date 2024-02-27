@@ -16,10 +16,11 @@ package auth
 
 import (
 	"errors"
+
+	"github.com/cubefs/cubefs/blobstore/util/log"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
-	"github.com/cubefs/cubefs/blobstore/util/log"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/codes"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/ginutils"
 	"github.com/cubefs/cubefs-dashboard/backend/model"

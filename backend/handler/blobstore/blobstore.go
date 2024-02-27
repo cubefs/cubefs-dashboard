@@ -22,9 +22,7 @@ import (
 
 	"github.com/cubefs/cubefs-dashboard/backend/handler/blobstore/common"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/codes"
-	"github.com/cubefs/cubefs-dashboard/backend/helper/enums"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/ginutils"
-	"github.com/cubefs/cubefs-dashboard/backend/model"
 	cm "github.com/cubefs/cubefs-dashboard/backend/service/blobstore/clustermgr"
 	"github.com/cubefs/cubefs-dashboard/backend/service/consul"
 )
@@ -102,21 +100,13 @@ func MemberRemove(c *gin.Context) {
 }
 
 func ListClusters(c *gin.Context) {
-	name := c.Param(ginutils.Cluster)
-	cluster, err := new(model.Cluster).FindName(name)
+	addr, err := ginutils.GetConsulAddr(c)
 	if err != nil {
-		log.Errorf("cluster.FindName failed.name:%+v,err:%+v", name, err)
-		ginutils.Send(c, codes.DatabaseError.Code(), err.Error(), nil)
 		return
 	}
-	if cluster.VolType != enums.VolTypeLowFrequency || cluster.ConsulAddr == "" {
-		log.Errorf("type error or no consul_addr.clusterModel:%+v", cluster)
-		ginutils.Send(c, codes.NotFound.Code(), codes.NotFound.Msg(), nil)
-		return
-	}
-	clusters, err := consul.GetRegionClusters(c, cluster.ConsulAddr)
+	clusters, err := consul.GetRegionClusters(c, addr)
 	if err != nil {
-		log.Errorf("get clusters failed.name:%+v,consul:%s,err:%+v", name, cluster.ConsulAddr, err)
+		log.Errorf("get clusters failed.id:%s,consul:%s,err:%+v", c.Param(ginutils.Cluster), addr, err)
 		ginutils.Send(c, codes.ThirdPartyError.Code(), err.Error(), nil)
 		return
 	}

@@ -66,7 +66,6 @@ func Create(c *gin.Context) {
 	if err != nil {
 		return
 	}
-
 	loginUser, err := ginutils.GetLoginUser(c)
 	if err != nil {
 		log.Errorf("ginutils.GetLoginUser failed.input:%+v,err:%+v", input, err)
@@ -100,16 +99,18 @@ func Create(c *gin.Context) {
 		ginutils.Send(c, codes.ThirdPartyError.Code(), err.Error(), nil)
 		return
 	}
-	createVol(input, loginUser)
+	createVol(c, input, loginUser)
 	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), data)
 }
 
-func createVol(input *CreateInput, loginUser *ginutils.LoginUser) {
+func createVol(c *gin.Context, input *CreateInput, loginUser *ginutils.LoginUser) {
+	clusterId, _ := c.Get(ginutils.Cluster)
 	volModel := &model.Vol{}
 	if err := copier.Copy(volModel, input); err != nil {
 		log.Errorf("copy vol model failed. input:%+v,err:%+v", input, err)
 		return
 	}
+	volModel.ClusterId = clusterId.(int64)
 	volModel.CreatorId = loginUser.Id
 	if err := volModel.Create(); err != nil {
 		log.Errorf("volModel.Create failed.volModel:%+v,err:%+v", volModel, err)

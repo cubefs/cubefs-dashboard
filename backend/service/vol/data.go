@@ -38,7 +38,7 @@ type ClientVol struct {
 	CacheLRUInterval int
 	CacheRule        string
 
-	PreloadCacheOn        bool
-	NeedToLowerReplica    bool
-	FollowerRead          bool
+	PreloadCacheOn     bool
+	NeedToLowerReplica bool
+	FollowerRead       bool
 }

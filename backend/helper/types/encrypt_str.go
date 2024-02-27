@@ -25,7 +25,7 @@ import (
 
 type EncryptStr string
 
-func (e EncryptStr) Value() (driver.Value, error)  {
+func (e EncryptStr) Value() (driver.Value, error) {
 	if e == "" {
 		return nil, nil
 	}

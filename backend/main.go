@@ -21,10 +21,10 @@ import (
 
 	"github.com/cubefs/cubefs-dashboard/backend/config"
 	"github.com/cubefs/cubefs-dashboard/backend/helper"
+	"github.com/cubefs/cubefs-dashboard/backend/helper/crypt"
 	"github.com/cubefs/cubefs-dashboard/backend/model/migrate"
 	"github.com/cubefs/cubefs-dashboard/backend/model/mysql"
 	"github.com/cubefs/cubefs-dashboard/backend/router"
-	"github.com/cubefs/cubefs-dashboard/backend/helper/crypt"
 )
 
 var confPath = flag.String("c", "", "please input your conf file path")

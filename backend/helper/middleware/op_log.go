@@ -18,14 +18,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/cubefs/cubefs/blobstore/util/log"
 	"github.com/gin-gonic/gin"
 
-	"github.com/cubefs/cubefs/blobstore/util/log"
-
 	"github.com/cubefs/cubefs-dashboard/backend/helper/codes"
+	"github.com/cubefs/cubefs-dashboard/backend/helper/defaults"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/ginutils"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/types"
 	"github.com/cubefs/cubefs-dashboard/backend/model"
@@ -48,7 +49,7 @@ func RecordOpLog() gin.HandlerFunc {
 		user, err := ginutils.GetLoginUser(c)
 		if err != nil {
 			log.Errorf("ginutils.GetLoginUser failed.err:%+v", err)
-			ginutils.Send(c, codes.Unauthorized.Code(), err.Error(), nil)
+			ginutils.Fail(c, codes.Unauthorized.Code(), err.Error())
 			c.Abort()
 			return
 		}
@@ -72,11 +73,18 @@ func RecordOpLog() gin.HandlerFunc {
 				log.Errorf("parse body params failed.err:%+v", err)
 			}
 		}
-
+		clusterId, _ := strconv.ParseInt(defaults.Str(c.Param(ginutils.Cluster), c.Query("cluster_id")), 10, 64)
+		if clusterId == 0 {
+			id, _ := bodyParams["cluster_id"].(float64)
+			clusterId = int64(id)
+		}
+		cluster := new(model.Cluster)
+		_ = cluster.FindId(clusterId)
 		opLog := &model.OperationLog{
 			Service:     service,
-			Cluster:     c.Param("cluster"),
 			UserId:      user.Id,
+			Cluster:     cluster.Name,
+			ClusterId:   clusterId,
 			UserName:    user.UserName,
 			OpTypeId:    optype.Id,
 			OpTypeEN:    optype.NameEN,
