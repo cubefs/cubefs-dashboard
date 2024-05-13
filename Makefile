@@ -9,18 +9,18 @@ phony += clean
 default: build
 
 build: build.sh
-	sh build.sh --all
+	bash build.sh --all
 
 all:
-	sh build.sh --all
+	bash build.sh --all
 
 backend:
-	sh build.sh --backend
+	bash build.sh --backend
 
 frontend:
-	sh build.sh --frontend
+	bash build.sh --frontend
 
 clean: bin
-	rm -rf bin
+	bash -rf bin
 
 .PHONY: $(phony)

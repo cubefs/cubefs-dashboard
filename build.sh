@@ -1,5 +1,4 @@
-#! /bin/bash
-set -e
+#!/usr/bin/env bash
 BIN_PATH=bin
 FRONT_PATH=frontend
 BACK_PATH=backend
