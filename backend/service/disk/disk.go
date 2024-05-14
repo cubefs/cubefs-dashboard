@@ -22,11 +22,12 @@ import (
 
 	"github.com/cubefs/cubefs/proto"
 
+	"github.com/cubefs/cubefs-dashboard/backend/config"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/httputils"
 )
 
 func Decommission(c *gin.Context, clusterAddr, addr, disk string) error {
-	reqUrl := "http://" + clusterAddr + proto.DecommissionDisk + "?addr=" + addr + "&disk=" + disk
+	reqUrl := "http://" + clusterAddr + proto.DecommissionDisk + "?addr=" + addr + "&disk=" + disk + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return err

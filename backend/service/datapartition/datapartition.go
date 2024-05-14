@@ -23,11 +23,12 @@ import (
 
 	"github.com/cubefs/cubefs/proto"
 
+	"github.com/cubefs/cubefs-dashboard/backend/config"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/httputils"
 )
 
 func Create(c *gin.Context, clusterAddr string, name string, count int) error {
-	reqUrl := "http://" + clusterAddr + proto.AdminCreateDataPartition + "?name=" + name + "&count=" + strconv.Itoa(count)
+	reqUrl := "http://" + clusterAddr + proto.AdminCreateDataPartition + "?name=" + name + "&count=" + strconv.Itoa(count) + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return err
@@ -44,7 +45,7 @@ func Create(c *gin.Context, clusterAddr string, name string, count int) error {
 }
 
 func Load(c *gin.Context, clusterAddr, id string) error {
-	reqUrl := "http://" + clusterAddr + proto.AdminLoadDataPartition + "?id=" + id
+	reqUrl := "http://" + clusterAddr + proto.AdminLoadDataPartition + "?id=" + id + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return err
@@ -96,7 +97,7 @@ func GetByName(c *gin.Context, clusterAddr, name string) ([]*proto.DataPartition
 }
 
 func Decommission(c *gin.Context, clusterAddr, id, addr string) (interface{}, error) {
-	reqUrl := "http://" + clusterAddr + proto.AdminDecommissionDataPartition + "?id=" + id + "&addr=" + addr
+	reqUrl := "http://" + clusterAddr + proto.AdminDecommissionDataPartition + "?id=" + id + "&addr=" + addr + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return nil, err

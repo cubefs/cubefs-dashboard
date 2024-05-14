@@ -47,6 +47,7 @@ type Config struct {
 type ServerConfig struct {
 	Port           int            `mapstructure:"port"`
 	Mode           string         `mapstructure:"mode"`
+	ClientIDKey    string         `mapstructure:"clientIDKey"`
 	StaticResource StaticResource `mapstructure:"static_resource"`
 }
 

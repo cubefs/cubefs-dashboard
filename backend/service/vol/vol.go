@@ -22,6 +22,7 @@ import (
 
 	"github.com/cubefs/cubefs/proto"
 
+	"github.com/cubefs/cubefs-dashboard/backend/config"
 	"github.com/cubefs/cubefs-dashboard/backend/helper"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/crypt"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/httputils"
@@ -49,7 +50,7 @@ func (c *CreateInput) QueryParams() string {
 }
 
 func Create(c *gin.Context, clusterAddr string, input *CreateInput) (interface{}, error) {
-	reqUrl := "http://" + clusterAddr + proto.AdminCreateVol + "?" + input.QueryParams()
+	reqUrl := "http://" + clusterAddr + proto.AdminCreateVol + "?" + input.QueryParams() + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return nil, err
@@ -76,7 +77,7 @@ type UpdateInput struct {
 }
 
 func Update(c *gin.Context, clusterAddr string, input *UpdateInput) (interface{}, error) {
-	reqUrl := "http://" + clusterAddr + proto.AdminUpdateVol + "?" + helper.BuildUrlParams(input)
+	reqUrl := "http://" + clusterAddr + proto.AdminUpdateVol + "?" + helper.BuildUrlParams(input) + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return nil, err
@@ -99,7 +100,7 @@ type ExpandInput struct {
 }
 
 func Expand(c *gin.Context, clusterAddr string, input *ExpandInput) error {
-	reqUrl := "http://" + clusterAddr + proto.AdminVolExpand + "?" + helper.BuildUrlParams(input)
+	reqUrl := "http://" + clusterAddr + proto.AdminVolExpand + "?" + helper.BuildUrlParams(input) + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return err
@@ -116,7 +117,7 @@ func Expand(c *gin.Context, clusterAddr string, input *ExpandInput) error {
 }
 
 func Shrink(c *gin.Context, clusterAddr string, input *ExpandInput) error {
-	reqUrl := "http://" + clusterAddr + proto.AdminVolShrink + "?" + helper.BuildUrlParams(input)
+	reqUrl := "http://" + clusterAddr + proto.AdminVolShrink + "?" + helper.BuildUrlParams(input) + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return err

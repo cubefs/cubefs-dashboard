@@ -22,6 +22,7 @@ import (
 
 	"github.com/cubefs/cubefs/proto"
 
+	"github.com/cubefs/cubefs-dashboard/backend/config"
 	"github.com/cubefs/cubefs-dashboard/backend/helper"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/httputils"
 )
@@ -33,7 +34,7 @@ type AddInput struct {
 }
 
 func Add(c *gin.Context, clusterAddr string, input *AddInput) (interface{}, error) {
-	reqUrl := "http://" + clusterAddr + proto.AddMetaNode + "?" + helper.BuildUrlParams(input)
+	reqUrl := "http://" + clusterAddr + proto.AddMetaNode + "?" + helper.BuildUrlParams(input) + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return nil, err
@@ -67,7 +68,7 @@ func Get(c *gin.Context, clusterNode, addr string) (*proto.MetaNodeInfo, error) 
 }
 
 func Decommission(c *gin.Context, clusterAddr, addr string) (interface{}, error) {
-	reqUrl := "http://" + clusterAddr + proto.DecommissionMetaNode + "?addr=" + addr
+	reqUrl := "http://" + clusterAddr + proto.DecommissionMetaNode + "?addr=" + addr + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return nil, err
@@ -84,7 +85,7 @@ func Decommission(c *gin.Context, clusterAddr, addr string) (interface{}, error)
 }
 
 func Migrate(c *gin.Context, clusterAddr, srcAddr, targetAddr string) error {
-	reqUrl := "http://" + clusterAddr + proto.MigrateMetaNode + "?srcAddr=" + srcAddr + "&targetAddr=" + targetAddr
+	reqUrl := "http://" + clusterAddr + proto.MigrateMetaNode + "?srcAddr=" + srcAddr + "&targetAddr=" + targetAddr + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return err
