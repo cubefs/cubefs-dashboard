@@ -24,6 +24,7 @@ import (
 
 	"github.com/cubefs/cubefs/proto"
 
+	"github.com/cubefs/cubefs-dashboard/backend/config"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/httputils"
 )
 
@@ -35,7 +36,7 @@ type CreateInput struct {
 }
 
 func Create(c *gin.Context, clusterAddr string, input *CreateInput) (*InfoOutput, error) {
-	reqUrl := "http://" + clusterAddr + proto.UserCreate
+	reqUrl := "http://" + clusterAddr + proto.UserCreate + "?clientIDKey=" + config.Conf.Server.ClientIDKey
 	b, err := json.Marshal(input)
 	if err != nil {
 		return nil, err
@@ -106,7 +107,7 @@ type UpdatePolicyInput struct {
 }
 
 func UpdatePolicy(c *gin.Context, clusterAddr string, input *UpdatePolicyInput) (interface{}, error) {
-	reqUrl := "http://" + clusterAddr + proto.UserUpdatePolicy
+	reqUrl := "http://" + clusterAddr + proto.UserUpdatePolicy + "?clientIDKey=" + config.Conf.Server.ClientIDKey
 	b, err := json.Marshal(input)
 	if err != nil {
 		return nil, err
