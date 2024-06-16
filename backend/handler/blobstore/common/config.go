@@ -17,8 +17,8 @@ package common
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/cubefs/cubefs/blobstore/common/codemode"
 	"github.com/cubefs/cubefs-dashboard/backend/service/blobstore/clustermgr/config"
+	"github.com/cubefs/cubefs/blobstore/common/codemode"
 )
 
 type CodeMode struct {

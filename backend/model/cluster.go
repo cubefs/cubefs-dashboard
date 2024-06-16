@@ -24,18 +24,20 @@ import (
 )
 
 type Cluster struct {
-	Id         int64          `gorm:"primaryKey;auto_increment" json:"id"`
-	Name       string         `gorm:"type:varchar(100);not null;default:'';index" json:"name"`
-	MasterAddr types.StrSlice `gorm:"type:varchar(1024);not null;default:'[]'" json:"master_addr"`
-	IDC        string         `gorm:"column:idc;type:varchar(255);not null;default:''" json:"idc"`
-	Cli        string         `gorm:"type:varchar(255);not null;default:''" json:"cli"`
-	Domain     string         `gorm:"type:varchar(255);not null;default:''" json:"domain"`
-	ConsulAddr string         `gorm:"type:varchar(255);not null;default:''" json:"consul_addr"`
-	Tag        string         `gorm:"type:varchar(255);not null;default:'';index" json:"tag"`
-	S3Endpoint string         `gorm:"column:s3_endpoint;type:varchar(255);not null;default:''" json:"s3_endpoint"`
-	VolType    enums.VolType  `gorm:"type:tinyint(1);not null;default:0" json:"vol_type"`
-	CreateTime time.Time      `gorm:"create_time" json:"create_time"`
-	UpdateTime time.Time      `gorm:"update_time" json:"update_time"`
+	Id         int64               `gorm:"primaryKey;auto_increment" json:"id"`
+	Name       string              `gorm:"type:varchar(100);not null;default:'';index" json:"name"`
+	MasterAddr types.StrSlice      `gorm:"type:varchar(1024);not null;default:'[]'" json:"master_addr"`
+	IDC        string              `gorm:"column:idc;type:varchar(255);not null;default:''" json:"idc"`
+	Cli        string              `gorm:"type:varchar(255);not null;default:''" json:"cli"`
+	Domain     string              `gorm:"type:varchar(255);not null;default:''" json:"domain"`
+	Region     string              `gorm:"type:varchar(255);not null;default:''" json:"region"`
+	ConsulAddr string              `gorm:"type:varchar(255);not null;default:''" json:"consul_addr"`
+	Tag        string              `gorm:"type:varchar(255);not null;default:'';index" json:"tag"`
+	S3Endpoint string              `gorm:"column:s3_endpoint;type:varchar(255);not null;default:''" json:"s3_endpoint"`
+	VolType    enums.VolType       `gorm:"type:tinyint(1);not null;default:0" json:"vol_type"`
+	Status     enums.ClusterStatus `gorm:"type:tinyint(1);not null;default:1" json:"status"`
+	CreateTime time.Time           `gorm:"create_time" json:"create_time"`
+	UpdateTime time.Time           `gorm:"update_time" json:"update_time"`
 }
 
 func (c *Cluster) Create() error {
@@ -71,7 +73,7 @@ func (c *Cluster) FindName(name string) (*Cluster, error) {
 	return clusters, err
 }
 
-func (c *Cluster) FindTag(tag string) (*Cluster, error)  {
+func (c *Cluster) FindTag(tag string) (*Cluster, error) {
 	if tag == "" {
 		return nil, errors.New("tag is required")
 	}
@@ -81,14 +83,18 @@ func (c *Cluster) FindTag(tag string) (*Cluster, error)  {
 }
 
 type FindClusterParam struct {
-	Page    int    `form:"page"`
-	PerPage int    `form:"per_page"`
+	Id      int    `form:"id"`
 	Name    string `form:"name"`
 	VolType *int   `form:"vol_type"`
+	Page    int    `form:"page"`
+	PerPage int    `form:"per_page"`
 }
 
-func (c *Cluster) Find(param FindClusterParam) ([]Cluster, int64, error) {
+func (c *Cluster) Find(param *FindClusterParam) ([]Cluster, int64, error) {
 	db := mysql.GetDB().Model(&Cluster{})
+	if param.Id != 0 {
+		db = db.Where("id = ?", param.Id)
+	}
 	if param.Name != "" {
 		db = db.Where("name = ?", param.Name)
 	}
@@ -112,4 +118,11 @@ func (c *Cluster) FindAll(name string) ([]Cluster, error) {
 	clusters := make([]Cluster, 0)
 	err := db.Find(&clusters).Error
 	return clusters, err
+}
+
+func (c *Cluster) DeleteId(id int64) error {
+	if id <= 0 {
+		return errors.New("id is needed")
+	}
+	return mysql.GetDB().Delete(&Cluster{Id: id}).Error
 }

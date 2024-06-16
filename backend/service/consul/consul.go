@@ -98,5 +98,5 @@ func AddAlbQueryAll() string {
 }
 
 func DelAlbPrefix(key string) string {
-	return fmt.Sprintf(strings.Replace(key,"nginx/bucketLimit/","",1))
+	return fmt.Sprintf(strings.Replace(key, "nginx/bucketLimit/", "", 1))
 }

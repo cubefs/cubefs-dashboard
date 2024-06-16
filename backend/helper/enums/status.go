@@ -25,3 +25,10 @@ const (
 	DiskStatusDropping
 	DiskStatusMax
 )
+
+type ClusterStatus int
+
+const (
+	ClusterStatusOn = ClusterStatus(iota + 1)
+	ClusterStatusOff
+)

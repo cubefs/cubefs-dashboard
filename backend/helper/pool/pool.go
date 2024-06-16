@@ -39,20 +39,20 @@ func (t TaskPool) Run(task func()) {
 	t.pool <- task
 }
 
-func (t TaskPool) TryRun(task func())  bool {
+func (t TaskPool) TryRun(task func()) bool {
 	select {
-	case t.pool<-task:
+	case t.pool <- task:
 		return true
 	default:
 		return false
 	}
 }
 
-func (t TaskPool) Close()  {
+func (t TaskPool) Close() {
 	close(t.pool)
 }
 
-func GetPoolSize(poolSize, length int) int  {
+func GetPoolSize(poolSize, length int) int {
 	if length < poolSize {
 		return length
 	}

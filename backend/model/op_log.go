@@ -25,6 +25,7 @@ type OperationLog struct {
 	Id          uint64       `gorm:"primaryKey" json:"id"`
 	Service     string       `gorm:"type:varchar(20);not null;default:''" json:"service"` // blobstore/cubefs
 	Cluster     string       `gorm:"type:varchar(255);index;not null;default:''" json:"cluster"`
+	ClusterId   int64        `gorm:"type:bigint(20);not null;default:0" json:"cluster_id"`
 	UserId      int          `gorm:"index;not null;default:0" json:"user_id"`
 	UserName    string       `gorm:"type:varchar(50);not null;default:''" json:"user_name"`
 	OpTypeId    int          `gorm:"index;not null;default:0" json:"op_type_id"`
@@ -49,7 +50,7 @@ type FindOpLogParam struct {
 	UserId   int `form:"user_id"`
 }
 
-func (p *FindOpLogParam) Check() error  {
+func (p *FindOpLogParam) Check() error {
 	if p.Page <= 0 {
 		p.Page = 1
 	}

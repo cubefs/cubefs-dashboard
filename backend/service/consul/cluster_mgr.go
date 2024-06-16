@@ -17,13 +17,14 @@ package consul
 import (
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
+	"github.com/cubefs/cubefs/blobstore/util/log"
 	"github.com/gin-gonic/gin"
 
-	"github.com/cubefs/cubefs/blobstore/util/log"
-
+	"github.com/cubefs/cubefs-dashboard/backend/helper/ginutils"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/httputils"
 )
 
@@ -37,7 +38,11 @@ type Cluster struct {
 }
 
 func GetRegionClusters(c *gin.Context, consulAddr string) ([]Cluster, error) {
-	reqUrl := fmt.Sprintf("%s/v1/kv/ebs/%s/clusters?recurse=true", consulAddr, c.Param("cluster"))
+	region, exists := c.Get(ginutils.Region)
+	if !exists {
+		return nil, errors.New("no region")
+	}
+	reqUrl := fmt.Sprintf("%s/v1/kv/ebs/%s/clusters?recurse=true", consulAddr, region)
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		log.Errorf("get clusters from consul failed.reqUrl:%s,err:%+v", reqUrl, err)

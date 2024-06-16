@@ -16,6 +16,8 @@ package ginutils
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -36,7 +38,7 @@ func Check(c *gin.Context, v interface{}) bool {
 	}
 	if err := c.ShouldBind(v); err != nil {
 		log.Errorf("parse param error:%+v", err)
-		Send(c, codes.InvalidArgs.Code(), err.Error(), nil)
+		Fail(c, codes.InvalidArgs.Code(), err.Error())
 		return false
 	}
 
@@ -47,46 +49,47 @@ func Check(c *gin.Context, v interface{}) bool {
 
 	if err := checker.Check(); err != nil {
 		log.Errorf("param check failed. err:%+v", err)
-		Send(c, codes.InvalidArgs.Code(), err.Error(), nil)
+		Fail(c, codes.InvalidArgs.Code(), err.Error())
 		return false
 	}
 
 	return true
 }
 
-const Cluster = "cluster"
+const (
+	Cluster     = "cluster" // Cluster is the value of cluster.id
+	ClusterName = "cluster_name"
+	Region      = "region"
+)
 
 func GetClusterMaster(c *gin.Context) (string, error) {
-	name := c.Param(Cluster)
-	cluster, err := new(model.Cluster).FindName(name)
+	cluster, err := GetCluster(c)
 	if err != nil {
-		err = ClusterMasterAddrErr(name, err)
-		log.Errorf("cluster.FindName failed.name:%s,err:%+v", name, err)
-		Send(c, codes.DatabaseError.Error(), err.Error(), nil)
 		return "", err
 	}
 	if len(cluster.MasterAddr) == 0 {
-		err = ClusterMasterAddrErr(name, errors.New("no master addr"))
-		log.Errorf("cluster vol_type error or no master_addr.master_addr:%+v,vol_type:%+v,name:%s", cluster.MasterAddr, cluster.VolType, name)
-		Send(c, codes.DatabaseError.Error(), err.Error(), nil)
+		err = ClusterMasterAddrErr(cluster.Name, errors.New("no master addr"))
+		log.Errorf("cluster vol_type error or no master_addr.master_addr:%+v,vol_type:%+v,name:%s", cluster.MasterAddr, cluster.VolType, cluster.Name)
+		Fail(c, codes.DatabaseError.Error(), err.Error())
 		return "", err
 	}
 	return cluster.MasterAddr[0], nil
 }
 
 func GetConsulAddr(c *gin.Context) (string, error) {
-	name := c.Param(Cluster)
-	cluster, err := new(model.Cluster).FindName(name)
+	cluster, err := GetCluster(c)
 	if err != nil {
-		err = ClusterConsulAddrErr(name, err)
-		log.Errorf("cluster.FindName failed. cluster:%s,err:%+v", name, err)
-		Send(c, codes.DatabaseError.Code(), err.Error(), nil)
 		return "", err
 	}
-	if len(cluster.ConsulAddr) == 0 || cluster.VolType != enums.VolTypeLowFrequency {
-		err = ClusterConsulAddrErr(name, errors.New("no consul addr"))
-		log.Errorf("cluster vol_type error or no consulAddr:%+v,vol_type:%+v,name:%s", cluster.ConsulAddr, cluster.VolType, c.Param(Cluster))
-		Send(c, codes.DatabaseError.Error(), err.Error(), nil)
+	if len(cluster.ConsulAddr) == 0 {
+		err = ClusterConsulAddrErr(cluster.Name, errors.New("no consul addr"))
+		log.Errorf("GetConsulAddr failed.err:%+v", err)
+		Fail(c, codes.DatabaseError.Error(), err.Error())
+		return "", err
+	}
+	if cluster.VolType != enums.VolTypeLowFrequency {
+		log.Errorf("cluster vol_type error vol_type:%+v,id:%d,name:%s", cluster.VolType, cluster.Id, cluster.Name)
+		Fail(c, codes.DatabaseError.Error(), "vol_type error")
 		return "", err
 	}
 	return cluster.ConsulAddr, nil
@@ -104,4 +107,36 @@ func CheckAndGetMaster(c *gin.Context, v interface{}) (string, error) {
 		return "", errors.New("check param failed")
 	}
 	return GetClusterMaster(c)
+}
+
+func GetCluster(c *gin.Context) (*model.Cluster, error) {
+	idStr := c.Param(Cluster)
+	id, err := ParseClusterId(idStr)
+	if err != nil {
+		log.Errorf("GetClusterId failed, clusterId:%s,err:%+v", idStr, err)
+		Fail(c, codes.InvalidArgs.Code(), err.Error())
+		return nil, err
+	}
+	cluster := new(model.Cluster)
+	if err = cluster.FindId(id); err != nil {
+		err = fmt.Errorf("get cluster(%d) error:%+v", id, err)
+		log.Errorf("cluster.FindId failed.id:%s,err:%+v", idStr, err)
+		Fail(c, codes.DatabaseError.Error(), err.Error())
+		return nil, err
+	}
+	c.Set(Cluster, cluster.Id)
+	c.Set(ClusterName, cluster.Name)
+	c.Set(Region, cluster.Region)
+	return cluster, nil
+}
+
+func ParseClusterId(idStr string) (int64, error) {
+	if idStr == "" {
+		return 0, errors.New("no cluster id")
+	}
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		return 0, fmt.Errorf("parse cluster id(%s) failed", idStr)
+	}
+	return id, nil
 }
