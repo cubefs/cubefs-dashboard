@@ -3,6 +3,11 @@
 # Introduction
 cubefs Console (cfs-gui) is a graphical management tool for cubeFS system, which is designed to meet the needs of system administrators and ordinary users for daily file management. It is an independent web service that is more intuitive and easier to get started with than cfs-cli.
 
+## Governance
+* CubeFS-dashboard is a sub-project of the CubeFS main project, complying with the rules of CubeFS main projects.
+* CubeFS-dashboard does not have independent leadership, adopting the same leadership strategy as the CubeFS main project.
+* Contributions to CubeFS-dashboard are equivalent to contributions to the main project and can be used as a basis for community role promotion.
+
 # Architecture
 The cfs-gui backend interacts directly with the CubeFS cluster, manages multiple clusters simultaneously, and stores its own data in the database. The permission module can assign accounts to different application scenarios. cfs-gui has four main functional modules, as follows:<br>
 - Logical resource management: volume, data-partition, meta-partition, erasure-coding stripe, etc
