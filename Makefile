@@ -21,6 +21,6 @@ frontend:
 	bash build.sh --frontend
 
 clean: bin
-	bash -rf bin
+	rm -rf bin
 
 .PHONY: $(phony)
