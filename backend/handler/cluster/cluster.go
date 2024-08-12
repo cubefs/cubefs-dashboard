@@ -18,20 +18,20 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
+	"github.com/cubefs/cubefs/blobstore/util/log"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo/bson"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 
-	"github.com/cubefs/cubefs/blobstore/util/log"
-	"github.com/cubefs/cubefs/proto"
-
 	"github.com/cubefs/cubefs-dashboard/backend/helper"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/codes"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/enums"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/ginutils"
+	"github.com/cubefs/cubefs-dashboard/backend/helper/pool"
 	"github.com/cubefs/cubefs-dashboard/backend/helper/types"
 	"github.com/cubefs/cubefs-dashboard/backend/model"
 	"github.com/cubefs/cubefs-dashboard/backend/service/cluster"
@@ -47,6 +47,19 @@ type CreateInput struct {
 	Tag        string         `json:"tag"`
 	S3Endpoint string         `json:"s3_endpoint" binding:"omitempty,url"`
 	VolType    enums.VolType  `json:"vol_type"`
+	Region     string         `json:"region"`
+}
+
+func (input *CreateInput) Check() error {
+	switch input.VolType {
+	case enums.VolTypeLowFrequency:
+		if input.Region == "" {
+			return errors.New("region is needed")
+		}
+		return nil
+	default:
+		return nil
+	}
 }
 
 func (input *CreateInput) checkAddr(c *gin.Context) error {
@@ -65,7 +78,7 @@ func checkMasterAddr(c *gin.Context, masterAddr types.StrSlice) error {
 		}
 		if _, err := cluster.Get(c, v); err != nil {
 			log.Errorf("[%s] get cluster failed. err:%+v", v, err)
-			ginutils.Send(c, codes.ThirdPartyError.Code(), fmt.Sprintf("ip: %s 無效", v), nil)
+			ginutils.Fail(c, codes.ThirdPartyError.Code(), fmt.Sprintf("ip: %s 無效", v))
 			return err
 		}
 	}
@@ -79,7 +92,7 @@ func checkIpPort(c *gin.Context, addr string) error {
 	}
 	if err := helper.CheckIpPort(addr); err != nil {
 		log.Errorf("checkIpPort failed. addr:%s, err:%+v", addr, err)
-		ginutils.Send(c, codes.InvalidArgs.Code(), err.Error(), nil)
+		ginutils.Fail(c, codes.InvalidArgs.Code(), err.Error())
 		return err
 	}
 	return nil
@@ -240,6 +253,7 @@ func create(input *CreateInput) (*model.Cluster, error) {
 		log.Errorf("copy Cluster failed. err:%+v", err)
 		return m, err
 	}
+	m.Status = enums.ClusterStatusOn
 	if err := m.Create(); err != nil {
 		log.Errorf("create cluster failed. err:%+v", err)
 		return m, err
@@ -248,10 +262,7 @@ func create(input *CreateInput) (*model.Cluster, error) {
 }
 
 type ListInput struct {
-	Page    int    `form:"page"`
-	PerPage int    `form:"per_page"`
-	Name    string `form:"name"`
-	VolType *int   `form:"vol_type"`
+	*model.FindClusterParam
 }
 
 func (input *ListInput) Check() error {
@@ -271,39 +282,15 @@ type ListOutput struct {
 	Clusters []Cluster `json:"clusters"`
 }
 
-type Cluster struct {
-	model.Cluster       `json:",inline"`
-	OriginalName        string                   `json:"original_name"`
-	LeaderAddr          string                   `json:"leader_addr"`
-	MetaNodeSum         int                      `json:"meta_node_sum"`
-	MetaTotal           string                   `json:"meta_total"`
-	MetaUsed            string                   `json:"meta_used"`
-	MetaUsedRatio       string                   `json:"meta_used_ratio"`
-	DataNodeSum         int                      `json:"data_node_sum"`
-	DataTotal           string                   `json:"data_total"`
-	DataUsed            string                   `json:"data_used"`
-	DataUsedRatio       string                   `json:"data_used_ratio"`
-	MetaNodes           []proto.NodeView         `json:"meta_nodes,omitempty" `
-	DataNodes           []proto.NodeView         `json:"data_nodes,omitempty"`
-	BadPartitionIDs     []proto.BadPartitionView `json:"bad_partition_ids"`
-	BadMetaPartitionIDs []proto.BadPartitionView `json:"bad_meta_partition_ids"`
-}
-
 func List(c *gin.Context) {
-	input := &ListInput{}
+	input := &ListInput{&model.FindClusterParam{}}
 	if !ginutils.Check(c, input) {
 		return
 	}
-	param := model.FindClusterParam{}
-	if err := copier.Copy(&param, input); err != nil {
-		log.Errorf("copy param failed. err:%+v", err)
-		ginutils.Send(c, codes.InvalidArgs.Code(), err.Error(), nil)
-		return
-	}
-	clusters, count, err := new(model.Cluster).Find(param)
+	clusters, count, err := new(model.Cluster).Find(input.FindClusterParam)
 	if err != nil {
 		log.Errorf("find clusters failed. input:%+v, err:%+v", input, err)
-		ginutils.Send(c, codes.DatabaseError.Code(), err.Error(), nil)
+		ginutils.Fail(c, codes.DatabaseError.Code(), err.Error())
 		return
 	}
 	output := ListOutput{
@@ -313,40 +300,101 @@ func List(c *gin.Context) {
 		Clusters: make([]Cluster, 0),
 	}
 	if len(clusters) == 0 {
-		ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), output)
+		ginutils.Success(c, output)
 		return
 	}
-	for _, m := range clusters {
-		if len(m.MasterAddr) == 0 {
-			output.Clusters = append(output.Clusters, Cluster{Cluster: m})
-			continue
-		}
-		clusterInfo, err := cluster.Get(c, m.MasterAddr[0])
-		if err != nil {
-			log.Errorf("get addr(%v) cluster failed: %v", m.MasterAddr[0], err)
-		}
-		if clusterInfo == nil {
-			output.Clusters = append(output.Clusters, Cluster{Cluster: m})
-			continue
-		}
-		data := Cluster{
-			Cluster:             m,
-			OriginalName:        clusterInfo.Name,
-			LeaderAddr:          clusterInfo.LeaderAddr,
-			MetaNodeSum:         len(clusterInfo.MetaNodes),
-			MetaTotal:           helper.GBByteConversion(clusterInfo.MetaNodeStatInfo.TotalGB),
-			MetaUsed:            helper.GBByteConversion(clusterInfo.MetaNodeStatInfo.UsedGB),
-			MetaUsedRatio:       helper.Percentage(clusterInfo.MetaNodeStatInfo.UsedGB, clusterInfo.MetaNodeStatInfo.TotalGB),
-			DataNodeSum:         len(clusterInfo.DataNodes),
-			DataTotal:           helper.GBByteConversion(clusterInfo.DataNodeStatInfo.TotalGB),
-			DataUsed:            helper.GBByteConversion(clusterInfo.DataNodeStatInfo.UsedGB),
-			DataUsedRatio:       helper.Percentage(clusterInfo.DataNodeStatInfo.UsedGB, clusterInfo.DataNodeStatInfo.TotalGB),
-			MetaNodes:           clusterInfo.MetaNodes,
-			DataNodes:           clusterInfo.DataNodes,
-			BadPartitionIDs:     clusterInfo.BadPartitionIDs,
-			BadMetaPartitionIDs: clusterInfo.BadMetaPartitionIDs,
-		}
-		output.Clusters = append(output.Clusters, data)
+
+	poolSize := pool.GetPoolSize(30, len(clusters))
+	tp := pool.New(poolSize, poolSize)
+	clusterChan := make(chan Cluster, len(clusters))
+	handleClusters(c, clusters, tp, clusterChan)
+	for cc := range clusterChan {
+		output.Clusters = append(output.Clusters, cc)
 	}
-	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), output)
+
+	ginutils.Success(c, output)
+}
+
+func handleClusters(c *gin.Context, clusters []model.Cluster, tp pool.TaskPool, clusterChan chan Cluster) {
+	wg := sync.WaitGroup{}
+	for i := range clusters {
+		m := clusters[i]
+		wg.Add(1)
+		tp.Run(func() {
+			defer wg.Done()
+			if len(m.MasterAddr) == 0 || m.Status != enums.ClusterStatusOn {
+				clusterChan <- Cluster{Cluster: m}
+				return
+			}
+			clusterInfo, err := cluster.Get(c, m.MasterAddr[0])
+			if err != nil {
+				log.Errorf("get addr(%v) cluster failed: %v", m.MasterAddr[0], err)
+			}
+			if clusterInfo == nil {
+				clusterChan <- Cluster{Cluster: m}
+				return
+			}
+			data := Cluster{
+				Cluster:             m,
+				OriginalName:        clusterInfo.Name,
+				LeaderAddr:          clusterInfo.LeaderAddr,
+				MetaNodeSum:         len(clusterInfo.MetaNodes),
+				MetaTotal:           helper.GBByteConversion(clusterInfo.MetaNodeStatInfo.TotalGB),
+				MetaUsed:            helper.GBByteConversion(clusterInfo.MetaNodeStatInfo.UsedGB),
+				MetaUsedRatio:       helper.Percentage(clusterInfo.MetaNodeStatInfo.UsedGB, clusterInfo.MetaNodeStatInfo.TotalGB),
+				DataNodeSum:         len(clusterInfo.DataNodes),
+				DataTotal:           helper.GBByteConversion(clusterInfo.DataNodeStatInfo.TotalGB),
+				DataUsed:            helper.GBByteConversion(clusterInfo.DataNodeStatInfo.UsedGB),
+				DataUsedRatio:       helper.Percentage(clusterInfo.DataNodeStatInfo.UsedGB, clusterInfo.DataNodeStatInfo.TotalGB),
+				MetaNodes:           clusterInfo.MetaNodes,
+				DataNodes:           clusterInfo.DataNodes,
+				BadPartitionIDs:     clusterInfo.BadPartitionIDs,
+				BadMetaPartitionIDs: clusterInfo.BadMetaPartitionIDs,
+			}
+			clusterChan <- data
+		})
+	}
+	wg.Wait()
+	close(clusterChan)
+	tp.Close()
+}
+
+type ChangeStatusInput struct {
+	ClusterId int64               `json:"cluster_id" binding:"required"`
+	Status    enums.ClusterStatus `json:"status"`
+}
+
+func ChangeStatus(c *gin.Context) {
+	input := &ChangeStatusInput{}
+	if !ginutils.Check(c, input) {
+		return
+	}
+	err := new(model.Cluster).Update(input.ClusterId, map[string]interface{}{
+		"status": input.Status,
+	})
+	if err != nil {
+		log.Errorf("change cluster status failed,args:%+v,err:%+v", input, err)
+		ginutils.Fail(c, codes.DatabaseError.Code(), err.Error())
+		return
+	}
+	ginutils.Success(c, nil)
+}
+
+type RemoveInput struct {
+	ClusterId int64 `form:"cluster_id" binding:"required"`
+}
+
+func Remove(c *gin.Context) {
+	input := &RemoveInput{}
+	if err := c.BindQuery(input); err != nil {
+		log.Errorf("parse param failed,err:%+v", err)
+		ginutils.Fail(c, codes.InvalidArgs.Code(), err.Error())
+		return
+	}
+	if err := new(model.Cluster).DeleteId(input.ClusterId); err != nil {
+		log.Errorf("delete cluster failed.id:%d,err:%+v", input.ClusterId, err)
+		ginutils.Fail(c, codes.DatabaseError.Code(), err.Error())
+		return
+	}
+	ginutils.Success(c, nil)
 }

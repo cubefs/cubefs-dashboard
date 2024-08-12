@@ -37,7 +37,7 @@ func FormatNodeStatus(isActive bool, badDisks ...string) string {
 
 func FormatAvailable(available, used, total uint64) uint64 {
 	if used > total {
-		return  0
+		return 0
 	}
 	return available
 }

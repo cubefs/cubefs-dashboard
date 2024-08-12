@@ -23,7 +23,7 @@ import (
 	"github.com/cubefs/cubefs-dashboard/backend/helper/enums"
 )
 
-func Session() gin.HandlerFunc  {
+func Session() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// check whether the user session is valid
 		session := sessions.Default(c)

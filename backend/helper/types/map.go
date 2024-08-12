@@ -41,7 +41,7 @@ func (m *MapStr) Scan(v interface{}) error {
 
 type Map map[string]interface{}
 
-func (m Map) Value() (driver.Value, error)  {
+func (m Map) Value() (driver.Value, error) {
 	if len(m) == 0 {
 		m = map[string]interface{}{}
 	}
@@ -49,7 +49,7 @@ func (m Map) Value() (driver.Value, error)  {
 	return string(b), e
 }
 
-func (m *Map) Scan(v interface{}) error  {
+func (m *Map) Scan(v interface{}) error {
 	b, ok := v.([]byte)
 	if !ok {
 		return errors.New(fmt.Sprintf("invalid type:%T", v))
@@ -59,7 +59,7 @@ func (m *Map) Scan(v interface{}) error  {
 
 type Values map[string][]string
 
-func (val Values) Value() (driver.Value, error)  {
+func (val Values) Value() (driver.Value, error) {
 	if len(val) == 0 {
 		val = map[string][]string{}
 	}
@@ -67,7 +67,7 @@ func (val Values) Value() (driver.Value, error)  {
 	return string(b), e
 }
 
-func (val *Values) Scan(v interface{}) error  {
+func (val *Values) Scan(v interface{}) error {
 	b, ok := v.([]byte)
 	if !ok {
 		return errors.New(fmt.Sprintf("invalid type:%T", v))

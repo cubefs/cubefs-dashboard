@@ -39,6 +39,10 @@ func Success(ctx *gin.Context, data interface{}) {
 	Send(ctx, codes.OK.Code(), codes.OK.Msg(), data)
 }
 
+func Fail(ctx *gin.Context, code int, msg string) {
+	Send(ctx, code, msg, nil)
+}
+
 func sendResponse(ctx *gin.Context, code int, msg string, data interface{}) {
 	ctx.JSON(http.StatusOK, &Result{
 		Code:    code,

@@ -23,6 +23,7 @@ import (
 
 type User struct {
 	Id         uint64           `gorm:"primaryKey" json:"id"`
+	ClusterId  int64            `gorm:"type:bigint(20);not null;default:0" json:"cluster_id"`
 	Name       string           `gorm:"type:varchar(50);not null;default:'';uniqueIndex" json:"name"`
 	Role       int              `gorm:"type:tinyint(4);not null;default:3" json:"role"`
 	AccessKey  types.EncryptStr `gorm:"type:varchar(500);not null;default:''" json:"access_key"`

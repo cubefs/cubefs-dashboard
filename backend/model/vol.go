@@ -22,6 +22,7 @@ import (
 
 type Vol struct {
 	Id              uint64    `gorm:"primaryKey" json:"id"`
+	ClusterId       int64     `gorm:"type:bigint(20);not null;default:0" json:"cluster_id"`
 	Name            string    `gorm:"type:varchar(100);not null;default:'';index" json:"name"`
 	Owner           string    `gorm:"type:varchar(50);not null;default:'';index" json:"owner"`
 	Capacity        uint64    `gorm:"not null;default:0" json:"capacity"`
@@ -40,9 +41,10 @@ func (v *Vol) Create() error {
 }
 
 type FindVolsParam struct {
-	Owner   string `form:"owner" binding:"required"`
-	Page    int    `form:"page"`
-	PerPage int    `form:"per_page"`
+	ClusterId int64  `form:"cluster_id"`
+	Owner     string `form:"owner" binding:"required"`
+	Page      int    `form:"page"`
+	PerPage   int    `form:"per_page"`
 }
 
 func (p *FindVolsParam) Check() error {
@@ -59,6 +61,9 @@ func (v *Vol) Find(param *FindVolsParam) ([]Vol, int64, error) {
 	db := mysql.GetDB().Model(&Vol{})
 	if param.Owner != "" {
 		db = db.Where("owner = ?", param.Owner)
+	}
+	if param.ClusterId > 0 {
+		db = db.Where("cluster_id = ?", param.ClusterId)
 	}
 	var count int64
 	if err := db.Count(&count).Error; err != nil {
