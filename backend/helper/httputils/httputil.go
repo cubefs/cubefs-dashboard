@@ -15,6 +15,7 @@
 package httputils
 
 import (
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -39,7 +40,19 @@ func HandleResponse(c *gin.Context, resp *http.Response, err error, data interfa
 		err = fmt.Errorf("failed :%s", string(s))
 		return resp.StatusCode, err
 	}
-	s, err := ioutil.ReadAll(resp.Body)
+
+	var reader io.ReadCloser
+	if resp.Header.Get("Content-Encoding") == "gzip" {
+		reader, err = gzip.NewReader(resp.Body)
+		if err != nil {
+			err = fmt.Errorf("failed: gzip decompression error")
+			return 503, err
+		}
+	} else {
+		reader = resp.Body
+	}
+
+	s, err := ioutil.ReadAll(reader)
 	if err != nil {
 		err = fmt.Errorf("read body error :%v", err)
 		return codes.ResultError.Code(), err
