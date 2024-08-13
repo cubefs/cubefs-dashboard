@@ -173,7 +173,7 @@ export default {
     inputcode: '请输入角色编码',
     inputname: '请输入角色名',
     inputrule: '只能包含英文、数字和下划线',
-    tenantcheckedfirst: '选择该权限请先选择租户管理，否则不生效',  
+    tenantcheckedfirst: '选择该权限请先选择租户管理，否则不生效',
   },
   usermgt: {
     accountrule: '只能包含数字、大写字母、小写字母、下划线',
@@ -210,7 +210,7 @@ export default {
     multi_replicas: '多副本节点',
     role: '角色管理',
     user: '用户管理',
-    volume: '卷管理',  
+    volume: '卷管理',
   },
   router: {
     cluster: '集群管理',
@@ -278,7 +278,7 @@ export default {
     tenant: 'Owner租户',
     tips1: '文件管理操作需要先配置跨域才能放开，且跨域来源需包含访问域名，例如',
     upaddr: '上传文件至 ',
-    whichcluster: '所在集群',  
+    whichcluster: '所在集群',
   },
   clusterinfo: {
     masteraddr: '管理服务地址',
@@ -313,7 +313,7 @@ export default {
     up50: '上限值为50',
     volumecachesize: '卷Cache总量',
     volumecachetimeout: '卷Cache淘汰时间',
-    volumenamerule: '必须以字母开头,可有下划线,数字,字母,短横线',  
+    volumenamerule: '必须以字母开头,可有下划线,数字,字母,短横线',
   },
   tenant: {
     createtenantsuc: '创建租户成功',
@@ -321,7 +321,7 @@ export default {
     inputdescrp: '请输入租户说明',
     inputtenantid: '请输入租户ID',
     tenantdescrp: '租户说明:',
-    tenantid: '租户ID',  
+    tenantid: '租户ID',
   },
   resource: {
     alldiskhealth: '没有不可写的磁盘',
@@ -369,12 +369,12 @@ export default {
     setsuc: '设置成功',
     srcaddr: '源地址',
     stripedetail: '条带组详情',
-    tasksin20min: '最近20分钟任务情况',  
+    tasksin20min: '最近20分钟任务情况',
     },
   cfsclusteroverview: {
     attacheccluster: '是否关联纠删码集群',
     blobstoreaddr: '纠删码(blobstore)地址',
-    bsaddrrule: '请输入blobstore地址,一定要加协议，例如(http|https)://ip:port',
+    bsaddrrule: '请输入blobstore地址,一定要加协议，例如(http|https)://ip:port, 与Master中的ebsAddr是一致的',
     clustername: '集群名',
     datasize: 'Data容量',
     datausage: 'Data使用率',
@@ -394,7 +394,7 @@ export default {
     s3address: 'S3地址',
     s3addrrule: '请输入s3 endpoint，一定要加协议，例如(http|https)://ip:port, (http|https)://域名',
     tag: 'tag',
-    volumetype: '请选择卷类型',  
+    volumetype: '请选择卷类型',
   },
   privileges: {
     AUTH_ROLE_CREATE: '添加角色',
@@ -427,7 +427,7 @@ export default {
     CFS_VOLS_SHRINK: '卷缩容',
     CFS_VOLS_UPDATE: '编辑纠删码卷',
     CLUSTER_CREATE: '上架集群',
-    CLUSTER_UPDATE: '修改集群',  
+    CLUSTER_UPDATE: '修改集群',
   },
   ...zhLocale
 }
