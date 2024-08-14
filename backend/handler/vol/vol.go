@@ -52,6 +52,8 @@ func (input *CreateInput) Check() error {
 		if input.ReplicaNumber <= 0 {
 			return errors.New("replica_number should great than 0")
 		}
+	case int(enums.VolTypeLowFrequency):
+		return nil
 	default:
 		err := fmt.Errorf("invalid vol_type:%d", input.VolType)
 		log.Error(err)
