@@ -155,6 +155,7 @@ export default {
     writable: 'Writable',
     xxsuc: 'successfully',
     yes: 'Yes',
+    confirmdeletecluster: 'are you sure to delete the Cluster?',
   },
   button: {
     cancel: 'Cancel',
@@ -278,7 +279,7 @@ export default {
     tenant: 'Tenant',
     tips1: 'You should configure CORS policy first before manage files, and request domain must be in the source list, e.g.',
     upaddr: 'Upload to ',
-    whichcluster: 'Cluster',  
+    whichcluster: 'Cluster',
   },
   clusterinfo: {
     masteraddr: 'Master address',
@@ -313,7 +314,8 @@ export default {
     up50: 'max is 50',
     volumecachesize: 'Cache size of Volume',
     volumecachettl: 'Cache TTL of Volume',
-    volumenamerule: 'Must begin with a letter, and can only contain underscores, alphanumeric characters or short dashes',  
+    volumenamerule: 'Must begin with a letter, and can only contain underscores, alphanumeric characters or short dashes',
+    confirmdeletevol: 'are you sure to delete the volume?',
   },
   tenant: {
     createtenantsuc: 'Create tenant successfully',
@@ -321,7 +323,7 @@ export default {
     inputdescrp: 'Enter the tenant descriptive',
     inputtenantid: 'Enter the tenant ID',
     tenantdescrp: 'Tenant descriptive:',
-    tenantid: 'Tenant ID',  
+    tenantid: 'Tenant ID',
   },
   resource: {
     alldiskhealth: 'All disks health',
@@ -394,7 +396,7 @@ export default {
     s3address: 'S3Addr',
     s3addrrule: 'Enter a s3 endpoint address which must start with protocol header, such as (http|https)://(ip:port)|domain',
     tag: 'Tag',
-    volumetype: 'Please choose volume type',  
+    volumetype: 'Please choose volume type',
   },
   privileges: {
     AUTH_ROLE_CREATE: 'add role', // '添加角色',
@@ -425,9 +427,10 @@ export default {
     CFS_VOLS_CREATE: 'create volume', // '创建卷',
     CFS_VOLS_EXPAND: 'volume scaleup', // '卷扩容',
     CFS_VOLS_SHRINK: 'volume scaledown', // '卷缩容',
+    CFS_VOLS_DELETE: 'volume delete',
     CFS_VOLS_UPDATE: 'edit EC', // '编辑纠删码卷',
     CLUSTER_CREATE: 'create cluster', // '上架集群',
-    CLUSTER_UPDATE: 'edit cluster', // '修改集群',  
+    CLUSTER_UPDATE: 'edit cluster', // '修改集群',
   },
   ...enLocale
 }

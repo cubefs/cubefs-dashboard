@@ -184,3 +184,25 @@ func ClientGet(c *gin.Context, clusterAddr, owner, name string) (*ClientVol, err
 	}
 	return output.Data.(*ClientVol), nil
 }
+
+type DeleteInput struct {
+	Name    string `json:"name"`
+	AuthKey string `json:"authKey"`
+}
+
+func Delete(c *gin.Context, clusterAddr string, input *DeleteInput) (interface{}, error) {
+	reqUrl := "http://" + clusterAddr + proto.AdminDeleteVol + "?name=" + input.Name + "&authKey=" + input.AuthKey
+	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	output := httputils.Output{Data: ""}
+	_, err = httputils.HandleResponse(c, resp, err, &output)
+	if err != nil {
+		return nil, err
+	}
+	if output.Code != proto.ErrCodeSuccess {
+		return nil, errors.New(output.Msg)
+	}
+	return output.Data, nil
+}

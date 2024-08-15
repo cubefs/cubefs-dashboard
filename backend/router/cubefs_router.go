@@ -51,6 +51,8 @@ func (c *cfsRouter) Register(engine *gin.Engine) {
 		vols.PUT("/update", vol.Update)
 		vols.PUT("/expand", vol.Expand)
 		vols.PUT("/shrink", vol.Shrink)
+		vols.GET("/delete", vol.Delete)
+
 	}
 
 	domains := group.Group("/domains")

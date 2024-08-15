@@ -31,5 +31,6 @@ func (c *clusterRouter) Register(engine *gin.Engine) {
 		clusters.POST("/create", cluster.Create)
 		clusters.PUT("/update", cluster.Update)
 		clusters.GET("/list", cluster.List)
+		clusters.GET("/delete", cluster.Delete)
 	}
 }

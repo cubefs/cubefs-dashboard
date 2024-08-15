@@ -155,6 +155,7 @@ export default {
     writable: '读写状态',
     xxsuc: '成功',
     yes: '是',
+    confirmdeletecluster: '确定删除集群么?',
   },
   button: {
     cancel: '取 消',
@@ -314,6 +315,7 @@ export default {
     volumecachesize: '卷Cache总量',
     volumecachetimeout: '卷Cache淘汰时间',
     volumenamerule: '必须以字母开头,可有下划线,数字,字母,短横线',
+    confirmdeletevol: '确定删除卷吗？',
   },
   tenant: {
     createtenantsuc: '创建租户成功',
@@ -330,7 +332,7 @@ export default {
     brokenjob: '设置坏盘申请成功, 请前往云工单查看审批详情',
     chooseaction: '请选择操作',
     choosedisk: '请至少勾选一个需要下线的磁盘',
-    cloudjobs:'服务下线操作申请成功, 请前往云工单查看审批详情',
+    cloudjobs: '服务下线操作申请成功, 请前往云工单查看审批详情',
     confirmbatchoffline: '确定要批量下线吗?',
     confirmregistdisk: '确定注册该磁盘吗？',
     confirmsetbroken: '确定设置成坏盘吗？',
@@ -425,6 +427,7 @@ export default {
     CFS_VOLS_CREATE: '创建卷',
     CFS_VOLS_EXPAND: '卷扩容',
     CFS_VOLS_SHRINK: '卷缩容',
+    CFS_VOLS_DELETE: '卷删除',
     CFS_VOLS_UPDATE: '编辑纠删码卷',
     CLUSTER_CREATE: '上架集群',
     CLUSTER_UPDATE: '修改集群',

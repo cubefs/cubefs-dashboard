@@ -350,3 +350,28 @@ func List(c *gin.Context) {
 	}
 	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), output)
 }
+
+type DeleteInput struct {
+	Name string `form:"name" binding:"required"`
+}
+
+func Delete(c *gin.Context) {
+	input := &DeleteInput{}
+	if !ginutils.Check(c, input) {
+		return
+	}
+	m, err := new(model.Cluster).FindName(input.Name)
+	if err != nil || m == nil || m.Id == 0 {
+		log.Errorf("find cluster by name failed. err:%+v", err)
+		ginutils.Send(c, codes.DatabaseError.Code(), err.Error(), nil)
+		return
+	}
+	row, err := new(model.Cluster).DeleteById(m.Id)
+	if err != nil {
+		log.Errorf("Failed to delete cluster. err:%+v", err)
+		ginutils.Send(c, codes.DatabaseError.Code(), err.Error(), nil)
+		return
+	}
+
+	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), row)
+}

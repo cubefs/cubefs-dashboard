@@ -136,14 +136,14 @@
         :label="$t('common.createtime')"
         prop="create_time"
         sortable
-        width="120"
+        width="100"
       >
         <template slot-scope="scope">
           {{ scope.row.create_time | formatDate }}
         </template>
       </el-table-column>
       <el-table-column :label="$t('common.business')" prop="business"></el-table-column>
-      <el-table-column :label="$t('common.action')" :width="80">
+      <el-table-column :label="$t('common.action')" :width="80" align="center" fixed="right">
         <template slot-scope="scope">
           <MoreOPerate
             :count="1"
@@ -164,6 +164,13 @@
               type="text"
               @click="handleExpansion(scope.row, 'shrink')"
             >{{ $t('common.scaledown') }}</el-button>
+            <el-button
+              v-auth="'CFS_VOLS_DELETE'"
+              class="btn"
+              size="medium"
+              type="text"
+              @click="deleteVol(scope.row)"
+            >{{ $t('common.delete') }}</el-button>
             <el-button
               v-auth="'CFS_USERS_POLICIES'"
               class="btn"
@@ -253,11 +260,12 @@ import CreateDp from './components/createDp'
 import CreateMp from './components/createMp'
 import UpdateVol from './components/updateVol.vue'
 import FilterTableData from '@/pages/components/filter'
-import { getVolList, getVolDetail } from '@/api/cfs/cluster'
+import {getVolList, getVolDetail, deleteVol} from '@/api/cfs/cluster'
 import { sortSizeWithUnit, renderSize, generateEXCEL } from '@/utils'
 import Mixin from '@/pages/cfs/clusterOverview/mixin'
 import Partition from '../partition.vue'
 import MetaPartition from '../metaPartition.vue'
+import {setNodeInfoBad} from "@/api/ebs/ebs";
 export default {
   components: {
     MoreOPerate,
@@ -451,6 +459,29 @@ export default {
     },
     openUpdateVolumnModal(row) {
       this.$refs.updateVol.init(row)
+    },
+    async deleteVol(row) {
+      try {
+        await this.$confirm(this.$t('volume.confirmdeletevol') + row.name, this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
+        })
+        const res = await deleteVol({
+          name: row.name,
+          cluster_name: this.clusterName,
+        })
+        if (res.code === 200) {
+          this.$message.success(this.$t('common.delete') + this.$t('common.xxsuc') + '<br/>' + res.data)
+          await this.getData()
+        } else {
+          this.$message({
+            showClose: true,
+            message: this.$t('common.delete') + this.$t('common.failed') + '\n' + res.data,
+            type: 'error',
+            duration: 10000
+          })
+        }
+      } catch (e) {}
     },
   },
 }

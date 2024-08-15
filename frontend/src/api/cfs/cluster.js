@@ -35,6 +35,11 @@ export const upDateCluster = (param) => {
 export const getClusterList = (param) => {
   return Ajax.get(clusterPrefix + 'clusters/list', param)
 }
+// 删除集群
+export const deleteCluster = (param) => {
+  return Ajax.get(clusterPrefix + 'clusters/delete', param)
+}
+
 // 获取集群是否可以设置故障域
 export const getClusterIsErrArea = (param) => {
   return Ajax.get(prefix(param) + 'domains/info', param)
@@ -57,6 +62,12 @@ export const expandVol = (param) => {
 export const shrinkVol = (param) => {
   return Ajax.put(prefix(param) + 'vols/shrink', param)
 }
+// 删除卷
+export const deleteVol = (param) => {
+  // return Ajax.delete(prefix(param) + 'vols/shrink', param)
+  return Ajax.get(prefix(param) + 'vols/delete', param)
+}
+
 // 获取卷详情
 export const getVolDetail = (param) => {
   return Ajax.get(prefix(param) + 'vols/info', param)

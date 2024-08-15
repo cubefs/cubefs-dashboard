@@ -27,7 +27,7 @@ var (
 	DefaultRolePermission = map[string][]string{
 		"Admin": []string{},
 		"Operator": []string{
-			"CLUSTER_CREATE", "CLUSTER_UPDATE", "CLUSTER_LIST",
+			"CLUSTER_CREATE", "CLUSTER_UPDATE", "CLUSTER_LIST", "CLUSTER_DELETE",
 			"BLOBSTORE_CLUSTER_LIST",
 			"BLOBSTORE_STAT", "BLOBSTORE_LEADERSHIP", "BLOBSTORE_MEMBER_REMOVE",
 			"BLOBSTORE_NODES_LIST", "BLOBSTORE_NODES_ACCESS", "BLOBSTORE_NODES_DROP", "BLOBSTORE_NODES_OFFLINE", "BLOBSTORE_NODES_CONFIG_RELOAD", "BLOBSTORE_NODES_CONFIG_INFO", "BLOBSTORE_NODES_CONFIG_FAIL",
@@ -36,7 +36,7 @@ var (
 			"BLOBSTORE_CONFIG_LIST", "BLOBSTORE_CONFIG_SET",
 			"BLOBSTORE_SERVICES_LIST", "BLOBSTORE_SERVICES_GET", "BLOBSTORE_SERVICES_OFFLINE",
 			"CFS_USERS_CREATE", "CFS_USERS_LIST", "CFS_USERS_NAMES", "CFS_USERS_POLICIES",
-			"CFS_VOLS_CREATE", "CFS_VOLS_LIST", "CFS_VOLS_INFO", "CFS_VOLS_UPDATE", "CFS_VOLS_EXPAND", "CFS_VOLS_SHRINK",
+			"CFS_VOLS_CREATE", "CFS_VOLS_LIST", "CFS_VOLS_INFO", "CFS_VOLS_UPDATE", "CFS_VOLS_DELETE", "CFS_VOLS_EXPAND", "CFS_VOLS_SHRINK",
 			"CFS_DOMAINS_STATUS", "CFS_DOMAINS_INFO",
 			"CFS_DATANODE_ADD", "CFS_DATANODE_LIST", "CFS_DATANODE_PARTITIONS", "CFS_DATANODE_DECOMMISSION", "CFS_DATANODE_MIGRATE",
 			"CFS_METANODE_ADD", "CFS_METANODE_LIST", "CFS_METANODE_PARTITIONS", "CFS_METANODE_DECOMMISSION", "CFS_METANODE_MIGRATE",
@@ -79,6 +79,7 @@ var (
 		{AuthCode: "CLUSTER_CREATE", AuthName: "create cluster", AuthType: &backend, URI: prefix + "/clusters/crete", Method: "POST", IsLogin: true, IsCheck: true},
 		{AuthCode: "CLUSTER_UPDATE", AuthName: "update cluster", AuthType: &backend, URI: prefix + "/clusters/update", Method: "PUT", IsLogin: true, IsCheck: true},
 		{AuthCode: "CLUSTER_LIST", AuthName: "list cluster", AuthType: &backend, URI: prefix + "/clusters/list", Method: "GET", IsLogin: true, IsCheck: true},
+		{AuthCode: "CLUSTER_DELETE", AuthName: "delete cluster", AuthType: &backend, URI: prefix + "/clusters/delete", Method: "GET", IsLogin: true, IsCheck: true},
 
 		// blobstore.clusters
 		{AuthCode: "BLOBSTORE_CLUSTER_LIST", AuthName: "list blobstore cluster", AuthType: &backend, URI: prefix + "/blobstore/:clusters/cluster/list", Method: "GET", IsLogin: true, IsCheck: true},
@@ -132,6 +133,7 @@ var (
 		// cfs.vols
 		{AuthCode: "CFS_VOLS_CREATE", AuthName: "create cfs vol", AuthType: &backend, URI: prefix + "/cfs/:cluster/vols/create", Method: "POST", IsLogin: true, IsCheck: true},
 		{AuthCode: "CFS_VOLS_UPDATE", AuthName: "update cfs vol", AuthType: &backend, URI: prefix + "/cfs/:cluster/vols/update", Method: "PUT", IsLogin: true, IsCheck: true},
+		{AuthCode: "CFS_VOLS_DELETE", AuthName: "delete cfs vol", AuthType: &backend, URI: prefix + "/cfs/:cluster/vols/delete", Method: "GET", IsLogin: true, IsCheck: true},
 		{AuthCode: "CFS_VOLS_EXPAND", AuthName: "expand cfs vol", AuthType: &backend, URI: prefix + "/cfs/:cluster/vols/expand", Method: "PUT", IsLogin: true, IsCheck: true},
 		{AuthCode: "CFS_VOLS_SHRINK", AuthName: "shrink cfs vol", AuthType: &backend, URI: prefix + "/cfs/:cluster/vols/shrink", Method: "PUT", IsLogin: true, IsCheck: true},
 		{AuthCode: "CFS_VOLS_LIST", AuthName: "list cfs vol", AuthType: &backend, URI: prefix + "/cfs/:cluster/vols/list", Method: "GET", IsLogin: true, IsCheck: true},

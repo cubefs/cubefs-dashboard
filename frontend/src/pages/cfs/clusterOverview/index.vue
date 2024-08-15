@@ -55,7 +55,7 @@
   </div>
 </template>
 <script>
-import { getClusterList, upDateCluster, createCluster } from '@/api/cfs/cluster'
+import {getClusterList, upDateCluster, createCluster, deleteVol, deleteCluster} from '@/api/cfs/cluster'
 import { getClusterList as getEbsClusterList } from '@/api/ebs/ebs'
 import { initCfsClusterRoute } from '@/router/index'
 import { mapMutations } from 'vuex'
@@ -137,12 +137,22 @@ export default {
                   v-auth="CLUSTER_UPDATE"
                   type="text"
                   size="medium"
-                  class="ft-16"
+                  className="ft-16"
                   icon="el-icon-edit-outline"
-                  title={ this.$t('common.edit') }
+                  title={this.$t('common.edit')}
                   onClick={() => {
                     this.showDialog(row)
                   }}>
+                </el-button>
+                <el-button
+                  v-auth="CLUSTER_DELETE"
+                  type="text"
+                  size="medium"
+                  className="ft-16"
+                  icon="el-icon-delete"
+                  title={this.$t('common.delete')}
+                  onClick={() => { this.deleteCluster(row) }}
+                >
                 </el-button>
               </div>
             )
@@ -160,7 +170,7 @@ export default {
           trigger: 'blur',
           validator: (rule, value, cb) => {
             const regIp =
-                  /^https?:\/\/(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
+              /^https?:\/\/(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
             if (!value) {
               cb(new Error(this.$t('cfsclusteroverview.inputbsaddr')))
             } else {
@@ -380,6 +390,29 @@ export default {
           id,
         )
       }
+    },
+    async deleteCluster(row) {
+      try {
+        await this.$confirm(this.$t('common.confirmdeletecluster') + row.name, this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
+        }).then(async () => {
+          const res = await deleteCluster({
+            name: row.name
+          })
+          if (res.code === 200) {
+            this.$message.success(this.$t('common.delete') + this.$t('common.xxsuc') + '<br/>' + res.data)
+            await this.getClusterList()
+          } else {
+            this.$message({
+              showClose: true,
+              message: this.$t('common.delete') + this.$t('common.failed') + '\n' + res.data,
+              type: 'error',
+              duration: 10000
+            })
+          }
+        })
+      } catch (e) {}
     },
     async doCheck() {
       await this.$refs.form.validate()
