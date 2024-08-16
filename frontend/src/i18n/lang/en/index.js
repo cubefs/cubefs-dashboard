@@ -316,6 +316,8 @@ export default {
     volumecachettl: 'Cache TTL of Volume',
     volumenamerule: 'Must begin with a letter, and can only contain underscores, alphanumeric characters or short dashes',
     confirmdeletevol: 'are you sure to delete the volume?',
+    confirmdeletetenant: 'are you sure to delete the tenant',
+    confirmdeletepolicies: 'are you sure to clear the policies？',
   },
   tenant: {
     createtenantsuc: 'Create tenant successfully',
@@ -422,8 +424,11 @@ export default {
     CFS_S3_FILES_DOWNLOAD_SIGNEDURL: 'download', // 下载文件',
     CFS_S3_FILES_UPLOAD_SIGNEDURL: 'upload', // '上传文件',
     CFS_USERS_CREATE: 'tenants-create', // '租户管理-创建租户',
+    CFS_USERS_DELETE: 'tenants-delete', // '租户管理-删除租户',
     CFS_USERS_LIST: 'manage tenants', // '租户管理',
     CFS_USERS_POLICIES: 'volume grant', // '卷授权',
+    CFS_USERS_POLICIES_DELETE: 'delete volume grant', // '删除卷授权'
+    CFS_USERS_VOLS_TRANSFER: 'volume transfer', // '卷转移'
     CFS_VOLS_CREATE: 'create volume', // '创建卷',
     CFS_VOLS_EXPAND: 'volume scaleup', // '卷扩容',
     CFS_VOLS_SHRINK: 'volume scaledown', // '卷缩容',
@@ -431,6 +436,7 @@ export default {
     CFS_VOLS_UPDATE: 'edit EC', // '编辑纠删码卷',
     CLUSTER_CREATE: 'create cluster', // '上架集群',
     CLUSTER_UPDATE: 'edit cluster', // '修改集群',
+    CLUSTER_DELETE: 'delete cluster' // '删除集群'
   },
   ...enLocale
 }

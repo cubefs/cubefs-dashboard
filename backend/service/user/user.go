@@ -126,3 +126,78 @@ func UpdatePolicy(c *gin.Context, clusterAddr string, input *UpdatePolicyInput) 
 	}
 	return output.Data, nil
 }
+
+type DeleteInput struct {
+	Id string `form:"user" binding:"required"`
+}
+
+func Delete(c *gin.Context, clusterAddr string, input *DeleteInput) (interface{}, error) {
+	reqUrl := "http://" + clusterAddr + proto.UserDelete + "?user=" + input.Id
+	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	output := httputils.Output{Data: ""}
+	_, err = httputils.HandleResponse(c, resp, err, &output)
+	if err != nil {
+		return nil, err
+	}
+	if output.Code != proto.ErrCodeSuccess {
+		return nil, errors.New(output.Msg)
+	}
+	return output.Data, nil
+}
+
+type DeletePolicyInput struct {
+	UserId string `json:"user_id" binding:"required"`
+	Volume string `json:"volume" binding:"required"`
+}
+
+func DeletePolicy(c *gin.Context, clusterAddr string, input *DeletePolicyInput) (interface{}, error) {
+	reqUrl := "http://" + clusterAddr + proto.UserRemovePolicy
+	b, err := json.Marshal(input)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodPost, bytes.NewReader(b), nil)
+	if err != nil {
+		return nil, err
+	}
+	output := httputils.Output{Data: ""}
+	_, err = httputils.HandleResponse(c, resp, err, &output)
+	if err != nil {
+		return nil, err
+	}
+	if output.Code != proto.ErrCodeSuccess {
+		return nil, errors.New(output.Msg)
+	}
+	return output.Data, nil
+}
+
+type TransferVolsInput struct {
+	Volume  string `json:"volume" binding:"required"`
+	UserSrc string `json:"user_src" binding:"required"`
+	UserDst string `json:"user_dst" binding:"required"`
+}
+
+func TransferVols(c *gin.Context, clusterAddr string, input *TransferVolsInput) (interface{}, error) {
+	reqUrl := "http://" + clusterAddr + proto.UserTransferVol
+	b, err := json.Marshal(input)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodPost, bytes.NewReader(b), nil)
+	if err != nil {
+		return nil, err
+	}
+	output := httputils.Output{Data: ""}
+	_, err = httputils.HandleResponse(c, resp, err, &output)
+	if err != nil {
+		return nil, err
+	}
+
+	if output.Code != proto.ErrCodeSuccess {
+		return nil, errors.New(output.Msg)
+	}
+	return output.Data, nil
+}

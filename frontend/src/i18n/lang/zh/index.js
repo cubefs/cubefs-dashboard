@@ -315,7 +315,9 @@ export default {
     volumecachesize: '卷Cache总量',
     volumecachetimeout: '卷Cache淘汰时间',
     volumenamerule: '必须以字母开头,可有下划线,数字,字母,短横线',
-    confirmdeletevol: '确定删除卷吗？',
+    confirmdeletevol: '确定删除卷？',
+    confirmdeletetenant: '确定删除租户？',
+    confirmdeletepolicies: '确定清空卷策略？',
   },
   tenant: {
     createtenantsuc: '创建租户成功',
@@ -422,8 +424,11 @@ export default {
     CFS_S3_FILES_DOWNLOAD_SIGNEDURL: '下载文件',
     CFS_S3_FILES_UPLOAD_SIGNEDURL: '上传文件',
     CFS_USERS_CREATE: '租户管理-创建租户',
+    CFS_USERS_DELETE: '租户管理-删除租户',
     CFS_USERS_LIST: '租户管理',
     CFS_USERS_POLICIES: '卷授权',
+    CFS_USERS_POLICIES_DELETE: '删除卷授权',
+    CFS_USERS_VOLS_TRANSFER: '卷转移',
     CFS_VOLS_CREATE: '创建卷',
     CFS_VOLS_EXPAND: '卷扩容',
     CFS_VOLS_SHRINK: '卷缩容',
@@ -431,6 +436,7 @@ export default {
     CFS_VOLS_UPDATE: '编辑纠删码卷',
     CLUSTER_CREATE: '上架集群',
     CLUSTER_UPDATE: '修改集群',
+    CLUSTER_DELETE: '删除集群' // '删除集群'
   },
   ...zhLocale
 }

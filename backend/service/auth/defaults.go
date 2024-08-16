@@ -35,7 +35,7 @@ var (
 			"BLOBSTORE_DISKS_LIST", "BLOBSTORE_DISKS_INFO", "BLOBSTORE_DISKS_DROPPING_LIST", "BLOBSTORE_DISKS_ACCESS", "BLOBSTORE_DISKS_SET", "BLOBSTORE_DISKS_DROP", "BLOBSTORE_DISKS_PROBE", "BLOBSTORE_DISKS_STATS_MIGRATING",
 			"BLOBSTORE_CONFIG_LIST", "BLOBSTORE_CONFIG_SET",
 			"BLOBSTORE_SERVICES_LIST", "BLOBSTORE_SERVICES_GET", "BLOBSTORE_SERVICES_OFFLINE",
-			"CFS_USERS_CREATE", "CFS_USERS_LIST", "CFS_USERS_NAMES", "CFS_USERS_POLICIES",
+			"CFS_USERS_CREATE", "CFS_USERS_LIST", "CFS_USERS_NAMES", "CFS_USERS_POLICIES", "CFS_USERS_POLICIES_DELETE", "CFS_USERS_DELETE", "CFS_USERS_VOLS_TRANSFER",
 			"CFS_VOLS_CREATE", "CFS_VOLS_LIST", "CFS_VOLS_INFO", "CFS_VOLS_UPDATE", "CFS_VOLS_DELETE", "CFS_VOLS_EXPAND", "CFS_VOLS_SHRINK",
 			"CFS_DOMAINS_STATUS", "CFS_DOMAINS_INFO",
 			"CFS_DATANODE_ADD", "CFS_DATANODE_LIST", "CFS_DATANODE_PARTITIONS", "CFS_DATANODE_DECOMMISSION", "CFS_DATANODE_MIGRATE",
@@ -129,6 +129,9 @@ var (
 		{AuthCode: "CFS_USERS_POLICIES", AuthName: "update user policies", AuthType: &backend, URI: prefix + "/cfs/:cluster/users/policies", Method: "POST", IsLogin: true, IsCheck: true},
 		{AuthCode: "CFS_USERS_LIST", AuthName: "list cfs user", AuthType: &backend, URI: prefix + "/cfs/:cluster/users/list", Method: "GET", IsLogin: true, IsCheck: true},
 		{AuthCode: "CFS_USERS_NAMES", AuthName: "get user names", AuthType: &backend, URI: prefix + "/cfs/:cluster/users/names", Method: "GET", IsLogin: true, IsCheck: true},
+		{AuthCode: "CFS_USERS_DELETE", AuthName: "user delete", AuthType: &backend, URI: prefix + "/cfs/:cluster/users/delete", Method: "DELETE", IsLogin: true, IsCheck: true},
+		{AuthCode: "CFS_USERS_POLICIES_DELETE", AuthName: "delete user policies", AuthType: &backend, URI: prefix + "/cfs/:cluster/users/policies", Method: "DELETE", IsLogin: true, IsCheck: true},
+		{AuthCode: "CFS_USERS_VOLS_TRANSFER", AuthName: "transfer user vols", AuthType: &backend, URI: prefix + "/cfs/:cluster/users/vols/transfer", Method: "POST", IsLogin: true, IsCheck: true},
 
 		// cfs.vols
 		{AuthCode: "CFS_VOLS_CREATE", AuthName: "create cfs vol", AuthType: &backend, URI: prefix + "/cfs/:cluster/vols/create", Method: "POST", IsLogin: true, IsCheck: true},

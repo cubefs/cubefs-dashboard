@@ -89,9 +89,20 @@ export const getUserList = (param) => {
 export const updateUserPolicy = (param) => {
   return Ajax.post(prefix(param) + 'users/policies', param)
 }
+export const deleteUserPolicy = (param) => {
+  return Ajax.delete(prefix(param) + 'users/policies', param)
+}
 // 获取用户名称列表
 export const getUserNameList = (param) => {
   return Ajax.get(prefix(param) + 'users/names', param)
+}
+// 删除租户
+export const deleteUser = (param) => {
+  return Ajax.delete(prefix(param) + 'users/delete', param)
+}
+// 卷转移
+export const transferVol = (param) => {
+  return Ajax.post(prefix(param) + 'users/vols/transfer', param)
 }
 
 // -----------  元数据节点  --------------

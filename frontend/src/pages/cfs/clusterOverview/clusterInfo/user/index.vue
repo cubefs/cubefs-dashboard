@@ -39,11 +39,22 @@
     <el-row class="userInfo">
       <u-page-table :data="dataList" :page-size="page.per_page">
         <!-- <el-table-column label="序号" type="index"></el-table-column> -->
-        <el-table-column :label="$t('tenant.tenantid')" prop="user_id"></el-table-column>
-        <el-table-column :label="$t('common.tenant') + $t('common.type')" prop="user_type"></el-table-column>
+        <el-table-column :label="$t('tenant.tenantid')" prop="user_id" :width="100"></el-table-column>
+        <el-table-column :label="$t('common.tenant') + $t('common.type')" prop="user_type" :width="100"></el-table-column>
         <el-table-column label="AK" prop="access_key"></el-table-column>
         <el-table-column label="SK" prop="secret_key"></el-table-column>
-        <el-table-column :label="$t('common.createtime')" prop="create_time"></el-table-column>
+        <el-table-column :label="$t('common.createtime')" prop="create_time" :width="100"></el-table-column>
+        <el-table-column :label="$t('common.action')" :width="120" align="center" fixed="right">
+          <template slot-scope="scope">
+            <el-button
+              v-auth="'CFS_USERS_DELETE'"
+              type="text"
+              size="small"
+              v-if="scope.row.user_type != 'root'"
+              @click="deleteUser(scope.row)"
+            >{{ $t('common.delete') }}</el-button>
+          </template>
+        </el-table-column>
       </u-page-table>
     </el-row>
     <el-row>
@@ -85,6 +96,24 @@
               >{{ getTableItemPolicyVal(item) }}</el-radio>
             </template>
           </el-table-column>
+          <el-table-column :label="$t('common.action')" :width="120">
+            <template slot-scope="scope">
+              <el-button
+                v-auth="'CFS_USERS_POLICIES_DELETE'"
+                type="text"
+                size="small"
+                @click="deleteUserPolicies(scope.row)"
+                v-if="scope.row.user_id != 'root' && scope.row.policy.length >= 1 && scope.row.policy[0] != 'owner'"
+              >{{ $t('common.clear') + $t('common.permissions') }}</el-button>
+              <el-button
+                v-auth="'CFS_USERS_VOLS_TRANSFER'"
+                type="text"
+                size="small"
+                :disabled="true"
+                v-if="scope.row.user_id != 'root' && scope.row.policy.length == 1 && scope.row.policy[0] == 'owner'"
+              >{{ $t('privileges.CFS_USERS_VOLS_TRANSFER') }}</el-button>
+            </template>
+          </el-table-column>
         </u-page-table>
       </el-row>
     </el-row>
@@ -94,7 +123,7 @@
 <script>
 import UPageTable from '@/pages/components/uPageTable'
 import CreateUser from './components/createUser'
-import { getUserList } from '@/api/cfs/cluster'
+import {deleteUser, deleteUserPolicy, deleteVol, getUserList} from '@/api/cfs/cluster'
 import Mixin from '@/pages/cfs/clusterOverview/mixin'
 export default {
   components: {
@@ -155,6 +184,55 @@ export default {
     createUser() {
       this.$refs.createUser.open()
     },
+    async deleteUser(row) {
+      try {
+        await this.$confirm(this.$t('volume.confirmdeletetenant') + row.user_id, this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
+        })
+        const res = await deleteUser({
+          id: row.user_id,
+          cluster_name: this.clusterName,
+        })
+        if (res.code === 200) {
+          this.$message.success(this.$t('common.delete') + this.$t('common.xxsuc') + res.data)
+          await this.getData()
+        } else {
+          this.$message({
+            showClose: true,
+            message: this.$t('common.delete') + this.$t('common.failed') + '\n' + res.data,
+            type: 'error',
+            duration: 10000
+          })
+        }
+      } catch (e) {}
+    },
+    async deleteUserPolicies(row) {
+      try {
+        await this.$confirm(this.$t('volume.confirmdeletepolicies') + row.user_id + '  ' + row.volume, this.$t('common.notice'), {
+          confirmButtonText: this.$t('common.yes'),
+          cancelButtonText: this.$t('common.no'),
+        })
+        const res = await deleteUserPolicy({
+          user_id: row.user_id,
+          volume: row.volume,
+          cluster_name: this.clusterName,
+        })
+        if (res.code === 200) {
+          this.$message.success(this.$t('common.clear') + this.$t('common.permissions') + this.$t('common.xxsuc') + res.data)
+          await this.getData()
+        } else {
+          this.$message({
+            showClose: true,
+            message: this.$t('common.clear') + this.$t('common.permissions') + this.$t('common.failed') + '\n' + res.data,
+            type: 'error',
+            duration: 10000
+          })
+        }
+      } catch (e) {}
+    },
+
+
   },
 }
 </script>
