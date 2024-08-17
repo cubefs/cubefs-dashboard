@@ -103,30 +103,33 @@
                 type="text"
                 size="small"
                 @click="deleteUserPolicies(scope.row)"
-                v-if="scope.row.user_id != 'root' && scope.row.policy.length >= 1 && scope.row.policy[0] != 'owner'"
+                v-if="scope.row.policy.length >= 1 && scope.row.policy[0] != 'owner'"
               >{{ $t('common.clear') + $t('common.permissions') }}</el-button>
               <el-button
                 v-auth="'CFS_USERS_VOLS_TRANSFER'"
                 type="text"
                 size="small"
-                :disabled="true"
-                v-if="scope.row.user_id != 'root' && scope.row.policy.length == 1 && scope.row.policy[0] == 'owner'"
+                @click.stop="transferVols(scope.row)"
+                v-if="scope.row.policy.length == 1 && scope.row.policy[0] == 'owner'"
               >{{ $t('privileges.CFS_USERS_VOLS_TRANSFER') }}</el-button>
             </template>
           </el-table-column>
         </u-page-table>
       </el-row>
     </el-row>
+    <TransferVols ref="transferVols" @refresh="refresh" />
     <CreateUser ref="createUser" @refresh="refresh" />
   </el-card>
 </template>
 <script>
 import UPageTable from '@/pages/components/uPageTable'
 import CreateUser from './components/createUser'
-import {deleteUser, deleteUserPolicy, deleteVol, getUserList} from '@/api/cfs/cluster'
+import TransferVols from './components/transferVols'
+import {deleteUser, deleteUserPolicy, getUserList} from '@/api/cfs/cluster'
 import Mixin from '@/pages/cfs/clusterOverview/mixin'
 export default {
   components: {
+    TransferVols,
     CreateUser,
     UPageTable,
   },
@@ -182,7 +185,16 @@ export default {
       }
     },
     createUser() {
+      console.log('createUser')
       this.$refs.createUser.open()
+    },
+    transferVols(row) {
+      console.log('transferVols')
+      this.$refs.transferVols.open()
+      this.$refs.transferVols.initForm({
+        volName: row.volume,
+        userSrc: row.user_id,
+      })
     },
     async deleteUser(row) {
       try {
@@ -231,8 +243,6 @@ export default {
         }
       } catch (e) {}
     },
-
-
   },
 }
 </script>

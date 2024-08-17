@@ -156,6 +156,8 @@ export default {
     xxsuc: '成功',
     yes: '是',
     confirmdeletecluster: '确定删除集群么?',
+    volumebelongsto: '卷归属于',
+    transferownershipto: '转移所有权给'
   },
   button: {
     cancel: '取 消',

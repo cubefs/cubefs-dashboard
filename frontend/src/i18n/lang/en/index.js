@@ -156,6 +156,8 @@ export default {
     xxsuc: 'successfully',
     yes: 'Yes',
     confirmdeletecluster: 'are you sure to delete the Cluster?',
+    volumebelongsto: 'volume belongs to',
+    transferownershipto: 'transfer ownership to',
   },
   button: {
     cancel: 'Cancel',
