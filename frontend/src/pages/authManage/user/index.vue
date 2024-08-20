@@ -20,7 +20,7 @@
       <el-input v-model="user_name" prefix-icon="el-icon-search" :placeholder="$t('usermgt.inputname')" style="width: 240px" clearable />
       <div>
         <el-button v-auth="'AUTH_USER_DELETE'" type="text" icon="el-icon-delete" style="color: #ed4014">{{ $t('button.delete') }}</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="addUser">{{ $t('common.add') }}{{ $t('common.user') }}</el-button>
+        <el-button v-auth="'AUTH_USER_CREATE'" type="primary" icon="el-icon-plus" @click="addUser">{{ $t('common.add') }}{{ $t('common.user') }}</el-button>
       </div>
     </div>
     <o-page-table

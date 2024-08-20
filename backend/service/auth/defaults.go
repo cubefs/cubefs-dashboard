@@ -192,7 +192,7 @@ var (
 
 		// auth user
 		{AuthCode: "AUTH_USER_LIST", AuthName: "list user", AuthType: &backend, URI: prefix + "/auth/user/list", Method: "GET", IsLogin: true, IsCheck: false},
-		{AuthCode: "AUTH_USER_CREATE", AuthName: "create user", AuthType: &backend, URI: prefix + "/auth/user/create", Method: "POST", IsLogin: false, IsCheck: false},
+		{AuthCode: "AUTH_USER_CREATE", AuthName: "create user", AuthType: &backend, URI: prefix + "/auth/user/create", Method: "POST", IsLogin: false, IsCheck: true},
 		{AuthCode: "AUTH_USER_UPDATE", AuthName: "update user", AuthType: &backend, URI: prefix + "/auth/user/update", Method: "PUT", IsLogin: true, IsCheck: true},
 		{AuthCode: "AUTH_USER_SELF_UPDATE", AuthName: "update user(self)", AuthType: &backend, URI: prefix + "/auth/user/self/update", Method: "PUT", IsLogin: true, IsCheck: false},
 		{AuthCode: "AUTH_USER_DELETE", AuthName: "delete user", AuthType: &backend, URI: prefix + "/auth/user/delete", Method: "DELETE", IsLogin: true, IsCheck: true},

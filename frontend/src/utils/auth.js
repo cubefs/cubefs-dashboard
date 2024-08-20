@@ -88,7 +88,7 @@ export function getCodeList(that) {
     },
     {
       title: that.$t('auth.user'),
-      children: ['AUTH_USER_UPDATE', 'AUTH_USER_DELETE', 'AUTH_USER_PASSWORD_UPDATE'],
+      children: ['AUTH_USER_CREATE', 'AUTH_USER_UPDATE', 'AUTH_USER_DELETE', 'AUTH_USER_PASSWORD_UPDATE'],
     },
     {
       title: that.$t('auth.role'),

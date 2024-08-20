@@ -407,7 +407,7 @@ export default {
     AUTH_ROLE_DELETE: 'delete role', // '删除角色',
     AUTH_ROLE_UPDATE: 'edit role', // '编辑角色',
     AUTH_USER_CREATE: 'create user', // '添加用户',
-    AUTH_USER_DELETE: 'delete user', //'删除用户',
+    AUTH_USER_DELETE: 'delete user', // '删除用户',
     AUTH_USER_PASSWORD_UPDATE: 'change password', // '修改用户密码',
     AUTH_USER_UPDATE: 'edit user', // '编辑用户',
     BLOBSTORE_CONFIG_SET: 'enable/disable', // '开启/关闭',
