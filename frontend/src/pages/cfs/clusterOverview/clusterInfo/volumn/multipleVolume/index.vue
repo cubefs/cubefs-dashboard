@@ -164,13 +164,13 @@
               type="text"
               @click="handleExpansion(scope.row, 'shrink')"
             >{{ $t('common.scaledown') }}</el-button>
-            <el-button
-              v-auth="'CFS_VOLS_DELETE'"
-              class="btn"
-              size="medium"
-              type="text"
-              @click="deleteVol(scope.row)"
-            >{{ $t('common.delete') }}</el-button>
+<!--            <el-button-->
+<!--              v-auth="'CFS_VOLS_DELETE'"-->
+<!--              class="btn"-->
+<!--              size="medium"-->
+<!--              type="text"-->
+<!--              @click="deleteVol(scope.row)"-->
+<!--            >{{ $t('common.delete') }}</el-button>-->
             <el-button
               v-auth="'CFS_USERS_POLICIES'"
               class="btn"

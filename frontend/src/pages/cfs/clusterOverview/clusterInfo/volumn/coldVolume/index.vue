@@ -170,16 +170,16 @@
               type="text"
               @click="handleExpansion(scope.row, 'shrink')"
             >{{ $t('common.scaledown') }}</el-button>
-            <el-button
-              v-auth="'CFS_VOLS_DELETE'"
-              size="medium"
-              type="text"
-              class="btn"
-              @click="deleteVol(scope.row)"
-            >
-              <!-- 删除纠删码卷 -->
-              {{ $t('common.delete') }}
-            </el-button>
+<!--            <el-button-->
+<!--              v-auth="'CFS_VOLS_DELETE'"-->
+<!--              size="medium"-->
+<!--              type="text"-->
+<!--              class="btn"-->
+<!--              @click="deleteVol(scope.row)"-->
+<!--            >-->
+<!--              &lt;!&ndash; 删除纠删码卷 &ndash;&gt;-->
+<!--              {{ $t('common.delete') }}-->
+<!--            </el-button>-->
             <el-button
               v-auth="'CFS_USERS_POLICIES'"
               class="btn"
