@@ -221,6 +221,17 @@ export default {
     },
     async deleteUserPolicies(row) {
       try {
+        const [isOK, message] = this.deleteUserCheck(row)
+        if (!isOK) {
+          this.$message({
+            showClose: true,
+            message: message,
+            type: 'error',
+            duration: 6000
+          })
+          return
+        }
+
         await this.$confirm(this.$t('volume.confirmdeletepolicies') + row.user_id + '  ' + row.volume, this.$t('common.notice'), {
           confirmButtonText: this.$t('common.yes'),
           cancelButtonText: this.$t('common.no'),
@@ -242,6 +253,15 @@ export default {
           })
         }
       } catch (e) {}
+    },
+    deleteUserCheck(row) {
+      // check clear policy
+      for (let i = 0; i < this.dataListAuth.length; i++) {
+        if (this.dataListAuth[i].user_id === row.user_id) {
+          return [false, this.$t('common.delete') + this.$t('common.failed') + '\n' + this.$t('volume.authorizationorattributionexists')]
+        }
+      }
+      return [true, null]
     },
   },
 }
