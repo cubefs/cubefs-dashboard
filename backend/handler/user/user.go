@@ -226,6 +226,34 @@ func UpdatePolicy(c *gin.Context) {
 	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), output)
 }
 
+type DeletePolicyInput struct {
+	UserId string `form:"user_id" binding:"required"`
+	Volume string `form:"volume" binding:"required"`
+}
+
+func DeletePolicy(c *gin.Context) {
+	input := &DeletePolicyInput{}
+	addr, err := ginutils.CheckAndGetMaster(c, input)
+	if err != nil {
+		return
+	}
+
+	in := new(user.DeletePolicyInput)
+	err = copier.Copy(in, input)
+	if err != nil {
+		log.Errorf("copy user.CreateInput failed.args:%+v, err:%+v", input, err)
+		ginutils.Send(c, codes.InvalidArgs.Code(), err.Error(), nil)
+		return
+	}
+	data, err := user.DeletePolicy(c, addr, in)
+	if err != nil {
+		log.Errorf("user.delete policy failed.args:%+v,addr:%s,err:%+v", input, addr, err)
+		ginutils.Send(c, codes.ThirdPartyError.Code(), err.Error(), nil)
+		return
+	}
+	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), data)
+}
+
 type ListVolsOutput struct {
 	Page    int         `json:"page"`
 	PerPage int         `json:"per_page"`
@@ -251,4 +279,52 @@ func ListVols(c *gin.Context) {
 		Data:    vols,
 	}
 	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), output)
+}
+
+type TransferVolsInput struct {
+	Volume  string `json:"volume" binding:"required"`
+	UserSrc string `json:"user_src" binding:"required"`
+	UserDst string `json:"user_dst" binding:"required"`
+}
+
+func TransferVols(c *gin.Context) {
+	input := &TransferVolsInput{}
+	addr, err := ginutils.CheckAndGetMaster(c, input)
+	if err != nil {
+		return
+	}
+	in := new(user.TransferVolsInput)
+	err = copier.Copy(in, input)
+	if err != nil {
+		log.Errorf("copy user.CreateInput failed.args:%+v, err:%+v", input, err)
+		ginutils.Send(c, codes.InvalidArgs.Code(), err.Error(), nil)
+		return
+	}
+	data, err := user.TransferVols(c, addr, in)
+	if err != nil {
+		log.Errorf("user.transfer vols policy failed.args:%+v,addr:%s,err:%+v", input, addr, err)
+		ginutils.Send(c, codes.ThirdPartyError.Code(), err.Error(), nil)
+		return
+	}
+	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), data)
+}
+
+type DeleteInput struct {
+	Id string `form:"id" binding:"required"`
+}
+
+func Delete(c *gin.Context) {
+	input := &DeleteInput{}
+	addr, err := ginutils.CheckAndGetMaster(c, input)
+	if err != nil {
+		return
+	}
+	in := user.DeleteInput{Id: input.Id}
+	data, err := user.Delete(c, addr, &in)
+	if err != nil {
+		log.Errorf("user.Delete failed.args:%+v,addr:%s,err:%+v", input, addr, err)
+		ginutils.Send(c, codes.ThirdPartyError.Code(), err.Error(), nil)
+		return
+	}
+	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), data)
 }

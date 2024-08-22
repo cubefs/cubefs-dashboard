@@ -54,6 +54,7 @@
         </div>
         <el-dialog
           top="10vh"
+          width="70%"
           :title="$t('common.tenant') + $t('common.list')"
           :visible.sync="userDialogVisible"
         >

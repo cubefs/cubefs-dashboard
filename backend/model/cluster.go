@@ -71,7 +71,7 @@ func (c *Cluster) FindName(name string) (*Cluster, error) {
 	return clusters, err
 }
 
-func (c *Cluster) FindTag(tag string) (*Cluster, error)  {
+func (c *Cluster) FindTag(tag string) (*Cluster, error) {
 	if tag == "" {
 		return nil, errors.New("tag is required")
 	}
@@ -112,4 +112,10 @@ func (c *Cluster) FindAll(name string) ([]Cluster, error) {
 	clusters := make([]Cluster, 0)
 	err := db.Find(&clusters).Error
 	return clusters, err
+}
+
+func (c *Cluster) DeleteById(id int64) (int64, error) {
+	db := mysql.GetDB().Delete(&Cluster{Id: id})
+
+	return db.RowsAffected, db.Error
 }

@@ -52,6 +52,8 @@ func (input *CreateInput) Check() error {
 		if input.ReplicaNumber <= 0 {
 			return errors.New("replica_number should great than 0")
 		}
+	case int(enums.VolTypeLowFrequency):
+		return nil
 	default:
 		err := fmt.Errorf("invalid vol_type:%d", input.VolType)
 		log.Error(err)
@@ -300,4 +302,36 @@ func expandOrShrink(c *gin.Context, path string) {
 		return
 	}
 	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), nil)
+}
+
+type DeleteInput struct {
+	Name string `form:"name" binding:"required"`
+}
+
+func Delete(c *gin.Context) {
+	input := &DeleteInput{}
+	addr, err := ginutils.CheckAndGetMaster(c, input)
+	if err != nil {
+		return
+	}
+	volInfo, err := vol.GetByName(c, addr, input.Name)
+	if err != nil {
+		log.Errorf("vol.GetByName failed. args:%+v, err:%+v", input, err)
+		ginutils.Send(c, codes.ThirdPartyError.Code(), err.Error(), nil)
+		return
+	}
+	in := &vol.DeleteInput{Name: input.Name, AuthKey: crypt.Md5Encryption(volInfo.Owner)}
+	if err = copier.Copy(in, input); err != nil {
+		log.Errorf("copy UpdateInput failed. args:%+v,err:%+v", input, err)
+		ginutils.Send(c, codes.InvalidArgs.Code(), err.Error(), nil)
+		return
+	}
+
+	out, err := vol.Delete(c, addr, in)
+	if err != nil {
+		log.Errorf("vol.Update failed.cluster:%s,addr:%s,args:%+v,err:%+v", c.Param(ginutils.Cluster), addr, in, err)
+		ginutils.Send(c, codes.ThirdPartyError.Code(), err.Error(), nil)
+		return
+	}
+	ginutils.Send(c, codes.OK.Code(), codes.OK.Msg(), out)
 }

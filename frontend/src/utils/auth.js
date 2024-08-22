@@ -60,11 +60,11 @@ export function getCodeList(that) {
   return [
     {
       title: that.$t('auth.cluster'),
-      children: ['CLUSTER_CREATE', 'CLUSTER_UPDATE', 'CFS_USERS_LIST', 'CFS_USERS_CREATE'],
+      children: ['CLUSTER_CREATE', 'CLUSTER_UPDATE', 'CLUSTER_DELETE', 'CFS_USERS_LIST', 'CFS_USERS_CREATE', 'CFS_USERS_DELETE', 'CFS_USERS_VOLS_TRANSFER'],
     },
     {
       title: that.$t('auth.volume'),
-      children: ['CFS_VOLS_CREATE', 'CFS_VOLS_UPDATE', 'CFS_VOLS_EXPAND', 'CFS_VOLS_SHRINK', 'CFS_USERS_POLICIES'],
+      children: ['CFS_VOLS_CREATE', 'CFS_VOLS_UPDATE', 'CFS_VOLS_EXPAND', 'CFS_VOLS_SHRINK', 'CFS_USERS_POLICIES', 'CFS_USERS_POLICIES_DELETE'],
     },
     {
       title: that.$t('auth.multi_replicas'),
@@ -88,7 +88,7 @@ export function getCodeList(that) {
     },
     {
       title: that.$t('auth.user'),
-      children: ['AUTH_USER_UPDATE', 'AUTH_USER_DELETE', 'AUTH_USER_PASSWORD_UPDATE'],
+      children: ['AUTH_USER_CREATE', 'AUTH_USER_UPDATE', 'AUTH_USER_DELETE', 'AUTH_USER_PASSWORD_UPDATE'],
     },
     {
       title: that.$t('auth.role'),

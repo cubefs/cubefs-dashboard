@@ -38,9 +38,12 @@ func (c *cfsRouter) Register(engine *gin.Engine) {
 	{
 		users.POST("/create", user.Create)
 		users.GET("/list", user.List)
+		users.DELETE("/delete", user.Delete)
 		users.GET("/names", user.ListNames)
 		users.POST("/policies", user.UpdatePolicy)
+		users.DELETE("/policies", user.DeletePolicy)
 		users.GET("/vols/list", user.ListVols)
+		users.POST("/vols/transfer", user.TransferVols)
 	}
 
 	vols := group.Group("/vols")
@@ -51,6 +54,7 @@ func (c *cfsRouter) Register(engine *gin.Engine) {
 		vols.PUT("/update", vol.Update)
 		vols.PUT("/expand", vol.Expand)
 		vols.PUT("/shrink", vol.Shrink)
+		vols.GET("/delete", vol.Delete)
 	}
 
 	domains := group.Group("/domains")
