@@ -134,7 +134,7 @@ func Shrink(c *gin.Context, clusterAddr string, input *ExpandInput) error {
 }
 
 func Get(c *gin.Context, clusterAddr, keywords string) (*[]proto.VolInfo, error) {
-	reqUrl := "http://" + clusterAddr + proto.AdminListVols + "?keywords=" + keywords
+	reqUrl := "http://" + clusterAddr + proto.AdminListVols + "?keywords=" + keywords + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return nil, err

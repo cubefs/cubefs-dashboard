@@ -67,7 +67,7 @@ type InfoOutput struct {
 }
 
 func Info(c *gin.Context, clusterAddr, userName string) (*InfoOutput, error) {
-	reqUrl := "http://" + clusterAddr + proto.UserGetInfo + "?user=" + userName
+	reqUrl := "http://" + clusterAddr + proto.UserGetInfo + "?user=" + userName + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return nil, err
@@ -84,7 +84,7 @@ func Info(c *gin.Context, clusterAddr, userName string) (*InfoOutput, error) {
 }
 
 func List(c *gin.Context, clusterAddr, keywords string) (*[]InfoOutput, error) {
-	reqUrl := "http://" + clusterAddr + proto.UserList + "?keywords=" + keywords
+	reqUrl := "http://" + clusterAddr + proto.UserList + "?keywords=" + keywords + "&clientIDKey=" + config.Conf.Server.ClientIDKey
 	resp, err := httputils.DoRequestNoCookie(c, reqUrl, http.MethodGet, nil, nil)
 	if err != nil {
 		return nil, err

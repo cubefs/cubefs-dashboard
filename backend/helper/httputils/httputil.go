@@ -112,7 +112,7 @@ func DoRequestOvertime(c *gin.Context, url, method string, body io.Reader, extra
 	req.Header = header
 	client := &http.Client{
 		Transport: http.DefaultTransport,
-		Timeout:   time.Second,
+		Timeout:   10 * time.Second,
 	}
 	return client.Do(req)
 }
