@@ -442,7 +442,7 @@ export default {
         publishCluster = upDateCluster
       }
       await publishCluster(params)
-      this.$message.success(`${this.dataId ? this.$t('common.edit') : this.$t('common.add')}this.$t('common.xxsuc')`)
+      this.$message.success(`${this.dataId ? this.$t('common.edit') : this.$t('common.add')}` + this.$t('common.xxsuc'))
       this.getClusterList()
       this.close()
     },
