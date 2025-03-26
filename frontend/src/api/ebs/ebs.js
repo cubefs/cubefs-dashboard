@@ -22,6 +22,8 @@ const clusterPrefix = '/api/cubefs/console/blobstore/'
 export const getClusterOview = ({ region }) => ajax.get(base({ region }) + 'stat', {}, { canShowErrorMessage: false })
 // 获取集群
 export const getClusterList = ({ region, ...params }) => ajax.get(clusterPrefix + `${region}/clusters/list`, params, { _ignoreMsg: true })
+// 检查集群
+export const checkCluster = ({region, ...params }) => ajax.get(clusterPrefix + `${region}/clusters/check`, params, { _ignoreMsg: true })
 
 // -------- 节点管理 -----------------
 // 列表

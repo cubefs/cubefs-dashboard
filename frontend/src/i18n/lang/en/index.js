@@ -389,6 +389,7 @@ export default {
     illegaladdr: 'illegal address',
     illegalip: 'Illegal ip',
     inputbsaddr: 'Enter blobstore addr',
+    bsaddrnoeccluster: 'Blobstore address is invalid',
     inputcli: 'Enter cli',
     inputclustername: 'Enter cluster name',
     inputidc: 'Enter a IDC name',

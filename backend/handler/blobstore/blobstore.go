@@ -122,3 +122,16 @@ func ListClusters(c *gin.Context) {
 	}
 	ginutils.Success(c, clusters)
 }
+
+func CheckClusters(c *gin.Context) {
+	name := c.Param(ginutils.Cluster)
+	ConsulAddr := c.DefaultQuery("consul_addr", "")
+
+	clusters, err := consul.GetRegionClusters(c, ConsulAddr)
+	if err != nil {
+		log.Errorf("get clusters failed.name:%+v,consul:%s,err:%+v", name, ConsulAddr, err)
+		ginutils.Send(c, codes.ThirdPartyError.Code(), err.Error(), nil)
+		return
+	}
+	ginutils.Success(c, clusters)
+}

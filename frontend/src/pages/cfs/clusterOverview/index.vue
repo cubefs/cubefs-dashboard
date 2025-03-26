@@ -56,9 +56,10 @@
 </template>
 <script>
 import {getClusterList, upDateCluster, createCluster, deleteVol, deleteCluster} from '@/api/cfs/cluster'
-import { getClusterList as getEbsClusterList } from '@/api/ebs/ebs'
+import { getClusterList as getEbsClusterList, checkCluster } from '@/api/ebs/ebs'
 import { initCfsClusterRoute } from '@/router/index'
 import { mapMutations } from 'vuex'
+// import region from "echarts/src/coord/geo/Region";
 export default {
   name: '',
   components: {},
@@ -177,15 +178,20 @@ export default {
               const ipArr = value.split('\n').filter((item) => {
                 return !!item
               })
-              for (const ip of ipArr) {
-                if (!regIp.test(ip)) {
-                  cb(new Error(this.$t('cfsclusteroverview.illegalip')))
-                  break
-                }
-              }
-              cb()
+
+              this.ecCheck(this.formValue.name, ipArr[0])
+                .then((exists) => {
+                  if (!exists) {
+                    cb(new Error(this.$t('cfsclusteroverview.bsaddrnoeccluster')))
+                  } else {
+                    cb()
+                  }
+                })
+                .catch((e) => {
+                  console.log('Validator error: ', e)
+                  cb(new Error(this.$t('cfsclusteroverview.bsaddrnoeccluster')))
+                })
             }
-            cb()
           },
         },
         props: {
@@ -332,7 +338,7 @@ export default {
                     return !!item
                   })
                   for (const ip of ipArr) {
-                    if (!regIp.test(ip) && !regDomain.test(ip) ) {
+                    if (!regIp.test(ip) && !regDomain.test(ip)) {
                       cb(new Error(this.$t('cfsclusteroverview.illegaladdr')))
                       break
                     }
@@ -442,9 +448,30 @@ export default {
         publishCluster = upDateCluster
       }
       await publishCluster(params)
-      this.$message.success(`${this.dataId ? this.$t('common.edit') : this.$t('common.add')}this.$t('common.xxsuc')`)
+      this.$message.success(`${this.dataId ? this.$t('common.edit') : this.$t('common.add')} this.$t('common.xxsuc')`)
       this.getClusterList()
       this.close()
+    },
+    async ecCheck(region, consul_addr) {
+      try {
+        const res = await checkCluster({
+          region,
+          consul_addr,
+        })
+        console.log('res_code:', res.code)
+        if (res.code === 200 && res.data.length > 0) {
+          console.log('true: ', res.data.length)
+          return true
+        } else {
+          // 验证失败
+          console.log('false: ', res)
+          return false
+        }
+      } catch (e) {
+        // 输出错误信息
+        console.log('ecCheck: ', e)
+        return false
+      }
     },
     initForm(val, id) {
       this.formValue = { ...val }
