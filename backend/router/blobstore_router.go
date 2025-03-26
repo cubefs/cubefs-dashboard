@@ -34,6 +34,7 @@ func (b *blobRouter) Register(engine *gin.Engine) {
 	region := group.Group("/:cluster")
 	{
 		region.GET("/clusters/list", blobstore.ListClusters)
+		region.GET("/clusters/check", blobstore.CheckClusters)
 	}
 
 	group = group.Group("/:cluster/:id")

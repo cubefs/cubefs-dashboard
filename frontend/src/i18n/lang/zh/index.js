@@ -389,6 +389,7 @@ export default {
     illegaladdr: '输入的地址不正确',
     illegalip: '输入的地址含有不合法的ip',
     inputbsaddr: '请输入blobstore地址',
+    bsaddrnoeccluster: 'blobstore地址无效',
     inputcli: '请输入cli',
     inputclustername: '请输入集群名(集群名要与clustermgr的region一致)',
     inputidc: '请输入机房',
